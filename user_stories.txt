@@ -1,64 +1,69 @@
-User Stories
+Women Who Code -- mentor matching app
+for reference:
+https://gist.github.com/nesquena/9648cd400423173db5ca
+
+
 User app flow
+
 
 1. User can login with his/ her google+ or facebook account.
 2. Once the user logs in, he/ she is taken to the user profile page.
-3. User can link her external accounts on the profile page. (Linkedin, Github, Wordpress)
+3. User can link her external accounts on the profile page. (Linkedin, Github, Wordpress[a])
 4. Auto populate the following fields if user has linked external accounts and if any of the information is available through these accounts.
-    - Country
+        - Country
         - Zip Code
-            - Job Title
-                - Company
-                    - Years Programming
-                    5. If external accounts are not linked, user is asked to fill in her profile information.
-                        - Country (Use google maps)
-                            - Zip Code (Use google maps)
-                                - Job Title
-                                    - Company
-                                        - Years Programming
-                                        6. User can select the technologies and platforms she is interested in learning.
-                                        7. User can select the days and time of the week she is available to be mentored.
-                                        8. User can select the technologies and platforms he/ she is interested in mentoring.
-                                        9. User can select the days and time of the week she is available to mentor. 
-                                        10. Check userâs gender from oAuth response and hide âTo learnâ section if its âmaleâ.
-                                        11. User saves profile information.
-                                        12. System matches the userâs profile with a list of already available mentors in the system based on the these factors - Location, skills, time available.
-                                        13. User is presented with a list of mentors available that matches the criteria.
-                                        14. User is presented with a message at the top of the screen to update his/ her bio.
-                                        15. Mentorâs list shows the following information about the mentor:
-                                            - Profile Photo
-                                                - Name
-                                                    - Job Title
-                                                        - Company
-                                                            - Distance
-                                                            16. User can search the list by mentorâs name.
-                                                            17. Dropdown list to select mentors within < 15 miles, < 30 miles, < 50 miles.
-                                                            18. Take the user to mentorâs profile page once she clicks on the list row containing the mentor.
-                                                            19. Display mentorâs profile page.
-                                                                - Profile Photo
-                                                                    - Name
-                                                                        - Country
-                                                                            - Zip Code
-                                                                                - Job Title
-                                                                                    - Company
-                                                                                        - Years Programming
-                                                                                            - External Account Links
-                                                                                                - Bio
-                                                                                                    - Skills wants to mentor
-                                                                                                        - Available to mentor on
-                                                                                                            - Skills wants to learn
-                                                                                                                - Available to learn on
-                                                                                                                    - âConnectâ Button
-                                                                                                                    20. Logged in user can click the âConnectâ button.
-                                                                                                                    21. System informs the user that her email id will be shared with the mentor. Ask her permission to do so.
-                                                                                                                    22. Email mentor that someone wants to connect with him.
-                                                                                                                    23. If user is just a mentor (either male or hasnât selected any skills in âTo learnâ section), show him/ her a message on the list view saying his profile is saved in the system and someone interested in his mentorship may contact him soon. 
-                                                                                                                    24. Push notification to mentors when someone wants to connect with a link to mentees profile. (If time permits)
-                                                                                                                    25. App menu:
-                                                                                                                        - Edit Profile
-                                                                                                                            - Mentee Requests
-                                                                                                                                - Requests Sent
-                                                                                                                                    - Sign Out
-                                                                                                                                    26. Mentee Requests - A list of users (Same list as mentorâs page) who have contacted you for your mentorship.
-                                                                                                                                    27. Requests Sent - A list of users (Same list as mentorâs page) whom you have sent a request to connect to.
+        - Job Title
+        - Company
+        - Years Programming
+5. If external accounts are not linked, user is asked to fill in her profile information.
+        - Country (Use google maps)
+        - Zip Code (Use google maps)
+        - Job Title
+        - Company
+        - Years Programming
+6. User can select the technologies and platforms she is interested in learning.
+7. User can select the days and time of the week she is available to be mentored.
+8. User can select the technologies and platforms he/ she is interested in mentoring.
+9. User can select the days and time of the week she is available to mentor. 
+10. Check user’s gender from oAuth response and hide “To learn” section if its “male”.
+11. User saves profile information.
+12. System matches the user’s profile with a list of already available mentors in the system based on the these factors - Location, skills, time available.
+13. User is presented with a list of mentors available that matches the criteria.
+14. User is presented with a message at the top of the screen to update his/ her bio.
+15. Mentor’s list shows the following information about the mentor:
+        - Profile Photo
+        - Name
+        - Job Title
+        - Company
+        - Distance
+16. User can search the list by mentor’s name.
+17. Dropdown list to select mentors within < 15 miles, < 30 miles, < 50 miles[b].
+18. Take the user to mentor’s profile page once she clicks on the list row containing the mentor.
+19. Display mentor’s profile page.
+        - Profile Photo
+        - Name
+        - Country
+        - Zip Code
+        - Job Title
+        - Company
+        - Years Programming
+        - External Account Links
+        - Bio
+        - Skills wants to mentor
+        - Available to mentor on
+        - Skills wants to learn
+        - Available to learn on
+        - “Connect” Button
+20. Logged in user can click the “Connect” button.
+21. System informs the user that her email id will be shared with the mentor. Ask her permission to do so.
+22. Email mentor that someone wants to connect with him.
+23. If user is just a mentor (either male or hasn’t selected any skills in “To learn” section), show him/ her a message on the list view saying his profile is saved in the system and someone interested in his mentorship may contact him soon. 
+24. Push notification to mentors when someone wants to connect with a link to mentees profile. (If time permits[c])
+25. App menu:
+        - Edit Profile
+        - Mentee Requests
+        - Requests Sent
+        - Sign Out
+26. Mentee Requests - A list of users (Same list as mentor’s page) who have contacted you for your mentorship.
+27. Requests Sent - A list of users (Same list as mentor’s page) whom you have sent a request to connect to.
 
