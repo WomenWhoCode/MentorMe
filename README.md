@@ -1,4 +1,4 @@
 MentorMe
 ========
 
-Women Who Code Android Mentorship App
+Women Who Code Android Mentorship App.
