@@ -1,4 +1,9 @@
-package com.codepath.wwcmentorme;
+package com.codepath.wwcmentorme.activities;
+
+import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.R.id;
+import com.codepath.wwcmentorme.R.layout;
+import com.codepath.wwcmentorme.R.menu;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -11,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
-public class ViewProfileActivity extends Activity {
+public class EditProfileActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_profile);
+		setContentView(R.layout.activity_edit_profile);
 
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -28,7 +33,7 @@ public class ViewProfileActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.view_profile, menu);
+		getMenuInflater().inflate(R.menu.edit_profile, menu);
 		return true;
 	}
 
@@ -55,7 +60,7 @@ public class ViewProfileActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_view_profile,
+			View rootView = inflater.inflate(R.layout.fragment_edit_profile,
 					container, false);
 			return rootView;
 		}

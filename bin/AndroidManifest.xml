@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.codepath.wwcmentorme.MentorListActivity"
+            android:name="com.codepath.wwcmentorme.activities.MentorListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,15 +23,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.codepath.wwcmentorme.ViewProfileActivity"
+            android:name="com.codepath.wwcmentorme.activities.ViewProfileActivity"
             android:label="@string/title_activity_view_profile" >
         </activity>
         <activity
-            android:name="com.codepath.wwcmentorme.EditProfileActivity"
+            android:name="com.codepath.wwcmentorme.activities.EditProfileActivity"
             android:label="@string/title_activity_edit_profile" >
         </activity>
         <activity
-            android:name="com.codepath.wwcmentorme.HomeActivity"
+            android:name="com.codepath.wwcmentorme.activities.HomeActivity"
             android:label="@string/title_activity_home" >
         </activity>
     </application>
