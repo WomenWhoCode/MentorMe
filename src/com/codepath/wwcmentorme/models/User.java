@@ -1,7 +1,8 @@
 package com.codepath.wwcmentorme.models;
 
-import java.util.Date;
+import java.util.ArrayList;
 
+import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -9,9 +10,13 @@ import com.parse.ParseQuery;
 @ParseClassName("User")
 public class User extends ParseObject{
 
+	ArrayList<User> mentors;
+	
     public User() {
     }
 	
+    
+    // getters and setters
 	public long getFacebookId() {
         return getInt("facebookId");
     }
@@ -115,24 +120,22 @@ public class User extends ParseObject{
 	public void setYearsExperience(int years) {
 		put("yearsExperience", years);
 	}
+	
+	// API endpoints
+	
+	public void getMentors(long skillId, FindCallback<User> callback) {
+		ParseQuery<User> query = ParseQuery.getQuery(User.class);
+		query.whereEqualTo("isMentor", true);
+		query.whereEqualTo("skillsToTeach", skillId);
+		query.findInBackground(callback);
+	}
+	
 
-	public String getObjectId() {
-		return getObjectId();
-	}
-	
-	public Date getUpdatedAt() {
-		return getUpdatedAt();
-		
-	}
-	
-    public Date getCreatedAt() {
-    	return getCreatedAt();
-	}
-	
+
     // adding skills to learn
     // removing skills to learn
     
- //  adding skills to teach
+    //  adding skills to teach
     // removing skills to teach
     
     
@@ -141,7 +144,7 @@ public class User extends ParseObject{
     
     
 	//...
-	public static ParseQuery<User> getQuery() {
-	    return ParseQuery.getQuery(User.class);
-	  }
+//	public static ParseQuery<User> getQuery() {
+//	    return ParseQuery.getQuery(User.class);
+//	  }
 }
