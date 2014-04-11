@@ -1,12 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 
-import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.R.id;
-import com.codepath.wwcmentorme.R.layout;
-import com.codepath.wwcmentorme.R.menu;
-
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+
+import com.codepath.wwcmentorme.R;
 
 public class ViewProfileActivity extends Activity {
 
