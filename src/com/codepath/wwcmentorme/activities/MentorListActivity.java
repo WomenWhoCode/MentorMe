@@ -1,12 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 
-import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.R.id;
-import com.codepath.wwcmentorme.R.layout;
-import com.codepath.wwcmentorme.R.menu;
-
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +8,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+
+import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.helpers.Constants;
+import com.codepath.wwcmentorme.models.Availability;
+import com.codepath.wwcmentorme.models.Rating;
+import com.codepath.wwcmentorme.models.Request;
+import com.codepath.wwcmentorme.models.Skill;
+import com.codepath.wwcmentorme.models.User;
+import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class MentorListActivity extends Activity {
 
@@ -23,11 +26,19 @@ public class MentorListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mentor_list);
 
-		if (savedInstanceState == null) {
+        // must register subclasses *before* initializing Parse
+        ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(Rating.class);
+        ParseObject.registerSubclass(Request.class);
+        ParseObject.registerSubclass(Skill.class);
+        ParseObject.registerSubclass(Availability.class);
+        Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
+
+        if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-	}
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
