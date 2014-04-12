@@ -28,18 +28,15 @@ public class MentorListActivity extends Activity {
 
         // must register subclasses *before* initializing Parse
         ParseObject.registerSubclass(User.class);
-//        ParseObject.registerSubclass(Rating.class);
-//        ParseObject.registerSubclass(Request.class);
-//        ParseObject.registerSubclass(Skill.class);
-//        ParseObject.registerSubclass(Availability.class);
+        ParseObject.registerSubclass(Rating.class);
+        ParseObject.registerSubclass(Request.class);
+        ParseObject.registerSubclass(Skill.class);
+        ParseObject.registerSubclass(Availability.class);
         Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
-//		ParseObject person = new ParseObject("Person");
-//		person.put("name", "Jack");
-//		person.put("age", 31);
-//		person.saveEventually();
+
+        createTestUser();
 		
-		createTestUser();
-		if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
