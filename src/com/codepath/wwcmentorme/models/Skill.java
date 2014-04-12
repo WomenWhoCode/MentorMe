@@ -1,41 +1,42 @@
 package com.codepath.wwcmentorme.models;
 
-import java.util.Arrays;
+import java.util.List;
 
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 @ParseClassName("Skill")
-public class Skill  extends ParseObject{
+public class Skill extends ParseObject{
+	private static String SKILL_NAME_KEY = "skillName";
+	
 	public Skill() {
+		super();
     }
 	
-	public String getName() {
-		return getString("name");
+	public String getSkillName() {
+		return getString(SKILL_NAME_KEY);
 	}
 	
-	//returns arraylist of skill ObjectIds and names
-	public void getSkills(FindCallback<Skill> callback) {
+	public static ParseQuery<Skill> getQuery() {
+		return ParseQuery.getQuery(Skill.class);
+	}
+	
+	public static void getSkills() {
 		ParseQuery<Skill> query = ParseQuery.getQuery(Skill.class);
-		query.selectKeys(Arrays.asList("name"));
-		query.findInBackground(callback);
-		
-		// this returns a List; the below would return ArrayList but needs callback
-//		query.findInBackground(new FindCallback<Skill>() {
-//		    public void done(List<Skill> skillList, ParseException e) {
-//		        if (e == null) {
-//		        	ArrayList<Skill> skillArrayList = new ArrayList<Skill>();
-//		        	for (Skill s : skillList) {
-//		        		skillArrayList.add(s);
-//		        	}
-//		        	callback(skillArrayList);
-//		        } else {
-//		            Log.d("score", "Error: " + e.getMessage());
-//		        }
-//		    }
-//		});
+		query.findInBackground(new FindCallback<Skill>() {
+			
+			@Override
+			public void done(List<Skill> skills, ParseException e) {
+				if (e == null) {
+				
+				} else {
+					e.printStackTrace();
+				}				
+			}
+		});
 	}
 	
 }

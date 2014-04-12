@@ -24,15 +24,7 @@ public class MentorListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mentor_list);
-
-        // must register subclasses *before* initializing Parse
-        ParseObject.registerSubclass(User.class);
-        ParseObject.registerSubclass(Rating.class);
-        ParseObject.registerSubclass(Request.class);
-        ParseObject.registerSubclass(Skill.class);
-        ParseObject.registerSubclass(Availability.class);
-        Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
+		setContentView(R.layout.activity_mentor_list); 
 
         if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
