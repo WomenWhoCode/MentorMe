@@ -1,5 +1,7 @@
 package com.codepath.wwcmentorme.models;
 
+import java.util.Arrays;
+
 import com.parse.FindCallback;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
@@ -14,10 +16,12 @@ public class Skill  extends ParseObject{
 		return getString("name");
 	}
 	
-	//returns arraylist of skill ids and names
+	//returns arraylist of skill ObjectIds and names
 	public void getSkills(FindCallback<Skill> callback) {
 		ParseQuery<Skill> query = ParseQuery.getQuery(Skill.class);
+		query.selectKeys(Arrays.asList("name"));
 		query.findInBackground(callback);
+		
 		// this returns a List; the below would return ArrayList but needs callback
 //		query.findInBackground(new FindCallback<Skill>() {
 //		    public void done(List<Skill> skillList, ParseException e) {

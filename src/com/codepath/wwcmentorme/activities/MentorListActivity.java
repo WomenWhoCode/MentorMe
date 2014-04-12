@@ -34,23 +34,11 @@ public class MentorListActivity extends Activity {
         ParseObject.registerSubclass(Availability.class);
         Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
 
-        createTestUser();
-		
         if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
     }
-    
-	public void createTestUser() {
-	    User steve = new User();
-	    steve.setFirstName("Steve");
-	    steve.setLastName("Jobs");
-	    steve.saveInBackground();
-        steve.saveEventually();
-}
-
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
