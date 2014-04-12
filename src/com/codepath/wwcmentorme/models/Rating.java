@@ -2,18 +2,9 @@ package com.codepath.wwcmentorme.models;
 
 import java.util.Date;
 
-import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
-@ParseClassName("Skill")
-public class Skill  extends ParseObject{
-	public Skill() {
-    }
-	
-	public String getName() {
-		return getString("name");
-	}
-	
+public class Rating extends ParseObject {
 	public String getObjectId() {
 		return getObjectId();
 	}
@@ -25,6 +16,4 @@ public class Skill  extends ParseObject{
     public Date getCreatedAt() {
     	return getCreatedAt();
 	}
-
-
 }
