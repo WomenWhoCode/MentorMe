@@ -10,14 +10,27 @@ import com.parse.ParseQuery;
 
 @ParseClassName("Skill")
 public class Skill extends ParseObject{
-	private static String SKILL_NAME_KEY = "skillName";
+	public static String SKILL_ID_KEY = "skillId";
+	public static String SKILL_NAME_KEY = "skillName";
 	
 	public Skill() {
 		super();
     }
 	
+	public String getSkillId() {
+		return getString(SKILL_ID_KEY);
+	}
+	
+	public void setSkillId(String skillId) {
+		put(SKILL_ID_KEY, skillId);
+	}
+	
 	public String getSkillName() {
 		return getString(SKILL_NAME_KEY);
+	}
+	
+	public void setSkillName(String skillName) {
+		put(SKILL_NAME_KEY, skillName);
 	}
 	
 	public static ParseQuery<Skill> getQuery() {
@@ -37,6 +50,5 @@ public class Skill extends ParseObject{
 				}				
 			}
 		});
-	}
-	
+	}	
 }

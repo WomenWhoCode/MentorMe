@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -15,6 +15,26 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="TextView" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+
+    <style name="TextViewThin" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
+
+    <style name="TextViewCapsule" parent="@android:style/Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/rounded_corner</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="TextViewCapsuleBlue" parent="TextViewCapsule">
+        <item name="android:fontFamily">sans-serif-bold</item>
+        <item name="android:background">@drawable/rounded_corner_blue</item>
     </style>
 
 </resources>
