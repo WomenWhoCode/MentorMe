@@ -58,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
-        android:text="20mi"
         android:textSize="12sp" />
 
     <ImageView
@@ -67,7 +66,7 @@
         android:layout_height="16dp"
         android:layout_alignBottom="@+id/tvDistance"
         android:layout_toLeftOf="@+id/tvDistance"
-        android:contentDescription="Location"
+        android:contentDescription="@string/ivLocation"
         android:src="@drawable/ic_stat_location" />
     
     <TextView
@@ -79,8 +78,7 @@
             android:textSize="16sp"
             android:textColor="#33b5e5"
             android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            android:text="1242 mentees"/>
+            android:layout_marginTop="4dp"/>
 
     <LinearLayout
         android:id="@+id/llSkills"
@@ -96,7 +94,6 @@
             style="@style/TextViewCapsule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="android"
             android:layout_marginRight="4dp"
             android:textSize="12sp" />
         <TextView
@@ -104,7 +101,6 @@
             style="@style/TextViewCapsule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="scala"
             android:layout_marginRight="4dp"
             android:textSize="12sp" />
         <TextView
@@ -112,7 +108,6 @@
             style="@style/TextViewCapsule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="java/j2ee"
             android:layout_marginRight="4dp"
             android:textSize="12sp" />
     </LinearLayout>

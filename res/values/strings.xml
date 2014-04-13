@@ -7,4 +7,5 @@
     <string name="title_activity_view_profile">ViewProfileActivity</string>
     <string name="title_activity_edit_profile">EditProfileActivity</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="ivLocation">Location</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,6 +20,7 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.models.User;
+import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -94,9 +96,10 @@ public class MentorListActivity extends Activity implements
 		DataService.getMentors(geoPoint, distance, new FindCallback<User>() {
 
 			@Override
-			public void done(List<User> users, ParseException e) {
+			public void done(final List<User> users, ParseException e) {
 				if (e == null) {
-					mProgressBar.setVisibility(View.VISIBLE);
+					mProgressBar.setVisibility(View.VISIBLE);							
+					
 					if (mentorListAdapter == null) {
 						mentorListAdapter = new MentorListAdapter(MentorListActivity.this, geoPoint);
 						mentorListAdapter.addAll(users);

@@ -12,6 +12,10 @@ public class ViewHolder {
 		public TextView tvPosition;
 		public TextView tvAbout;
 		public TextView tvDistance;
+		public TextView tvMenteeCount;
+		public TextView tvSkill1;
+		public TextView tvSkill2;
+		public TextView tvSkill3;
 	}
 	
 }

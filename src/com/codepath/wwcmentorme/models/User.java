@@ -1,6 +1,8 @@
 package com.codepath.wwcmentorme.models;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.json.JSONArray;
 
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
@@ -21,9 +23,12 @@ public class User extends ParseObject{
 	public static String COMPANY_KEY = "company";
 	public static String YEARS_EXPERIENCE_KEY = "yearsExperience";
 	public static String IS_MENTOR_KEY = "isMentor";
+	public static String IS_MENTEE_KEY = "isMentee";
 	public static String LOCATION_KEY = "location";
-
-	ArrayList<User> mentors;
+	public static String MENTOR_SKILLS_KEY = "mentorSkills";
+	public static String MENTEE_SKILLS_KEY = "menteeSkills";
+	
+	private int mMenteeCount;
 	
     public User() {
     	super();
@@ -125,6 +130,14 @@ public class User extends ParseObject{
 		put(IS_MENTOR_KEY, isMentor);
 	}
 	
+	public Boolean getIsMentee() {
+		return getBoolean(IS_MENTEE_KEY);
+	}
+	
+	public void setIsMentee(Boolean isMentee) {
+		put(IS_MENTEE_KEY, isMentee);
+	}
+	
 	public String getProfileImageUrl() {
 		return new StringBuilder("https://graph.facebook.com/").append(getFacebookId()).append("/picture").toString();
 	}
@@ -139,6 +152,30 @@ public class User extends ParseObject{
 	
 	public void setLocation(ParseGeoPoint geoPoint) {
 		put(LOCATION_KEY, geoPoint);
+	}
+	
+	public int getMenteeCount() {
+		return mMenteeCount;
+	}
+	
+	public void setMenteeCount(int menteeCount) {
+		mMenteeCount = menteeCount;
+	}
+	
+	public JSONArray getMentorSkills() {
+		return getJSONArray(MENTOR_SKILLS_KEY);
+	}
+	
+	public void setMentorSkills(JSONArray mentorSkills) {
+		put(MENTOR_SKILLS_KEY, mentorSkills);
+	}
+	
+	public JSONArray getMenteeSkills() {
+		return getJSONArray(MENTEE_SKILLS_KEY);
+	}
+	
+	public void setMenteeSkills(JSONArray menteeSkills) {
+		put(MENTEE_SKILLS_KEY, menteeSkills);
 	}
 	
 	public static ParseQuery<User> getQuery() {
