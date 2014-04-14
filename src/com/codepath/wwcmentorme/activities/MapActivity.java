@@ -1,7 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 import java.util.ArrayList;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 
