@@ -1,7 +1,5 @@
 package com.codepath.wwcmentorme.adapters;
 
-import java.util.List;
-
 import org.json.JSONException;
 
 import com.codepath.wwcmentorme.R;
@@ -9,15 +7,12 @@ import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.RoundedImageView;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
-import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.CountCallback;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseUser;
 
 import android.content.Context;
 import android.text.Html;

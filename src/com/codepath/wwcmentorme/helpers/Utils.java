@@ -2,7 +2,6 @@ package com.codepath.wwcmentorme.helpers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;

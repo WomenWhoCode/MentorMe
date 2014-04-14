@@ -1,6 +1,8 @@
 package com.codepath.wwcmentorme.models;
 
-import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 
@@ -10,8 +12,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 @ParseClassName("User")
-public class User extends ParseObject implements Serializable{
-	private static final long serialVersionUID = -3909549350177506063L;
+public class User extends ParseObject {
+	private static Map<String, User> sUsers = Collections.synchronizedMap(new HashMap<String, User>());
 	public static String FACEBOOK_ID_KEY = "facebookId";
 	public static String FIRST_NAME_KEY = "firstName";
 	public static String LAST_NAME_KEY  = "lastName";
@@ -31,8 +33,18 @@ public class User extends ParseObject implements Serializable{
 	
 	private int mMenteeCount;
 	
+	public static User getUser(final String objectId) {
+		return sUsers.get(objectId);
+	}
+	
     public User() {
     	super();
+    }
+    
+    @Override
+    public void setObjectId(final String objectId) {
+    	super.setObjectId(objectId);
+    	sUsers.put(objectId, this);
     }
 	
 	public int getFacebookId() {
@@ -53,6 +65,10 @@ public class User extends ParseObject implements Serializable{
 	
 	public String getLastName() {
 		return getString(LAST_NAME_KEY);
+	}
+	
+	public String getDisplayName() {
+		return new StringBuilder(getFirstName()).append(" ").append(getLastName()).toString();
 	}
 	
 	public void setLastName(String lastName) {
@@ -113,6 +129,10 @@ public class User extends ParseObject implements Serializable{
 	
 	public void setCompanyName(String companyName) {
 		put(COMPANY_KEY, companyName);
+	}
+	
+	public String getPosition() {
+		return new StringBuilder(getJobTitle()).append(", ").append(getCompanyName()).toString();
 	}
 	
 	public int getYearsExperience() {

@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.codepath.wwcmentorme.R;
 
-public class EditProfileActivity extends Activity {
+public class EditProfileActivity extends AppActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -10,4 +10,12 @@
         android:title="@string/miRefineResults">
     </item>
     
+    <item
+        android:id="@+id/miShowMap"
+        android:icon="@drawable/ic_action_gear"
+        android:onClick="onShowMap"
+        android:showAsAction="always"
+        android:title="@string/miRefineResults">
+    </item>
+    
 </menu>
