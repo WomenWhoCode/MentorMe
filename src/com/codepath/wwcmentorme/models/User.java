@@ -1,6 +1,6 @@
 package com.codepath.wwcmentorme.models;
 
-import java.util.List;
+import java.io.Serializable;
 
 import org.json.JSONArray;
 
@@ -10,7 +10,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 @ParseClassName("User")
-public class User extends ParseObject{
+public class User extends ParseObject implements Serializable{
+	private static final long serialVersionUID = -3909549350177506063L;
 	public static String FACEBOOK_ID_KEY = "facebookId";
 	public static String FIRST_NAME_KEY = "firstName";
 	public static String LAST_NAME_KEY  = "lastName";

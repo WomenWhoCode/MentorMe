@@ -8,4 +8,19 @@
     <string name="title_activity_edit_profile">EditProfileActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="ivLocation">Location</string>
+    <string name="miRefineResults">Refine results</string>
+    <string name="btnOK">OK</string>
+    <string name="btnCancel">Cancel</string>
+    <string-array name="skill_array">
+        <item>All</item>
+        <item>Android</item>
+        <item>C++</item>
+        <item>CSS3</item>
+        <item>HTML</item>
+        <item>iOS</item>
+        <item>Java</item>
+        <item>Javascript</item>        
+        <item>PHP</item>
+        <item>Ruby</item>
+    </string-array>
 </resources>

@@ -1,11 +1,14 @@
 package com.codepath.wwcmentorme.models;
 
+import java.io.Serializable;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 @ParseClassName("Request")
-public class Request extends ParseObject {
+public class Request extends ParseObject implements Serializable {
+	private static final long serialVersionUID = 5748841944603885650L;
 	public static String MENTEE_ID_KEY = "menteeId";
 	public static String MENTOR_ID_KEY = "mentorId";
 	

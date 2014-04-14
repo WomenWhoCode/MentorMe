@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.codepath.wwcmentorme.helpers.Constants;
 import com.codepath.wwcmentorme.models.Request;
-import com.codepath.wwcmentorme.models.Skill;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,7 +30,6 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     
     private void initializeParse(){
     	ParseObject.registerSubclass(User.class);
-    	ParseObject.registerSubclass(Skill.class);
     	ParseObject.registerSubclass(Request.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
     }

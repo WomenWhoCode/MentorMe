@@ -36,5 +36,5 @@
         <item name="android:fontFamily">sans-serif-bold</item>
         <item name="android:background">@drawable/rounded_corner_blue</item>
     </style>
-
+    
 </resources>

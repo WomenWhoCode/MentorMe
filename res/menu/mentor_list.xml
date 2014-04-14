@@ -1,5 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.codepath.wwcmentorme.MentorListActivity" >
-
+	
+    <item
+        android:id="@+id/miRefineResults"
+        android:icon="@drawable/ic_action_gear"
+        android:onClick="onRefineResultsPress"
+        android:showAsAction="always"
+        android:title="@string/miRefineResults">
+    </item>
+    
 </menu>
