@@ -112,5 +112,4 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			if(holder.tvSkill3.getText().length() == 0)  holder.tvSkill3.setVisibility(View.INVISIBLE);
 		}
 	}
-
 }

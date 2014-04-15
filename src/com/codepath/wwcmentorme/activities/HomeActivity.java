@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import com.codepath.wwcmentorme.R;
 
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends AppActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

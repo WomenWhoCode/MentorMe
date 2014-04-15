@@ -19,6 +19,7 @@ import com.codepath.wwcmentorme.adapters.MentorListAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
+import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -36,10 +37,21 @@ public class MentorListActivity extends AppActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mentor_list);
+		setContentView(R.layout.activity_mentor_list);		 	
 
-		lvMentors = (ListView) findViewById(R.id.lvMentors);		
-
+		setCurrentLocation();
+		
+		lvMentors = (ListView) findViewById(R.id.lvMentors);
+		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint);		
+		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mentorListAdapter);
+		scaleInAnimationAdapter.setAbsListView(lvMentors);
+		lvMentors.setAdapter(scaleInAnimationAdapter);
+		
+		loadMentors(mGeoPoint);
+		getActionBar().setDisplayHomeAsUpEnabled(false);
+	}
+	
+	private void setCurrentLocation() {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
 		provider = locationManager.getBestProvider(criteria, false);
@@ -48,12 +60,6 @@ public class MentorListActivity extends AppActivity implements
 		mGeoPoint = new ParseGeoPoint();
 		mGeoPoint.setLatitude(mLocation.getLatitude());
 		mGeoPoint.setLongitude(mLocation.getLongitude());
-		
-		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint);
-		lvMentors.setAdapter(mentorListAdapter);
-		
-		loadMentors(mGeoPoint);
-		getActionBar().setDisplayHomeAsUpEnabled(false);
 	}
 
 	@Override
