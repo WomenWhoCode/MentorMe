@@ -9,6 +9,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
 
 public class MentorMeApp extends com.activeandroid.app.Application {
@@ -32,6 +33,7 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     	ParseObject.registerSubclass(User.class);
     	ParseObject.registerSubclass(Request.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
+    	ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
     }
     
 }
