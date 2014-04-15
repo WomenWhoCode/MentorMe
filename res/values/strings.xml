@@ -11,6 +11,19 @@
     <string name="miRefineResults">Refine results</string>
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
+    <string name="btn_linkedin">LinkedIn</string>
+    <string name="btn_github">GitHub</string>
+    <string name="btn_wordpress">WordPress</string>
+    <string name="location_label">Where are you based?</string>
+    <string name="city_hint">City</string>
+    <string name="zipcode_hint">Zip</string>
+    <string name="Share_your_experience">Share your experience</string>
+    <string name="job_hint">Job title</string>
+    <string name="company_hint">Company</string>
+    <string name="years_experience_hint">Years experience</string>
+    <string name="learn_label">I want to learn about:</string>
+    <string name="teach_label">I want to mentor:</string>
+    <string name="btn_add_skills">Add skills</string>
     <string-array name="skill_array">
         <item>All</item>
         <item>Android</item>

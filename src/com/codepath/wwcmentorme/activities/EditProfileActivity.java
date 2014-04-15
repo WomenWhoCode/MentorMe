@@ -1,18 +1,34 @@
 package com.codepath.wwcmentorme.activities;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.adapters.EditProfileFragmentAdapter;
+import com.viewpagerindicator.IconPageIndicator;
+import com.viewpagerindicator.PageIndicator;
 
-public class EditProfileActivity extends AppActivity {
+public class EditProfileActivity extends FragmentActivity {
+	FragmentPagerAdapter mAdapter;
+    ViewPager mPager;
+    PageIndicator mIndicator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
+		
+		mAdapter = new EditProfileFragmentAdapter(getSupportFragmentManager());
+
+        mPager = (ViewPager)findViewById(R.id.vpPager);
+        mPager.setAdapter(mAdapter);
+
+        mIndicator = (IconPageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
 	}
 
 	@Override

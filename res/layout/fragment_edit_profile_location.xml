@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tvLearnLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/location_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tvLearnLabel"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_stat_location" />
+    
+    <LinearLayout
+        android:id="@+id/llLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvLearnLabel"
+        android:layout_margin="8dp"
+        android:orientation="horizontal" >
+
+        <MultiAutoCompleteTextView
+            android:id="@+id/mactvCity"
+            android:layout_width="176sp"
+            android:layout_height="wrap_content"
+            android:hint="@string/city_hint" >
+
+            <requestFocus />
+        </MultiAutoCompleteTextView>
+
+        <EditText
+            android:id="@+id/etZip"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:hint="@string/zipcode_hint"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlAboutMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/llLocation"
+        android:layout_below="@+id/llLocation"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp" >
+    </RelativeLayout>
+
+</RelativeLayout>

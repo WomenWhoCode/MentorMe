@@ -1,7 +1,40 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity"
-    tools:ignore="MergeRootFrame" />
+    android:layout_margin="8dp"
+    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity">
+
+    <fragment
+        android:id="@+id/fragmentEditProfileTop"
+        android:name="com.codepath.wwcmentorme.fragments.EditProfileTopFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/fragment_edit_profile_top" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/fragmentEditProfileTop"
+        android:layout_alignRight="@+id/fragmentEditProfileTop"
+        android:layout_below="@+id/fragmentEditProfileTop"
+        android:layout_marginTop="16dp" >
+        
+        <com.viewpagerindicator.IconPageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpPager"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" 
+            android:layout_weight="1" />
+        
+</LinearLayout>
+    
+</RelativeLayout>

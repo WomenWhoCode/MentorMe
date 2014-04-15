@@ -43,6 +43,8 @@ local.properties
 .settings/
 .loadpath
 
+*.DS_Store
+
 build/*
 # External tool builders
 # .externalToolBuilders/
