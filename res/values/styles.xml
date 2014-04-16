@@ -37,4 +37,13 @@
         <item name="android:background">@drawable/rounded_corner_blue</item>
     </style>
     
+     <style name="AccountsBarButton" parent="?android:attr/buttonBarButtonStyle">
+        <item name="android:fontFamily">sans-serif-bold</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

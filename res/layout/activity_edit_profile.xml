@@ -6,22 +6,71 @@
     android:layout_margin="8dp"
     tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity">
 
-    <fragment
-        android:id="@+id/fragmentEditProfileTop"
-        android:name="com.codepath.wwcmentorme.fragments.EditProfileTopFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.codepath.wwcmentorme.helpers.RoundedImageView
+        android:id="@+id/ivUserProfile"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        tools:layout="@layout/fragment_edit_profile_top" />
+        android:src="@drawable/ic_launcher"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvFullName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ivUserProfile"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/ivUserProfile"
+        android:text="Lisa Simpson"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tvLinkAccountsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvFullName"
+        android:layout_below="@+id/tvFullName"
+        android:layout_marginTop="8dp"
+        android:text="Link accounts:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/llLinkAccounts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/ivUserProfile"
+        android:layout_below="@+id/tvLinkAccountsLabel"
+        android:layout_marginTop="4dp" 
+        style="?android:attr/buttonBarStyle">
+
+        <Button
+            android:id="@+id/btnAddSkillsToLearn"
+            style="@style/AccountsBarButton"
+            android:background="@drawable/button_linkedin"
+            android:text="@string/btn_linkedin"/>
+
+        <Button
+            android:id="@+id/button2"
+            style="@style/AccountsBarButton"
+            android:background="@drawable/button_github"
+            android:text="@string/btn_github"/>
+
+        <Button
+            android:id="@+id/button3"
+           	style="@style/AccountsBarButton"
+           	android:background="@drawable/button_gplus"
+            android:text="@string/btn_gplus" />
+    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/fragmentEditProfileTop"
-        android:layout_alignRight="@+id/fragmentEditProfileTop"
-        android:layout_below="@+id/fragmentEditProfileTop"
+        android:layout_alignLeft="@+id/ivUserProfile"
+        android:layout_below="@+id/llLinkAccounts"
         android:layout_marginTop="16dp" >
         
         <com.viewpagerindicator.IconPageIndicator
@@ -35,6 +84,6 @@
             android:layout_height="0dp" 
             android:layout_weight="1" />
         
-</LinearLayout>
+	</LinearLayout>
     
 </RelativeLayout>

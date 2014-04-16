@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@color/gplus_focused"
+          android:state_pressed="true" >
+          <corners android:radius="10dp" />
+    </item>
+    <item android:drawable="@color/gplus_focused"
+          android:state_focused="true">
+          <corners android:radius="10dp" />
+    </item>
+    <item android:drawable="@color/gplus_default">
+        <corners android:radius="10dp" />
+    </item>
+</selector>

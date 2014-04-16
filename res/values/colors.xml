@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="linkedin_focused">#005f8d</color>
+	<color name="linkedin_default">#007bb6</color>
+	<color name="github_focused">#303030</color>
+	<color name="github_default">#444444</color>
+	<color name="gplus_focused">#ca3523</color>
+	<color name="gplus_default">#dd4b39</color>
+</resources>

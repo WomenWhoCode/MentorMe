@@ -14,10 +14,12 @@
     <string name="btnCancel">Cancel</string>
     <string name="btn_linkedin">LinkedIn</string>
     <string name="btn_github">GitHub</string>
-    <string name="btn_wordpress">WordPress</string>
+    <string name="btn_gplus">Google+</string>
     <string name="location_label">Where are you based?</string>
     <string name="city_hint">City</string>
     <string name="zipcode_hint">Zip</string>
+    <string name="aboutme_label">About me</string>
+    <string name="aboutme_hint">E.g. Engineering manager at Twitter and previously lead the mobile team for Yahoo Mail</string>
     <string name="Share_your_experience">Share your experience</string>
     <string name="job_hint">Job title</string>
     <string name="company_hint">Company</string>
@@ -35,6 +37,8 @@
         <item>Java</item>
         <item>Javascript</item>        
         <item>PHP</item>
+        <item>Python</item>
         <item>Ruby</item>
+        <item>Scala</item>
     </string-array>
 </resources>
