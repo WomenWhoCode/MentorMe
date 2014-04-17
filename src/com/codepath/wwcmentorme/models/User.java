@@ -27,6 +27,7 @@ public class User extends ParseObject {
 	public static String YEARS_EXPERIENCE_KEY = "yearsExperience";
 	public static String IS_MENTOR_KEY = "isMentor";
 	public static String IS_MENTEE_KEY = "isMentee";
+	public static String IS_EDIT_KEY = "isEdit";
 	public static String LOCATION_KEY = "location";
 	public static String MENTOR_SKILLS_KEY = "mentorSkills";
 	public static String MENTEE_SKILLS_KEY = "menteeSkills";
@@ -159,6 +160,14 @@ public class User extends ParseObject {
 		put(IS_MENTEE_KEY, isMentee);
 	}
 	
+	public Boolean getIsEdit() {
+		return getBoolean(IS_EDIT_KEY);
+	}
+	
+	public void setIsEdit(Boolean isEdit) {
+		put(IS_EDIT_KEY, isEdit);
+	}
+	
 	public String getProfileImageUrl() {
 		return new StringBuilder("https://graph.facebook.com/").append(getFacebookId()).append("/picture").toString();
 	}
@@ -198,6 +207,8 @@ public class User extends ParseObject {
 	public void setMenteeSkills(JSONArray menteeSkills) {
 		put(MENTEE_SKILLS_KEY, menteeSkills);
 	}
+	
+	
 	
 	public static ParseQuery<User> getQuery() {
 		return ParseQuery.getQuery(User.class);

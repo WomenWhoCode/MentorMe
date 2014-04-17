@@ -53,14 +53,27 @@
             android:inputType="number" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rlAboutMe"
+    <EditText
+        android:id="@+id/etAboutme"
+        android:gravity="left|top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/llLocation"
+        android:layout_below="@+id/tvAboutmeLabel"
+        android:layout_marginTop="15dp"
+        android:inputType="textMultiLine" 
+        android:minLines="5"
+        android:lines="10"
+        android:hint="@string/aboutme_hint"/>
+
+    <TextView
+        android:id="@+id/tvAboutmeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvLearnLabel"
         android:layout_below="@+id/llLocation"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp" >
-    </RelativeLayout>
+        android:layout_marginTop="20dp"
+        android:text="@string/aboutme_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

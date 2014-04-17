@@ -37,7 +37,7 @@
         <item name="android:background">@drawable/rounded_corner_blue</item>
     </style>
     
-     <style name="AccountsBarButton" parent="?android:attr/buttonBarButtonStyle">
+     <style name="AccountsBarButton" parent="@android:style/Widget.Button">
         <item name="android:fontFamily">sans-serif-bold</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
