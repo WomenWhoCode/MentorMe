@@ -89,7 +89,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			@Override
 			public void done(int count, ParseException arg1) {
 				if(count > 0) {
-					holder.tvMenteeCount.setText(Integer.toString(count) + " mentees");
+					holder.tvMenteeCount.setText(Integer.toString(count) + " " + getContext().getResources().getQuantityString(R.plurals.mentee, count));
 				}
 			}
 		});

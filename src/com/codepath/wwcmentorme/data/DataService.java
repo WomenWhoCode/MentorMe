@@ -1,13 +1,17 @@
 package com.codepath.wwcmentorme.data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 
+import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
@@ -39,6 +43,19 @@ public class DataService {
 		ParseQuery<Request> query = Request.getQuery();
 		query.whereEqualTo(Request.MENTOR_ID_KEY, mentorId);
 		query.findInBackground(callback);
+	}
+	
+	public static void getAverageRating(int userId, FindCallback<Rating> callback) {
+		ParseQuery<Rating> query = Rating.getQuery();
+		query.whereEqualTo(Rating.RATED_FACEBOOK_ID_KEY, userId);
+		query.findInBackground(callback);
+	}
+	
+	public static void getRatingByUser(int currentUserId, int ratedUserId, GetCallback<Rating> callback) {
+		ParseQuery<Rating> query = Rating.getQuery();
+		query.whereEqualTo(Rating.FACEBOOK_ID_KEY, currentUserId);
+		query.whereEqualTo(Rating.RATED_FACEBOOK_ID_KEY, ratedUserId);
+		query.getFirstInBackground(callback);
 	}
 	
 }

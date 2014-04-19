@@ -30,6 +30,7 @@ public class User extends ParseObject {
 	public static String LOCATION_KEY = "location";
 	public static String MENTOR_SKILLS_KEY = "mentorSkills";
 	public static String MENTEE_SKILLS_KEY = "menteeSkills";
+	public static String AVAILABILITY_KEY = "availability";
 	
 	private int mMenteeCount;
 	
@@ -197,6 +198,14 @@ public class User extends ParseObject {
 	
 	public void setMenteeSkills(JSONArray menteeSkills) {
 		put(MENTEE_SKILLS_KEY, menteeSkills);
+	}
+	
+	public JSONArray getAvailability() {
+		return getJSONArray(AVAILABILITY_KEY);
+	}
+	
+	public void setAvailability(JSONArray availability) {
+		put(AVAILABILITY_KEY, availability);
 	}
 	
 	public static ParseQuery<User> getQuery() {

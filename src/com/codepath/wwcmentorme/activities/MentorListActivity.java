@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.codepath.wwcmentorme.R;
@@ -49,6 +52,24 @@ public class MentorListActivity extends AppActivity implements
 		
 		loadMentors(mGeoPoint);
 		getActionBar().setDisplayHomeAsUpEnabled(false);
+		
+		setupListViewClickListener();
+	}
+	
+	private void setupListViewClickListener() {
+		lvMentors.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				final User user = (User) lvMentors.getItemAtPosition(position);
+				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
+				intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getObjectId());
+				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
+				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
+				startActivity(intent);				
+			}
+		});
 	}
 	
 	private void setCurrentLocation() {
@@ -91,7 +112,7 @@ public class MentorListActivity extends AppActivity implements
 			}
 		});
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.mentor_list, menu);

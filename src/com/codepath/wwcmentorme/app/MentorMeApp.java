@@ -3,6 +3,7 @@ package com.codepath.wwcmentorme.app;
 import android.content.Context;
 
 import com.codepath.wwcmentorme.helpers.Constants;
+import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -31,7 +32,14 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     private void initializeParse(){
     	ParseObject.registerSubclass(User.class);
     	ParseObject.registerSubclass(Request.class);
+    	ParseObject.registerSubclass(Rating.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
+    }
+    
+    public static User getCurrentUser() {
+    	User user = new User();
+    	user.setFacebookId(827064128);
+    	return user;
     }
     
 }

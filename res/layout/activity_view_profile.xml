@@ -1,7 +1,358 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.codepath.wwcmentorme.activities.ViewProfileActivity"
-    tools:ignore="MergeRootFrame" />
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scroll"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:padding="0dp" >
+
+        <ImageView
+            android:id="@+id/ivMentorProfile"
+            android:layout_width="match_parent"
+            android:layout_height="360dp"
+            android:contentDescription="@string/ivMentorProfile"
+            android:scaleType="centerCrop" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ivMentorProfile"
+            android:background="#55000000"
+            android:padding="10dp" >
+
+            <TextView
+                android:id="@+id/tvFirstName"
+                style="@style/TextViewThin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="firstname"
+                android:textColor="@android:color/white"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tvLastName"
+                style="@style/TextViewThin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/tvFirstName"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/tvFirstName"
+                android:text="lastname"
+                android:textColor="@android:color/white"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/tvPosition"
+                style="@style/TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvFirstName"
+                android:text="position"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/ivMentee"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_mentee" />
+
+            <TextView
+                android:id="@+id/tvMenteeCount"
+                android:fontFamily="sans-serif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/ivMentee"
+                android:textColor="@color/actionbar"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RatingBar
+            android:id="@+id/rbRating"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivMentorProfile"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="15dp"
+            android:stepSize="0.1" />
+
+        <TextView
+            android:id="@+id/tvNoOfRating"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/rbRating"
+            android:layout_toRightOf="@+id/rbRating"
+            android:paddingBottom="15dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="15dp"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAddReview"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvNoOfRating"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="4dp"
+            android:paddingRight="10dp"
+            android:text="Add a Review"
+            android:textColor="@color/actionbar"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/separator_rating"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/tvNoOfRating"
+            android:background="@android:color/darker_gray" />
+
+        <TableLayout
+            android:id="@+id/tlIcButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/separator_rating"
+            android:background="#ffffff"
+            android:paddingLeft="10dp"
+            android:stretchColumns="*" >
+
+            <TableRow
+                android:id="@+id/tableRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/btnGithub"
+                    style="@style/ICButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_github"
+                    android:text="Github" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btnLinkedin"
+                    style="@style/ICButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_linkedin"
+                    android:text="Linkedin" >
+                </Button>
+
+                <Button
+                    android:id="@+id/btnWordpress"
+                    style="@style/ICButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_wordpress"
+                    android:drawablePadding="-20dp"
+                    android:text="Wordpress" >
+                </Button>
+            </TableRow>
+        </TableLayout>
+
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/tlIcButtons"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tvAboutMeHeader"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/separator2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="About me"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/tvAboutMe"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAboutMeHeader"
+            android:layout_margin="10dp"
+            android:textSize="16sp" />
+        
+        <TextView
+            android:id="@+id/tvExperienceHeader"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvAboutMe"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Experience"
+            android:textSize="34sp" />
+        
+        <TextView
+            android:id="@+id/tvYearsExperience"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvExperienceHeader"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="5dp"
+            android:textSize="22sp" />
+        
+
+        <TextView
+            android:id="@+id/tvYearsExperienceHeader"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvExperienceHeader"
+            android:layout_toRightOf="@+id/tvYearsExperience"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:text="years of industry experience"
+            android:textSize="22sp" />
+
+        
+
+        <TextView
+            android:id="@+id/tvMentorSkills"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvYearsExperience"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Expert in"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:id="@+id/llMentorSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMentorSkills"
+            android:layout_margin="10dp"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvMenteeSkills"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMentorSkills"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Need help in"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:id="@+id/llMenteeSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMenteeSkills"
+            android:layout_margin="10dp"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal" >
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/tvAvailabilityHeader"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/llMenteeSkills"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Available on"
+            android:textSize="22sp" />
+        <LinearLayout
+            android:id="@+id/llAvailability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAvailabilityHeader"
+            android:layout_margin="10dp"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal" >
+        </LinearLayout>
+        
+        
+        
+        
+        
+        
+        
+
+        <TextView
+            android:id="@+id/tvLocation"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llAvailability"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="San Francisco, CA"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tvDistance"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tvLocation"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:text="10mi"
+            android:textSize="12sp" />
+
+        <fragment
+            android:id="@+id/map_cell"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@+id/tvLocation"
+            android:layout_margin="10dp"
+            map:cameraTilt="0"
+            map:cameraZoom="13"
+            map:mapType="normal"
+            map:uiCompass="false"
+            map:uiRotateGestures="false"
+            map:uiScrollGestures="false"
+            map:uiTiltGestures="false"
+            map:uiZoomControls="false"
+            map:uiZoomGestures="false" />
+
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_above="@+id/map_cell"
+            android:layout_toLeftOf="@+id/tvDistance"
+            android:contentDescription="@string/ivLocation"
+            android:src="@drawable/ic_stat_location" />
+    </RelativeLayout>
+
+</ScrollView>

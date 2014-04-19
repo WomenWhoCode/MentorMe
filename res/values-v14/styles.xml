@@ -7,6 +7,11 @@
     -->
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light">
         <!-- API 14 theme customizations can go here. -->
+        <item name="android:actionBarStyle">@style/MentorMeActionBar</item>
+    </style>
+    
+    <style name="MentorMeActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/actionbar</item>
     </style>
 
 </resources>
