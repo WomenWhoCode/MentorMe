@@ -103,6 +103,7 @@ public class MentorListActivity extends AppActivity implements
 		lvMentors.setAdapter(scaleInAnimationAdapter);
 		loadMentors(mGeoPoint);
 		setupListViewClickListener();
+		didChangeContentView();
 	}
 	
 	private void setupListViewClickListener() {
@@ -124,7 +125,9 @@ public class MentorListActivity extends AppActivity implements
 		final ListView listView = (ListView)findViewById(R.id.left_drawer);
 		final DrawerListAdapter adapter = new DrawerListAdapter(this);
 		listView.setAdapter(adapter);
-		listView.addHeaderView(adapter.getHeaderView());
+		if (listView.findViewById(DrawerListAdapter.HEADER_ID) == null) {
+			listView.addHeaderView(adapter.getHeaderView());
+		}
 		if (MentorMeApp.getCurrentUser() != null) {
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
@@ -177,7 +180,11 @@ public class MentorListActivity extends AppActivity implements
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.mentor_list, menu);
+		if (mShowingBack) {
+			getMenuInflater().inflate(R.menu.map, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.mentor_list, menu);
+		}
 		return true;
 	}
 

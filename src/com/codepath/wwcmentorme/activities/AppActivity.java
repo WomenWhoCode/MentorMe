@@ -52,7 +52,7 @@ public class AppActivity extends Activity {
 		didChangeContentView();
 	}
 	
-	private void didChangeContentView() {
+	public void didChangeContentView() {
 		final AtomicBoolean stop = new AtomicBoolean(false);
 		UIUtils.enumerateSubviews(findViewById(android.R.id.content), new Block<ViewGroup, View>() {
 			@Override

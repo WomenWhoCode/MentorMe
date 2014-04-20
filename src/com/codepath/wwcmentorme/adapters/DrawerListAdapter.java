@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class DrawerListAdapter extends ArrayAdapter<DrawerListAdapter.DrawerItem> {
+	public static final int HEADER_ID = android.R.id.home;
 	public static class DrawerItem {
 		public int stringId;
 		public int iconId;
@@ -42,6 +43,7 @@ public class DrawerListAdapter extends ArrayAdapter<DrawerListAdapter.DrawerItem
 		LayoutInflater inflator = (LayoutInflater) getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View view = inflator.inflate(R.layout.user_header, null);
+		view.setId(HEADER_ID);
 		final ViewHolder.UserItem holder = new ViewHolder.UserItem();
 		holder.ivMentorProfile = (ImageView) view.findViewById(R.id.ivMentorProfile);
 		holder.tvFirstName = (TextView) view.findViewById(R.id.tvFirstName);

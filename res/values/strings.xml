@@ -16,6 +16,7 @@
     <string name="drawer_requests_Sent">Outgoing Requests</string>
     <string name="drawer_sign_out">Sign Out</string>
     <string name="fb_login">Login with Facebook</string>
+    <string name="list">list</string>
     <string-array name="skill_array">
         <item>All</item>
         <item>Android</item>
