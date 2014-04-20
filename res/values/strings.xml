@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="blank"></string>
     <string name="app_name">MentorMe</string>
     <string name="ivMentorProfile">profile</string>
@@ -17,6 +18,7 @@
     <string name="drawer_sign_out">Sign Out</string>
     <string name="fb_login">Login with Facebook</string>
     <string name="list">list</string>
+
     <string-array name="skill_array">
         <item>All</item>
         <item>Android</item>
@@ -25,7 +27,7 @@
         <item>HTML</item>
         <item>iOS</item>
         <item>Java</item>
-        <item>Javascript</item>        
+        <item>Javascript</item>
         <item>PHP</item>
         <item>Ruby</item>
     </string-array>
@@ -38,10 +40,14 @@
         <item>Fr</item>
         <item>Sa</item>
     </string-array>
-    <plurals
-        name="mentee">
+
+    <plurals name="mentee">
         <item quantity="zero">mentees</item>
         <item quantity="one">mentee</item>
         <item quantity="other">mentees</item>
     </plurals>
+
+    <string name="title_activity_user_list">UserListActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

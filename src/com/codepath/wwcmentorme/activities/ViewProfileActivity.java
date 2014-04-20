@@ -65,11 +65,6 @@ public class ViewProfileActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_profile);
 		
-		if(getIntent().hasExtra(USER_ID_KEY)) {
-			final String userId = getIntent().getStringExtra(USER_ID_KEY);
-			user = User.getUser(userId);
-		}
-		
 		if(getIntent().hasExtra(LATITUDE_KEY)) {
 			mLat = getIntent().getDoubleExtra(LATITUDE_KEY, 0);
 		}
@@ -78,8 +73,27 @@ public class ViewProfileActivity extends AppActivity {
 			mLng = getIntent().getDoubleExtra(LONGITUDE_KEY, 0);
 		}
 		
-		setupViews();
-		populateViews();
+		if(getIntent().hasExtra(USER_ID_KEY)) {
+			final int userId = getIntent().getIntExtra(USER_ID_KEY, 0);
+			DataService.getUser(userId, new FindCallback<User>() {
+				
+				@Override
+				public void done(List<User> theUsers, ParseException e) {
+					if (e == null) {
+						if(theUsers != null) {
+							for (User theUser : theUsers) {											
+								user = theUser;
+								setupViews();
+								populateViews();
+								break;
+							}
+						}
+					} else {
+						e.printStackTrace();
+					}
+				}
+			});				
+		}		
 	}
 
 	private void setupViews() {

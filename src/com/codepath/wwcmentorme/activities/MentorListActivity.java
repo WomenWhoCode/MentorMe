@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.DrawerListAdapter;
@@ -95,6 +96,8 @@ public class MentorListActivity extends AppActivity implements
 		getFragmentManager().addOnBackStackChangedListener(this);
 	}
 	
+	
+	
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
 		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint);		
@@ -113,7 +116,7 @@ public class MentorListActivity extends AppActivity implements
 					int position, long id) {
 				final User user = (User) lvMentors.getItemAtPosition(position);
 				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
-				intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getObjectId());
+				intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getFacebookId());
 				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
 				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
 				startActivity(intent);				
@@ -125,6 +128,7 @@ public class MentorListActivity extends AppActivity implements
 		final ListView listView = (ListView)findViewById(R.id.left_drawer);
 		final DrawerListAdapter adapter = new DrawerListAdapter(this);
 		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new SlideMenuClickListener());
 		if (listView.findViewById(DrawerListAdapter.HEADER_ID) == null) {
 			listView.addHeaderView(adapter.getHeaderView());
 		}
@@ -133,6 +137,29 @@ public class MentorListActivity extends AppActivity implements
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));
+		}
+	}
+	
+	private class SlideMenuClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			displayView(position);
+		}
+	}
+
+	private void displayView(int position) {
+		switch (position) {
+			case 0:
+				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
+				intent.putExtra(ViewProfileActivity.USER_ID_KEY, MentorMeApp.getCurrentUser().getFacebookId());
+				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
+				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
+				startActivity(intent);				
+	            break;
+	        default:
+	            break;
 		}
 	}
 	
