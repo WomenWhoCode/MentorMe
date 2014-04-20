@@ -4,7 +4,7 @@
 	
     <item
         android:id="@+id/miRefineResults"
-        android:icon="@drawable/ic_action_gear"
+        android:icon="@drawable/ic_filter"
         android:onClick="onRefineResultsPress"
         android:showAsAction="always"
         android:title="@string/miRefineResults">
@@ -12,7 +12,7 @@
     
     <item
         android:id="@+id/miShowMap"
-        android:icon="@drawable/ic_action_gear"
+        android:icon="@drawable/ic_map"
         android:onClick="onShowMap"
         android:showAsAction="always"
         android:title="@string/miRefineResults">

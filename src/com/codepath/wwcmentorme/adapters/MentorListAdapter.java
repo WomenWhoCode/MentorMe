@@ -2,9 +2,17 @@ package com.codepath.wwcmentorme.adapters;
 
 import org.json.JSONException;
 
+import android.content.Context;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.data.DataService;
-import com.codepath.wwcmentorme.helpers.RoundedImageView;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.models.User;
@@ -14,21 +22,19 @@ import com.parse.CountCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
-import android.content.Context;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
 public class MentorListAdapter extends ArrayAdapter<User> {
-	private ImageLoader mImageLoader;
 	private ParseGeoPoint currentGeoPoint;
+	
+	private static boolean sImageLoaderInitialized = false;
 
 	public MentorListAdapter(Context context, ParseGeoPoint geoPoint) {
 		super(context, 0);
 		currentGeoPoint = geoPoint;
+		if (!sImageLoaderInitialized) {
+			sImageLoaderInitialized = true;
+			final ImageLoader imageLoader = ImageLoader.getInstance();
+			imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+		}
 	}
 	
 	@Override
@@ -39,7 +45,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflator.inflate(R.layout.mentor_list_item, null);
 			final ViewHolder.UserItem holder = new ViewHolder.UserItem();
-			holder.ivMentorProfile = (RoundedImageView) view.findViewById(R.id.ivMentorProfile);
+			holder.ivMentorProfile = (ImageView) view.findViewById(R.id.ivMentorProfile);
 			holder.tvFirstName = (TextView) view.findViewById(R.id.tvFirstName);
 			holder.tvLastName = (TextView) view.findViewById(R.id.tvLastName);
 			holder.tvPosition = (TextView) view.findViewById(R.id.tvPosition);
@@ -63,9 +69,8 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 	}
 	
 	private void populate(final ViewHolder.UserItem holder, User user) throws JSONException {
-		mImageLoader = ImageLoader.getInstance();
-		mImageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-		mImageLoader.displayImage(user.getProfileImageUrl(200), holder.ivMentorProfile);
+		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(user.getProfileImageUrl(200), holder.ivMentorProfile);
 		
 		holder.tvFirstName.setText(user.getFirstName());
 		holder.tvLastName.setText(user.getLastName());

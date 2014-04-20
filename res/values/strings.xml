@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="blank"></string>
     <string name="app_name">MentorMe</string>
     <string name="ivMentorProfile">profile</string>
     <string name="action_settings">Settings</string>
@@ -11,6 +11,11 @@
     <string name="miRefineResults">Refine results</string>
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
+    <string name="drawer_edit_profile">Edit Profile</string>
+    <string name="drawer_requests_received">Incoming Requests</string>
+    <string name="drawer_requests_Sent">Outgoing Requests</string>
+    <string name="drawer_sign_out">Sign Out</string>
+    <string name="fb_login">Login with Facebook</string>
     <string-array name="skill_array">
         <item>All</item>
         <item>Android</item>
@@ -34,7 +39,7 @@
     </string-array>
     <plurals
         name="mentee">
-        <item quantity="zero">mentee</item>
+        <item quantity="zero">mentees</item>
         <item quantity="one">mentee</item>
         <item quantity="other">mentees</item>
     </plurals>

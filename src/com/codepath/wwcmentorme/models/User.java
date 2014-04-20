@@ -38,6 +38,13 @@ public class User extends ParseObject {
 		return sUsers.get(objectId);
 	}
 	
+	public static User getUserByFacebookId(final long facebookId) {
+		for (final User user : sUsers.values()) {
+			if (user.getFacebookId() == facebookId) return user;
+		}
+		return null;
+	}
+	
     public User() {
     	super();
     }

@@ -37,9 +37,7 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     }
     
     public static User getCurrentUser() {
-    	User user = new User();
-    	user.setFacebookId(827064128);
-    	return user;
+    	return User.getUserByFacebookId(827064128);
     }
     
 }

@@ -1,8 +1,10 @@
 package com.codepath.wwcmentorme.activities;
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.UIUtils;
@@ -24,24 +26,30 @@ public class MapActivity extends AppActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_fragment);
-
-		getProgressBar().setVisibility(View.VISIBLE);
 		// Get a handle to the Map Fragment
 		final MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+		ArrayList<String> markers = null;
+		if (getIntent().hasExtra(INTENT_EXTRA_MARKERS)) {
+			markers = getIntent().getStringArrayListExtra(INTENT_EXTRA_MARKERS);
+		}
+		populateMapFragment(fragment, getProgressBar(), markers);
+	}
+	
+	public static void populateMapFragment(final MapFragment fragment, final ProgressBar progressBar, final ArrayList<String> markers) {
+		progressBar.setVisibility(View.VISIBLE);
 		final GoogleMap map = fragment.getMap();
 		map.setOnMapLoadedCallback(new OnMapLoadedCallback() {
 			@Override
 			public void onMapLoaded() {
-				getProgressBar().setVisibility(View.INVISIBLE);
+				progressBar.setVisibility(View.INVISIBLE);
 			}
 		});
 		map.setMyLocationEnabled(true);
 		fragment.getView().post(new Runnable() {
 			@Override
 			public void run() {
-				if (getIntent().hasExtra(INTENT_EXTRA_MARKERS)) {
+				if (markers != null && markers.size() > 0) {
 					LatLngBounds.Builder builder = new LatLngBounds.Builder();
-					final ArrayList<String> markers = getIntent().getStringArrayListExtra(INTENT_EXTRA_MARKERS);
 					for (final String objectId : markers) {
 						final User user = User.getUser(objectId);
 						final ParseGeoPoint pt = user.getLocation();
@@ -58,5 +66,5 @@ public class MapActivity extends AppActivity {
 				}
 			}
 		});
-	}	
+	}
 }

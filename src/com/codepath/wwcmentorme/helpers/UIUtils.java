@@ -1,6 +1,7 @@
 package com.codepath.wwcmentorme.helpers;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,7 +21,8 @@ import android.widget.TextView;
 
 public class UIUtils {
 	public static final ColorDrawable TRANSPARENT = new ColorDrawable(Color.TRANSPARENT);
-	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL); 
+	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
+	public static final Typeface SANS_SERIF_THIN = Typeface.create("sans-serif-thin", Typeface.NORMAL);
 	public static void showActionSheet(final Context context, final CharSequence title, final CharSequence[] items,
 			final DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -44,14 +46,20 @@ public class UIUtils {
 		});
 		dialog.show();
 	}
-
+	
 	public static void enumerateSubviews(final View view, final Async.Block<ViewGroup, View> block) {
+		final AtomicBoolean stop = new AtomicBoolean(false);
+		enumerateSubviews(view, block, stop);
+	}
+
+	public static void enumerateSubviews(final View view, final Async.Block<ViewGroup, View> block, final AtomicBoolean stop) {
 		if (view instanceof ViewGroup) {
 			final ViewGroup vg = (ViewGroup)view;
 			for (int i = 0, count = vg.getChildCount(); i < count; ++i) {
 				final View child = vg.getChildAt(i);
-				enumerateSubviews(child, block);
+				enumerateSubviews(child, block, stop);
 				block.call(vg, child);
+				if (stop.get()) break;
 			}
 		}
 	}
@@ -72,8 +80,8 @@ public class UIUtils {
 	private static final float sDeviceScale = Resources.getSystem().getDisplayMetrics().density;
 	private static final float sOneByScale = 1 / sDeviceScale;
 
-	private static final float sDeviceWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-	private static final float sDeviceHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+	public static final float sDeviceWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+	public static final float sDeviceHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
 	public static float getDeviceScale() {
 		return sDeviceScale;

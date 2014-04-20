@@ -104,7 +104,7 @@
 
         <TextView
             android:id="@+id/tvAddReview"
-            style="@style/TextViewThin"
+            style="@style/TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/tvNoOfRating"
@@ -155,14 +155,13 @@
                     android:drawableLeft="@drawable/ic_linkedin"
                     android:text="Linkedin" >
                 </Button>
-
+                
                 <Button
                     android:id="@+id/btnWordpress"
                     style="@style/ICButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_wordpress"
-                    android:drawablePadding="-20dp"
                     android:text="Wordpress" >
                 </Button>
             </TableRow>
@@ -185,6 +184,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="About me"
+            android:textColor="@color/actionbar"
             android:textSize="34sp" />
 
         <TextView
@@ -206,6 +206,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="Experience"
+            android:textColor="@color/actionbar"
             android:textSize="34sp" />
         
         <TextView
@@ -297,14 +298,7 @@
             android:layoutDirection="rtl"
             android:orientation="horizontal" >
         </LinearLayout>
-        
-        
-        
-        
-        
-        
-        
-
+    
         <TextView
             android:id="@+id/tvLocation"
             style="@style/TextViewThin"
@@ -328,31 +322,13 @@
             android:text="10mi"
             android:textSize="12sp" />
 
-        <fragment
-            android:id="@+id/map_cell"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <include
             android:layout_width="match_parent"
             android:layout_height="160dp"
             android:layout_below="@+id/tvLocation"
             android:layout_margin="10dp"
-            map:cameraTilt="0"
-            map:cameraZoom="13"
-            map:mapType="normal"
-            map:uiCompass="false"
-            map:uiRotateGestures="false"
-            map:uiScrollGestures="false"
-            map:uiTiltGestures="false"
-            map:uiZoomControls="false"
-            map:uiZoomGestures="false" />
+            layout="@layout/map_fragment" />
 
-        <ImageView
-            android:id="@+id/ivLocation"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_above="@+id/map_cell"
-            android:layout_toLeftOf="@+id/tvDistance"
-            android:contentDescription="@string/ivLocation"
-            android:src="@drawable/ic_stat_location" />
     </RelativeLayout>
 
 </ScrollView>
