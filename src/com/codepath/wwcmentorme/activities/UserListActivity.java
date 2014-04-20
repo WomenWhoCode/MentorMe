@@ -1,11 +1,8 @@
 package com.codepath.wwcmentorme.activities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.R.layout;
-import com.codepath.wwcmentorme.R.menu;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
@@ -20,11 +17,9 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -40,6 +35,7 @@ public class UserListActivity extends AppActivity implements
 	private Location mLocation;
 	private String provider;
 	private String usertype;
+	private int userId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +45,10 @@ public class UserListActivity extends AppActivity implements
 
 		if (getIntent().hasExtra("usertype")) {
 			usertype = getIntent().getStringExtra("usertype");
+		}
+		
+		if (getIntent().hasExtra("userId")) {
+			userId = getIntent().getIntExtra("userId", 0);
 		}
 
 		Async.dispatchMain(new Runnable() {
@@ -69,18 +69,19 @@ public class UserListActivity extends AppActivity implements
 		mGeoPoint = new ParseGeoPoint();
 		mGeoPoint.setLatitude(mLocation.getLatitude());
 		mGeoPoint.setLongitude(mLocation.getLongitude());
+		locationManager.removeUpdates(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		locationManager.requestLocationUpdates(provider, 400, 1, this);
+		//locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		locationManager.removeUpdates(this);
+		//locationManager.removeUpdates(this);
 	}
 
 	private void populateListView() {
@@ -92,18 +93,18 @@ public class UserListActivity extends AppActivity implements
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);
 		if (usertype.equals("Mentor")) {
-			loadIncomingRequests();
+			loadIncomingRequests(userId);
 		} else {
-			loadOutgoingRequests();
+			loadOutgoingRequests(userId);
 		}
 		setupListViewClickListener();
 		didChangeContentView();
 	}
 
-	private void loadIncomingRequests() {
+	private void loadIncomingRequests(int userId) {
 		getProgressBar().setVisibility(View.VISIBLE);
 
-		DataService.getIncomingRequests(new FindCallback<Request>() {
+		DataService.getIncomingRequests(userId, new FindCallback<Request>() {
 
 			@Override
 			public void done(List<Request> requests, ParseException e) {
@@ -144,10 +145,10 @@ public class UserListActivity extends AppActivity implements
 		getProgressBar().setVisibility(View.INVISIBLE);
 	}
 
-	private void loadOutgoingRequests() {
+	private void loadOutgoingRequests(int userId) {
 		getProgressBar().setVisibility(View.VISIBLE);
 
-		DataService.getOutgoingRequests(new FindCallback<Request>() {
+		DataService.getOutgoingRequests(userId, new FindCallback<Request>() {
 
 			@Override
 			public void done(List<Request> requests, ParseException e) {

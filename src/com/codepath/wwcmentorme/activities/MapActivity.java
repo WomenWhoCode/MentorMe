@@ -1,7 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -56,7 +55,7 @@ public class MapActivity extends AppActivity {
 						final LatLng latlng = new LatLng(pt.getLatitude(), pt.getLongitude());
 						map.addMarker(new MarkerOptions()
 						.title(user.getDisplayName())
-						.icon(BitmapDescriptorFactory.defaultMarker())
+						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
 						.snippet(user.getPosition())
 						.position(latlng));
 						builder.include(latlng);

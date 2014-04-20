@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.DrawerListAdapter;
@@ -172,18 +171,19 @@ public class MentorListActivity extends AppActivity implements
 		mGeoPoint = new ParseGeoPoint();
 		mGeoPoint.setLatitude(mLocation.getLatitude());
 		mGeoPoint.setLongitude(mLocation.getLongitude());
+		locationManager.removeUpdates(this);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		locationManager.requestLocationUpdates(provider, 400, 1, this);
+		//locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		locationManager.removeUpdates(this);
+		//locationManager.removeUpdates(this);
 	}
 
 	private void loadMentors(final ParseGeoPoint geoPoint) {

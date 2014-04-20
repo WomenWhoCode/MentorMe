@@ -1,19 +1,19 @@
 package com.codepath.wwcmentorme.activities;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONException;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -23,15 +23,24 @@ import android.widget.TextView;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
+import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 
 public class ViewProfileActivity extends AppActivity {
 	public static final String USER_ID_KEY = "userId";
@@ -59,6 +68,8 @@ public class ViewProfileActivity extends AppActivity {
 	private TextView tvMenteeSkills;
 	private TextView tvAvailabilityHeader;
 	private LinearLayout llAvailability;
+	private ImageView ivMentee;
+	private MapFragment fragment;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +129,8 @@ public class ViewProfileActivity extends AppActivity {
 		tvMenteeSkills = (TextView) findViewById(R.id.tvMenteeSkills);
 		tvAvailabilityHeader = (TextView) findViewById(R.id.tvAvailabilityHeader);
 		llAvailability = (LinearLayout) findViewById(R.id.llAvailability);
+		ivMentee = (ImageView) findViewById(R.id.ivMentee);
+		fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 	}
 
 	private void populateViews() {
@@ -137,6 +150,7 @@ public class ViewProfileActivity extends AppActivity {
 		Double distance = Utils.getDistance(mLat, mLng, user.getLocation().getLatitude(), user.getLocation().getLongitude());
 		tvDistance.setText(Utils.formatDouble(distance) + "mi");	
 		tvAboutMe.setText(user.getAboutMe());
+		tvYearsExperience.setText(Integer.toString(user.getYearsExperience()));
 
 		populateMenteeCount();
 		populateAverageRating();
@@ -144,13 +158,48 @@ public class ViewProfileActivity extends AppActivity {
 		populateMentorSkills();
 		populateMenteeSkills();
 		populateAvailability();
+		populateMap();
 		
-		tvYearsExperience.setText(Integer.toString(user.getYearsExperience()));
+		setOnClickMenteeCount();
 	}
 	
+	private void populateMap() {
+		final GoogleMap map = fragment.getMap();
+		map.setMyLocationEnabled(false);
+		fragment.getView().post(new Runnable() {
+			@Override
+			public void run() {
+				LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+				final ParseGeoPoint pt = user.getLocation();
+				final LatLng latlng = new LatLng(pt.getLatitude(), pt
+						.getLongitude());
+				map.addMarker(new MarkerOptions()
+						.icon(BitmapDescriptorFactory
+								.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
+						.position(latlng));
+				builder.include(latlng);			
+
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 13));
+			}
+		});
+
+	}
+
+	private void setOnClickMenteeCount() {
+		ivMentee.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				final Intent intent = new Intent(ViewProfileActivity.this, UserListActivity.class);
+				intent.putExtra("usertype", "Mentor");
+				intent.putExtra("userId", user.getFacebookId());
+				startActivity(intent);			
+			}
+		});		
+	}
+
 	private void populateMenteeCount() {
-		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {
-			
+		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {			
 			@Override
 			public void done(int count, ParseException arg1) {
 				if(count > 0) {
@@ -173,8 +222,7 @@ public class ViewProfileActivity extends AppActivity {
 					 tvAvailabilityDay.setTextColor(Color.parseColor("#ffffff"));
 				 } 
 				 llAvailability.addView(tvAvailabilityDay);
-			}
-			
+			}			
 		} else {
 			tvAvailabilityHeader.setVisibility(View.GONE);
 			llAvailability.setVisibility(View.GONE);
@@ -210,8 +258,7 @@ public class ViewProfileActivity extends AppActivity {
 					tvMentorSkill.setText(user.getMentorSkills().get(i).toString());
 				} catch (JSONException e) {
 					e.printStackTrace();
-				}
-				
+				}				
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				params.setMargins(0,0,10,0);
 				tvMentorSkill.setLayoutParams(params);
@@ -243,8 +290,7 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void populateAverageRating() {
-		DataService.getAverageRating(user.getFacebookId(), new FindCallback<Rating>() {
-			
+		DataService.getAverageRating(user.getFacebookId(), new FindCallback<Rating>() {			
 			@Override
 			public void done(List<Rating> ratings, ParseException e) {
 				if(e == null) {
@@ -268,8 +314,7 @@ public class ViewProfileActivity extends AppActivity {
 					}
 				} else {
 					e.printStackTrace();
-				}
-				
+				}				
 			}
 		});
 	}

@@ -63,16 +63,16 @@ public class DataService {
 		query.getFirstInBackground(callback);
 	}
 	
-	public static void getIncomingRequests(FindCallback<Request> callback) {
+	public static void getIncomingRequests(int userId, FindCallback<Request> callback) {
 		ParseQuery<Request> query = Request.getQuery();
-		query.whereEqualTo(Request.MENTOR_ID_KEY, MentorMeApp.getCurrentUser().getFacebookId());
+		query.whereEqualTo(Request.MENTOR_ID_KEY, userId);
 		query.orderByDescending(Request.CREATED_AT_KEY);
 		query.findInBackground(callback);
 	}
 	
-	public static void getOutgoingRequests(FindCallback<Request> callback) {
+	public static void getOutgoingRequests(int userId, FindCallback<Request> callback) {
 		ParseQuery<Request> query = Request.getQuery();
-		query.whereEqualTo(Request.MENTEE_ID_KEY, MentorMeApp.getCurrentUser().getFacebookId());
+		query.whereEqualTo(Request.MENTEE_ID_KEY, userId);
 		query.orderByDescending(Request.CREATED_AT_KEY);
 		query.findInBackground(callback);
 	}
