@@ -2,4 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.codepath.wwcmentorme.ViewProfileActivity" >
 
+    <item
+        android:id="@+id/miProfileAction"
+        android:showAsAction="always">
+    </item>
+    
 </menu>

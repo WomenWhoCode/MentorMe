@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 
@@ -38,15 +38,22 @@ public class DataService {
 		query.countInBackground(callback);
 	}
 	
-	public static void getMentor(int mentorId, FindCallback<Request> callback) {
+	public static void getUserMentor(int menteeId, int mentorId, GetCallback<Request> callback) {
 		ParseQuery<Request> query = Request.getQuery();
+		query.whereEqualTo(Request.MENTEE_ID_KEY, menteeId);
 		query.whereEqualTo(Request.MENTOR_ID_KEY, mentorId);
-		query.findInBackground(callback);
+		query.getFirstInBackground(callback);
 	}
 	
-	public static void getUser(int userId, FindCallback<User> callback) {
+	public static void getUser(int userId, GetCallback<User> callback) {
 		ParseQuery<User> query = User.getQuery();
 		query.whereEqualTo(User.FACEBOOK_ID_KEY, userId);
+		query.getFirstInBackground(callback);
+	}
+	
+	public static void getUsers(ArrayList<Integer> userIds, FindCallback<User> callback) {
+		ParseQuery<User> query = User.getQuery();
+		query.whereContainedIn(User.FACEBOOK_ID_KEY, userIds);
 		query.findInBackground(callback);
 	}
 	

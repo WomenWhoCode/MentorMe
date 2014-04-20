@@ -1,15 +1,19 @@
 package com.codepath.wwcmentorme.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
+import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Constants.UserType;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
@@ -34,7 +38,7 @@ public class UserListActivity extends AppActivity implements
 	private LocationManager locationManager;
 	private Location mLocation;
 	private String provider;
-	private String usertype;
+	private UserType usertype;
 	private int userId;
 
 	@Override
@@ -44,17 +48,48 @@ public class UserListActivity extends AppActivity implements
 		setCurrentLocation();
 
 		if (getIntent().hasExtra("usertype")) {
-			usertype = getIntent().getStringExtra("usertype");
+			usertype = UserType.valueOf(getIntent().getStringExtra("usertype"));
 		}
-		
+
 		if (getIntent().hasExtra("userId")) {
 			userId = getIntent().getIntExtra("userId", 0);
 		}
+		
+		setTitle();		
 
 		Async.dispatchMain(new Runnable() {
 			@Override
 			public void run() {
 				populateListView();
+			}
+		});
+
+	}
+
+	private void setTitle() {
+		DataService.getUser(userId, new GetCallback<User>() {
+
+			@Override
+			public void done(User user, ParseException e) {
+				if (e == null) {
+					StringBuilder title = new StringBuilder();
+					if (userId == MentorMeApp.getCurrentUser().getFacebookId()) {
+						title.append("Your");
+					} else {
+						title.append(user.getFirstName() + "'s");
+					}
+
+					if (usertype.equals(UserType.MENTOR)) {
+						title.append(" Incoming Requests");
+					} else {
+						title.append(" Outgoing Requests");
+					}
+
+					setTitle(title);
+				} else {
+					e.printStackTrace();
+				}
+
 			}
 		});
 
@@ -75,13 +110,13 @@ public class UserListActivity extends AppActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		//locationManager.requestLocationUpdates(provider, 400, 1, this);
+		// locationManager.requestLocationUpdates(provider, 400, 1, this);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		//locationManager.removeUpdates(this);
+		// locationManager.removeUpdates(this);
 	}
 
 	private void populateListView() {
@@ -92,7 +127,7 @@ public class UserListActivity extends AppActivity implements
 				mentorListAdapter);
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);
-		if (usertype.equals("Mentor")) {
+		if (usertype.equals(UserType.MENTOR)) {
 			loadIncomingRequests(userId);
 		} else {
 			loadOutgoingRequests(userId);
@@ -110,29 +145,23 @@ public class UserListActivity extends AppActivity implements
 			public void done(List<Request> requests, ParseException e) {
 				if (e == null) {
 					if (requests != null && requests.size() > 0) {
-
+						ArrayList<Integer> userIds = new ArrayList<Integer>();
 						for (Request request : requests) {
-
-							DataService.getUser(request.getMenteeId(),
-									new FindCallback<User>() {
-
-										@Override
-										public void done(List<User> mentee,
-												ParseException e) {
-											if (e == null) {
-												if (mentee != null) {
-													for (User menteeUser : mentee) {
-														mentorListAdapter
-																.add(menteeUser);
-														break;
-													}
-												}
-											} else {
-												e.printStackTrace();
-											}
-										}
-									});
+							userIds.add(request.getMenteeId());
 						}
+						DataService.getUsers(userIds, new FindCallback<User>() {
+							
+							@Override
+							public void done(List<User> users, ParseException e) {
+								if (e == null) {
+									if(users != null) {
+										mentorListAdapter.addAll(users);
+									}
+								}else {
+									e.printStackTrace();
+								}								
+							}
+						});
 
 					}
 
@@ -154,29 +183,23 @@ public class UserListActivity extends AppActivity implements
 			public void done(List<Request> requests, ParseException e) {
 				if (e == null) {
 					if (requests != null && requests.size() > 0) {
-
+						ArrayList<Integer> userIds = new ArrayList<Integer>();
 						for (Request request : requests) {
-
-							DataService.getUser(request.getMentorId(),
-									new FindCallback<User>() {
-
-										@Override
-										public void done(List<User> mentee,
-												ParseException e) {
-											if (e == null) {
-												if (mentee != null) {
-													for (User menteeUser : mentee) {
-														mentorListAdapter
-																.add(menteeUser);
-														break;
-													}
-												}
-											} else {
-												e.printStackTrace();
-											}
-										}
-									});
+							userIds.add(request.getMentorId());
 						}
+						DataService.getUsers(userIds, new FindCallback<User>() {
+							
+							@Override
+							public void done(List<User> users, ParseException e) {
+								if (e == null) {
+									if(users != null) {
+										mentorListAdapter.addAll(users);
+									}
+								}else {
+									e.printStackTrace();
+								}								
+							}
+						});
 
 					}
 

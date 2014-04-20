@@ -23,9 +23,10 @@ import android.widget.TextView;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
-import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.Utils;
+import com.codepath.wwcmentorme.helpers.Constants.UserType;
 import com.codepath.wwcmentorme.models.Rating;
+import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -70,6 +71,8 @@ public class ViewProfileActivity extends AppActivity {
 	private LinearLayout llAvailability;
 	private ImageView ivMentee;
 	private MapFragment fragment;
+	private Boolean isConnected = false;
+	private Menu menu;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,27 +87,27 @@ public class ViewProfileActivity extends AppActivity {
 			mLng = getIntent().getDoubleExtra(LONGITUDE_KEY, 0);
 		}
 		
-		if(getIntent().hasExtra(USER_ID_KEY)) {
+		if (getIntent().hasExtra(USER_ID_KEY)) {
 			final int userId = getIntent().getIntExtra(USER_ID_KEY, 0);
-			DataService.getUser(userId, new FindCallback<User>() {
-				
+			DataService.getUser(userId, new GetCallback<User>() {
+
 				@Override
-				public void done(List<User> theUsers, ParseException e) {
+				public void done(User theUser, ParseException e) {
 					if (e == null) {
-						if(theUsers != null) {
-							for (User theUser : theUsers) {											
-								user = theUser;
-								setupViews();
-								populateViews();
-								break;
-							}
+						if (theUser != null) {
+
+							user = theUser;
+							updateMenuTitles();;
+							setupViews();
+							populateViews();
 						}
 					} else {
 						e.printStackTrace();
 					}
+
 				}
-			});				
-		}		
+			});
+		}
 	}
 
 	private void setupViews() {
@@ -159,6 +162,7 @@ public class ViewProfileActivity extends AppActivity {
 		populateMenteeSkills();
 		populateAvailability();
 		populateMap();
+
 		
 		setOnClickMenteeCount();
 	}
@@ -191,7 +195,7 @@ public class ViewProfileActivity extends AppActivity {
 			@Override
 			public void onClick(View v) {
 				final Intent intent = new Intent(ViewProfileActivity.this, UserListActivity.class);
-				intent.putExtra("usertype", "Mentor");
+				intent.putExtra("usertype", UserType.MENTOR.toString());
 				intent.putExtra("userId", user.getFacebookId());
 				startActivity(intent);			
 			}
@@ -199,14 +203,18 @@ public class ViewProfileActivity extends AppActivity {
 	}
 
 	private void populateMenteeCount() {
-		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {			
+		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {
 			@Override
 			public void done(int count, ParseException arg1) {
-				if(count > 0) {
-					tvMenteeCount.setText(Integer.toString(count) + " " + getResources().getQuantityString(R.plurals.mentee, count));
-				}
+
+				tvMenteeCount.setText(Utils.formatNumber(Integer
+						.toString(count))
+						+ " "
+						+ getResources().getQuantityString(R.plurals.mentee,
+								count));
+
 			}
-		});		
+		});
 	}
 
 	private void populateAvailability() {
@@ -322,16 +330,43 @@ public class ViewProfileActivity extends AppActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.view_profile, menu);
+		super.onCreateOptionsMenu(menu);
+		this.menu = menu;
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.miProfileAction) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	private void updateMenuTitles() {
+		final MenuItem item = menu.findItem(R.id.miProfileAction);
+		DataService.getUserMentor(MentorMeApp.getCurrentUser().getFacebookId(),
+				user.getFacebookId(), new GetCallback<Request>() {
 
+					@Override
+					public void done(Request request, ParseException e) {
+						if (user.getFacebookId() == MentorMeApp
+								.getCurrentUser().getFacebookId()) {
+							item.setTitle("Edit Profile");
+						} else {
+							if (e == null) {
+								if (request != null) {
+									item.setTitle("Connected");
+								}
+							} else {
+								item.setTitle("Connect");
+								e.printStackTrace();
+							}
+						}
+
+					}
+				});
+
+	}
 }

@@ -21,6 +21,7 @@ import com.codepath.wwcmentorme.activities.UserListActivity;
 import com.codepath.wwcmentorme.activities.ViewProfileActivity;
 import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
+import com.codepath.wwcmentorme.helpers.Constants.UserType;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -98,14 +99,14 @@ public class DrawerListAdapter extends
 						R.string.drawer_requests_received)) {
 					final Intent intent = new Intent(getContext(),
 							UserListActivity.class);
-					intent.putExtra("usertype", "Mentor");
+					intent.putExtra("usertype", UserType.MENTOR.toString());
 					intent.putExtra("userId", MentorMeApp.getCurrentUser().getFacebookId());
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(
 						R.string.drawer_requests_Sent)) {
 					final Intent intent = new Intent(getContext(),
 							UserListActivity.class);
-					intent.putExtra("usertype", "Mentee");
+					intent.putExtra("usertype", UserType.MENTEE.toString());
 					intent.putExtra("userId", MentorMeApp.getCurrentUser().getFacebookId());
 					getContext().startActivity(intent);
 				}

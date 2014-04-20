@@ -1,7 +1,9 @@
 package com.codepath.wwcmentorme.helpers;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,5 +97,17 @@ public class Utils {
 	    } else {
 	    	return Double.toString(d);
 	    }
+	}
+	
+	public static String formatNumber(String num) {
+		DecimalFormat formatter = new DecimalFormat("#,###");
+		Long longNum = Long.parseLong(num);
+		if (longNum <= 9999) {
+			return formatter.format(longNum);
+		}
+		int exp = (int) (Math.log(longNum) / Math.log(1000));
+
+		return String.format(Locale.US, "%.1f %c",
+				longNum / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
 }

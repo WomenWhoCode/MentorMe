@@ -194,8 +194,6 @@ public class MentorListActivity extends AppActivity implements
 			public void done(final List<User> users, ParseException e) {
 				if (e == null) {
 					mentorListAdapter.addAll(users);
-					mentorListAdapter.addAll(users);
-					mentorListAdapter.addAll(users);
 					getProgressBar().setVisibility(View.INVISIBLE);
 				} else {
 					e.printStackTrace();
