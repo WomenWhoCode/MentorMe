@@ -15,6 +15,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 public class DataService {
 	
@@ -127,6 +128,26 @@ public class DataService {
 		query.whereEqualTo(Rating.FACEBOOK_ID_KEY, currentUserId);
 		query.whereEqualTo(Rating.RATED_FACEBOOK_ID_KEY, ratedUserId);
 		query.getFirstInBackground(callback);
+	}
+	
+	public static void putRating(final Rating ratingIn, final long userId, final float value, final Async.Block<Boolean> completion) {
+		Rating rating = null;
+		if (ratingIn == null) {
+			rating = new Rating();
+			rating.put(Rating.FACEBOOK_ID_KEY, User.meId());
+			rating.put(Rating.RATED_FACEBOOK_ID_KEY, userId);
+		} else {
+			rating = ratingIn;
+		}
+		rating.put(Rating.RATING_KEY, value);
+		rating.saveInBackground(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (completion != null) {
+					completion.call(e == null);
+				}
+			}
+		});
 	}
 	
 }

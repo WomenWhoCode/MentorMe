@@ -19,8 +19,8 @@ public class Async {
 		}
 	}
 
-	public static interface Block<U, V> {
-		public void call(U context, V result);
+	public static interface Block<V> {
+		public abstract void call(V result);
 	}
 
 	public static void dispatch(final Runnable runnable) {

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.json.JSONException;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -18,14 +20,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
-import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -58,6 +62,7 @@ public class ViewProfileActivity extends AppActivity {
 	private TextView tvDistance;
 	private TextView tvMenteeCount;
 	private RatingBar rbRating;
+	private RatingBar rbMyRating;
 	private TextView tvNoOfRating;
 	private TextView tvAddReview;
 	private TextView tvAboutMe;
@@ -103,9 +108,9 @@ public class ViewProfileActivity extends AppActivity {
 		tvDistance = (TextView) findViewById(R.id.tvDistance);
 		tvMenteeCount = (TextView) findViewById(R.id.tvMenteeCount);
 		rbRating = (RatingBar) findViewById(R.id.rbRating);
-		LayerDrawable stars;
-		stars = (LayerDrawable) rbRating.getProgressDrawable();
-		stars.getDrawable(2).setColorFilter(Color.parseColor("#00B6AA"), PorterDuff.Mode.SRC_ATOP);
+		rbMyRating = (RatingBar) findViewById(R.id.rbRatingMe);
+		customizeProgressBar(rbRating, false);
+		customizeProgressBar(rbMyRating, true);
 		tvNoOfRating = (TextView) findViewById(R.id.tvNoOfRating);
 		tvAddReview = (TextView) findViewById(R.id.tvAddReview);
 		tvAboutMe = (TextView) findViewById(R.id.tvAboutMe);
@@ -118,6 +123,10 @@ public class ViewProfileActivity extends AppActivity {
 		llAvailability = (LinearLayout) findViewById(R.id.llAvailability);
 		ivMentee = (ImageView) findViewById(R.id.ivMentee);
 		fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+	}
+	
+	private void customizeProgressBar(final ProgressBar progressBar, final boolean selectable) {
+		UIUtils.customizeProgressBar(progressBar, Color.parseColor(selectable ? "#00B6AA" : "#cccccc"), Color.parseColor("#eeeeee"));
 	}
 
 	private void populateViews() {
@@ -257,15 +266,46 @@ public class ViewProfileActivity extends AppActivity {
 	private void populateAddReview() {
 		DataService.getRatingByUser(User.meId(), user.getFacebookId(), new GetCallback<Rating>() {
 			@Override
-			public void done(Rating rating, ParseException e) {
-				if(e == null) {
-					if(rating != null) {
-						tvAddReview.setText("Edit review");
-					} 
+			public void done(final Rating rating, ParseException e) {
+				if(e == null && rating != null) {
+					tvAddReview.setText("Edit review"); 
+					rbMyRating.setRating((float)(double)rating.getRating());
 				} else {
 					tvAddReview.setText("Add review");
-					e.printStackTrace();
-				}				
+				}
+				tvAddReview.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// Show an alert dialog to add a review
+						final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+						final View view = getLayoutInflater().inflate(R.layout.progress_dialog, null);
+						final RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
+						ratingBar.setStepSize(0.5f);
+						ratingBar.setRating(rating != null ? (float)(double)rating.getRating() : 0);
+						customizeProgressBar(ratingBar, true);
+						builder.setTitle(tvAddReview.getText()).setView(view).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								
+							}
+						}).setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								getProgressBar().setVisibility(View.VISIBLE);
+								DataService.putRating(rating, user.getFacebookId(), ratingBar.getRating(), new Async.Block<Boolean>() {
+									@Override
+									public void call(Boolean result) {
+										if (result.booleanValue()) {
+											populateAverageRating();
+											populateAddReview();
+											getProgressBar().setVisibility(View.INVISIBLE);
+										}
+									}
+								});
+							}
+						}).show();
+					}
+				});
 			}
 		});
 	}
@@ -285,12 +325,12 @@ public class ViewProfileActivity extends AppActivity {
 							}
 						}
 						numRating = numRating/count;
-						tvNoOfRating.setText(Integer.toString(count));
+						tvNoOfRating.setText(Integer.toString(count) + " reviews");
 						rbRating.setRating(numRating);
 						
 					} else {
 						rbRating.setRating(0);
-						tvNoOfRating.setText("0");
+						tvNoOfRating.setText("0 reviews");
 					}
 				} else {
 					e.printStackTrace();

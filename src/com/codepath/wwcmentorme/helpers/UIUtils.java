@@ -12,11 +12,14 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class UIUtils {
@@ -33,9 +36,9 @@ public class UIUtils {
 		dialog.setOnShowListener(new OnShowListener() {
 			@Override
 			public void onShow(DialogInterface dialogInterface) {
-				enumerateSubviews(dialog.getWindow().getDecorView(), new Async.Block<ViewGroup, View>() {
+				enumerateSubviews(dialog.getWindow().getDecorView(), new Async.Block<View>() {
 					@Override
-					public void call(ViewGroup context, View result) {
+					public void call(View result) {
 						if (result instanceof TextView) {
 							final TextView tv = (TextView)result;
 							tv.setTypeface(SANS_SERIF_LIGHT);
@@ -47,21 +50,28 @@ public class UIUtils {
 		dialog.show();
 	}
 	
-	public static void enumerateSubviews(final View view, final Async.Block<ViewGroup, View> block) {
+	public static void enumerateSubviews(final View view, final Async.Block<View> block) {
 		final AtomicBoolean stop = new AtomicBoolean(false);
 		enumerateSubviews(view, block, stop);
 	}
 
-	public static void enumerateSubviews(final View view, final Async.Block<ViewGroup, View> block, final AtomicBoolean stop) {
+	public static void enumerateSubviews(final View view, final Async.Block<View> block, final AtomicBoolean stop) {
 		if (view instanceof ViewGroup) {
 			final ViewGroup vg = (ViewGroup)view;
 			for (int i = 0, count = vg.getChildCount(); i < count; ++i) {
 				final View child = vg.getChildAt(i);
 				enumerateSubviews(child, block, stop);
-				block.call(vg, child);
+				block.call(child);
 				if (stop.get()) break;
 			}
 		}
+	}
+	
+	public static void customizeProgressBar(final ProgressBar progressBar, final int progressTintColor, final int backgroundColor) {
+		LayerDrawable stars = (LayerDrawable) progressBar.getProgressDrawable();
+		stars.getDrawable(0).setColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP);
+		stars.getDrawable(1).setColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP);
+		stars.getDrawable(2).setColorFilter(progressTintColor, PorterDuff.Mode.SRC_ATOP);
 	}
 
 	public static void startActivity(final Context context, final Class clazz) {

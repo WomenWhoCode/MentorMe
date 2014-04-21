@@ -34,6 +34,10 @@ public class AppActivity extends Activity {
 	private ActionBarDrawerToggle mToggle;
 	private boolean mSettingActionBarVisible;
 	private boolean mActionBarVisible;
+	
+	public final AppActivity getActivity() {
+		return this;
+	}
 
 	@Override
 	public void setContentView(View view) {
@@ -54,9 +58,9 @@ public class AppActivity extends Activity {
 	
 	public void didChangeContentView() {
 		final AtomicBoolean stop = new AtomicBoolean(false);
-		UIUtils.enumerateSubviews(findViewById(android.R.id.content), new Block<ViewGroup, View>() {
+		UIUtils.enumerateSubviews(findViewById(android.R.id.content), new Block<View>() {
 			@Override
-			public void call(ViewGroup context, View result) {
+			public void call(View result) {
 				if (result instanceof AbsListView || result instanceof ScrollView) {
 					result.setOnTouchListener(new OnTouchListener() {
 						float mPreviousY = 0;

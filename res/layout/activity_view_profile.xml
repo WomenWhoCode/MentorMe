@@ -75,18 +75,29 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </RelativeLayout>
+        
+        <TextView
+            android:id="@+id/tvAvgReviewTitle"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ivMentorProfile"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="Reviews"
+            android:textSize="22sp" />
 
         <RatingBar
             android:id="@+id/rbRating"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivMentorProfile"
+            android:layout_below="@+id/tvAvgReviewTitle"
             android:isIndicator="true"
             android:numStars="5"
-            android:paddingBottom="15dp"
             android:paddingLeft="10dp"
-            android:paddingTop="15dp"
+            android:paddingBottom="10dp"
             android:stepSize="0.1" />
 
         <TextView
@@ -94,22 +105,53 @@
             style="@style/TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/rbRating"
-            android:layout_toRightOf="@+id/rbRating"
-            android:paddingBottom="15dp"
-            android:paddingLeft="5dp"
-            android:paddingTop="15dp"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_below="@+id/ivMentorProfile"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:paddingRight="10dp"
+            android:textColor="#cccccc"
+            android:text="5 reviews"
+            android:textSize="16sp" />
+        
+        <View
+            android:id="@+id/separator_rating_avg"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/rbRating"
+            android:background="@android:color/darker_gray" />
+        
+        <TextView
+            android:id="@+id/tvMyReviewTitle"
+            style="@style/TextViewThin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/separator_rating_avg"
+            android:layout_alignParentLeft="true"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="My Review"
+            android:textSize="22sp" />
+        
+        <RatingBar
+            android:id="@+id/rbRatingMe"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMyReviewTitle"
+            android:isIndicator="true"
+            android:numStars="0"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:stepSize="0.1" />
 
         <TextView
             android:id="@+id/tvAddReview"
             style="@style/TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tvNoOfRating"
+            android:layout_below="@+id/separator_rating_avg"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="20dp"
             android:paddingRight="10dp"
             android:text="Add a Review"
             android:textColor="@color/actionbar"
@@ -120,7 +162,7 @@
             android:id="@+id/separator_rating"
             android:layout_width="fill_parent"
             android:layout_height="1px"
-            android:layout_below="@+id/tvNoOfRating"
+            android:layout_below="@+id/rbRatingMe"
             android:background="@android:color/darker_gray" />
 
         <TableLayout
