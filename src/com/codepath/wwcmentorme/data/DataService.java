@@ -150,12 +150,11 @@ public class DataService {
 		});
 	}
 	
-	public static void putRequest(final long mentorId, final Async.Block<Boolean> completion) {
+	public static void putRequest(final long menteeId, final Async.Block<Boolean> completion) {
 		Request request = new Request();
-		request.put(Request.MENTEE_ID_KEY, User.meId());
-		request.put(Request.MENTOR_ID_KEY, mentorId);
+		request.put(Request.MENTEE_ID_KEY, menteeId);
+		request.put(Request.MENTOR_ID_KEY, User.meId());
 		request.saveInBackground(new SaveCallback() {
-			
 			@Override
 			public void done(ParseException e) {
 				if (completion != null) {

@@ -368,6 +368,7 @@ public class ViewProfileActivity extends AppActivity {
 	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 	    if (requestCode == 1 && mIsResponse) {
 	        sendPushNotification();
+	        markConnected();
 	    }
 	}
 	
@@ -459,8 +460,6 @@ public class ViewProfileActivity extends AppActivity {
 		updateMenuTitles();
 		return true;
 	}
-
-	
 	
 	private void updateMenuTitles() {
 		if (menu == null || user == null) return;
