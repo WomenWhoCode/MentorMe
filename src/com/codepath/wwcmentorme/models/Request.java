@@ -17,19 +17,19 @@ public class Request extends ParseObject {
 		super();
 	}
 	
-	public int getMenteeId() {
-		return getInt(MENTEE_ID_KEY);
+	public long getMenteeId() {
+		return getLong(MENTEE_ID_KEY);
 	}
 	
-	public void setMenteeId(int menteeId) {
+	public void setMenteeId(long menteeId) {
 		put(MENTEE_ID_KEY, menteeId);
 	}
 	
-	public int getMentorId() {
-		return getInt(MENTOR_ID_KEY);
+	public long getMentorId() {
+		return getLong(MENTOR_ID_KEY);
 	}
 	
-	public void setMentorId(int mentorId) {
+	public void setMentorId(long mentorId) {
 		put(MENTOR_ID_KEY, mentorId);
 	}
 	

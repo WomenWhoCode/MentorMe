@@ -81,6 +81,8 @@ public class AppActivity extends Activity {
 								} else if (diff > 0) {
 									setActionBarVisible(true);
 								}
+							} else {
+								mSettingActionBarVisible = false;
 							}
 							if (setPreviousY) {
 								mPreviousY = event.getY();
@@ -92,10 +94,13 @@ public class AppActivity extends Activity {
 				}
 			}
 		}, stop);
-
 	}
 	
 	public void setActionBarVisible(final boolean visible) {
+		setActionBarVisible(visible, true);
+	}
+	
+	public void setActionBarVisible(final boolean visible, final boolean animated) {
 		mActionBarVisible = visible;
 		if (mSettingActionBarVisible) return;
 		mSettingActionBarVisible = true;
@@ -105,17 +110,22 @@ public class AppActivity extends Activity {
 		} else if (!visible) {
 			getActionBar().hide();
 		}
-		findViewById(R.id.activity_bar).animate().y(yOffset - UIUtils.p(6));
-		findViewById(R.id.activity_frame).animate().y(yOffset);
+		if (animated) {
+			findViewById(R.id.activity_bar).animate().y(yOffset - UIUtils.p(6));
+			findViewById(R.id.activity_frame).animate().y(yOffset);
+		} else {
+			findViewById(R.id.activity_bar).setY(yOffset - UIUtils.p(6));
+			findViewById(R.id.activity_frame).setY(yOffset);
+		}
 		Async.dispatchMain(new Runnable() {
 			@Override
 			public void run() {
 				mSettingActionBarVisible = false;
 				if (mActionBarVisible != visible) {
-					setActionBarVisible(mActionBarVisible);
+					setActionBarVisible(mActionBarVisible, animated);
 				}
 			}
-		}, 300);
+		}, animated ? 1000 : 0);
 	}
 	
 	private float getActionBarHeight() {
@@ -131,7 +141,7 @@ public class AppActivity extends Activity {
 		super.setContentView(R.layout.progress);
 		mProgressBar = (ProgressBar) findViewById(R.id.activity_bar);
 		mProgressBar.setVisibility(View.INVISIBLE);
-		setActionBarVisible(true);
+		setActionBarVisible(true, false);
 		return (ViewGroup) findViewById(R.id.activity_frame);
 	}
 

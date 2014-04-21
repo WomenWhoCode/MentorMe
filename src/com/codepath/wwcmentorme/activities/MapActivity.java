@@ -50,7 +50,7 @@ public class MapActivity extends AppActivity {
 				if (markers != null && markers.size() > 0) {
 					LatLngBounds.Builder builder = new LatLngBounds.Builder();
 					for (final String objectId : markers) {
-						final User user = User.getUser(objectId);
+						final User user = User.getUser(Long.parseLong(objectId));
 						final ParseGeoPoint pt = user.getLocation();
 						final LatLng latlng = new LatLng(pt.getLatitude(), pt.getLongitude());
 						map.addMarker(new MarkerOptions()

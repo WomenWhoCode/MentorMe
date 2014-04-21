@@ -57,8 +57,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvSkill3 = (TextView) view.findViewById(R.id.tvSkill3);
 			view.setTag(holder);
 		}
-		final ViewHolder.UserItem holder = (ViewHolder.UserItem) view
-				.getTag();
+		final ViewHolder.UserItem holder = (ViewHolder.UserItem) view.getTag();
 		final User user = (User) getItem(position);
 		try {
 			populate(holder, user);
@@ -89,19 +88,14 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvDistance.setText(Utils.formatDouble(distance) + "mi"); 
 		}
 		
-		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {
-			
-			@Override
-			public void done(int count, ParseException arg1) {
-
-				holder.tvMenteeCount.setText(Utils.formatNumber(Integer
-						.toString(count))
-						+ " "
-						+ getContext().getResources().getQuantityString(
-								R.plurals.mentee, count));
-
-			}
-		});
+		final int numMentees = user.getMentees().size();
+		
+		holder.tvMenteeCount.setText(Utils.formatNumber(Integer
+				.toString(numMentees)) + " " + getContext().getResources().getQuantityString(R.plurals.mentee, numMentees));
+		
+		holder.tvSkill1.setText(null);
+		holder.tvSkill2.setText(null);
+		holder.tvSkill3.setText(null);
 		
 		if(user.getMentorSkills() != null && user.getMentorSkills().length() > 0) {
 			for(int i = 0; i <= user.getMentorSkills().length() - 1; i++) {

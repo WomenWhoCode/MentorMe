@@ -18,6 +18,7 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        User.setMe(827064128L);
         MentorMeApp.context = this;
         initializeParse();
        
@@ -35,9 +36,4 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     	ParseObject.registerSubclass(Rating.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
     }
-    
-    public static User getCurrentUser() {
-    	return User.getUserByFacebookId(827064128);
-    }
-    
 }

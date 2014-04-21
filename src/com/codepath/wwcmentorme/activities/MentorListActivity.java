@@ -131,7 +131,7 @@ public class MentorListActivity extends AppActivity implements
 		if (listView.findViewById(DrawerListAdapter.HEADER_ID) == null) {
 			listView.addHeaderView(adapter.getHeaderView());
 		}
-		if (MentorMeApp.getCurrentUser() != null) {
+		if (User.me() != null) {
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
@@ -152,7 +152,7 @@ public class MentorListActivity extends AppActivity implements
 		switch (position) {
 			case 0:
 				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
-				intent.putExtra(ViewProfileActivity.USER_ID_KEY, MentorMeApp.getCurrentUser().getFacebookId());
+				intent.putExtra(ViewProfileActivity.USER_ID_KEY, User.meId());
 				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
 				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
 				startActivity(intent);				
@@ -193,8 +193,14 @@ public class MentorListActivity extends AppActivity implements
 			@Override
 			public void done(final List<User> users, ParseException e) {
 				if (e == null) {
-					mentorListAdapter.addAll(users);
-					getProgressBar().setVisibility(View.INVISIBLE);
+					User.saveAll(users);
+					DataService.getMentees(User.getUserFacebookIds(users), new Runnable() {
+						@Override
+						public void run() {
+							mentorListAdapter.addAll(User.sortedByMenteeCount(users));
+							getProgressBar().setVisibility(View.INVISIBLE);
+						}
+					});
 				} else {
 					e.printStackTrace();
 				}
@@ -304,7 +310,7 @@ public class MentorListActivity extends AppActivity implements
 			final ArrayList<String> markers = new ArrayList<String>();
 			for (int i = 0, count = mentorListAdapter.getCount(); i < count; ++i) {
 				final User user = mentorListAdapter.getItem(i);
-				markers.add(user.getObjectId());
+				markers.add(String.valueOf(user.getFacebookId()));
 			}
 			flipCard();
 			Async.dispatchMain(new Runnable() {

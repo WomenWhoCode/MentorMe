@@ -1,18 +1,12 @@
 package com.codepath.wwcmentorme.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
-import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
-import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -39,7 +33,7 @@ public class UserListActivity extends AppActivity implements
 	private Location mLocation;
 	private String provider;
 	private UserType usertype;
-	private int userId;
+	private long userId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +46,7 @@ public class UserListActivity extends AppActivity implements
 		}
 
 		if (getIntent().hasExtra("userId")) {
-			userId = getIntent().getIntExtra("userId", 0);
+			userId = getIntent().getLongExtra("userId", 0);
 		}
 		
 		setTitle();		
@@ -73,7 +67,7 @@ public class UserListActivity extends AppActivity implements
 			public void done(User user, ParseException e) {
 				if (e == null) {
 					StringBuilder title = new StringBuilder();
-					if (userId == MentorMeApp.getCurrentUser().getFacebookId()) {
+					if (userId == User.meId()) {
 						title.append("Your");
 					} else {
 						title.append(user.getFirstName() + "'s");
@@ -128,88 +122,23 @@ public class UserListActivity extends AppActivity implements
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);
 		if (usertype.equals(UserType.MENTOR)) {
-			loadIncomingRequests(userId);
+			loadRequests(userId, true);
 		} else {
-			loadOutgoingRequests(userId);
+			loadRequests(userId, false);
 		}
 		setupListViewClickListener();
 		didChangeContentView();
 	}
 
-	private void loadIncomingRequests(int userId) {
+	private void loadRequests(final long userId, final boolean incoming) {
 		getProgressBar().setVisibility(View.VISIBLE);
-
-		DataService.getIncomingRequests(userId, new FindCallback<Request>() {
-
+		DataService.getConnections(userId, new Runnable() {
 			@Override
-			public void done(List<Request> requests, ParseException e) {
-				if (e == null) {
-					if (requests != null && requests.size() > 0) {
-						ArrayList<Integer> userIds = new ArrayList<Integer>();
-						for (Request request : requests) {
-							userIds.add(request.getMenteeId());
-						}
-						DataService.getUsers(userIds, new FindCallback<User>() {
-							
-							@Override
-							public void done(List<User> users, ParseException e) {
-								if (e == null) {
-									if(users != null) {
-										mentorListAdapter.addAll(users);
-									}
-								}else {
-									e.printStackTrace();
-								}								
-							}
-						});
-
-					}
-
-				} else {
-					e.printStackTrace();
-				}
-
+			public void run() {
+				mentorListAdapter.addAll(User.getUsers(User.getUser(userId).getConnections(incoming)));
+				getProgressBar().setVisibility(View.INVISIBLE);
 			}
-		});
-		getProgressBar().setVisibility(View.INVISIBLE);
-	}
-
-	private void loadOutgoingRequests(int userId) {
-		getProgressBar().setVisibility(View.VISIBLE);
-
-		DataService.getOutgoingRequests(userId, new FindCallback<Request>() {
-
-			@Override
-			public void done(List<Request> requests, ParseException e) {
-				if (e == null) {
-					if (requests != null && requests.size() > 0) {
-						ArrayList<Integer> userIds = new ArrayList<Integer>();
-						for (Request request : requests) {
-							userIds.add(request.getMentorId());
-						}
-						DataService.getUsers(userIds, new FindCallback<User>() {
-							
-							@Override
-							public void done(List<User> users, ParseException e) {
-								if (e == null) {
-									if(users != null) {
-										mentorListAdapter.addAll(users);
-									}
-								}else {
-									e.printStackTrace();
-								}								
-							}
-						});
-
-					}
-
-				} else {
-					e.printStackTrace();
-				}
-
-			}
-		});
-		getProgressBar().setVisibility(View.INVISIBLE);
+		}, incoming);
 	}
 
 	private void setupListViewClickListener() {

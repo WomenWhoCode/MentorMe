@@ -1,5 +1,6 @@
 package com.codepath.wwcmentorme.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -21,12 +22,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
+import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
 import com.codepath.wwcmentorme.models.Rating;
-import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +37,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -71,7 +70,6 @@ public class ViewProfileActivity extends AppActivity {
 	private LinearLayout llAvailability;
 	private ImageView ivMentee;
 	private MapFragment fragment;
-	private Boolean isConnected = false;
 	private Menu menu;
 
 	@Override
@@ -88,25 +86,11 @@ public class ViewProfileActivity extends AppActivity {
 		}
 		
 		if (getIntent().hasExtra(USER_ID_KEY)) {
-			final int userId = getIntent().getIntExtra(USER_ID_KEY, 0);
-			DataService.getUser(userId, new GetCallback<User>() {
-
-				@Override
-				public void done(User theUser, ParseException e) {
-					if (e == null) {
-						if (theUser != null) {
-
-							user = theUser;
-							updateMenuTitles();;
-							setupViews();
-							populateViews();
-						}
-					} else {
-						e.printStackTrace();
-					}
-
-				}
-			});
+			final long userId = getIntent().getLongExtra(USER_ID_KEY, 0);
+			user = User.getUser(userId);
+			setupViews();
+			populateViews();
+			updateMenuTitles();
 		}
 	}
 
@@ -162,8 +146,6 @@ public class ViewProfileActivity extends AppActivity {
 		populateMenteeSkills();
 		populateAvailability();
 		populateMap();
-
-		
 		setOnClickMenteeCount();
 	}
 	
@@ -203,18 +185,12 @@ public class ViewProfileActivity extends AppActivity {
 	}
 
 	private void populateMenteeCount() {
-		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {
-			@Override
-			public void done(int count, ParseException arg1) {
-
-				tvMenteeCount.setText(Utils.formatNumber(Integer
-						.toString(count))
-						+ " "
-						+ getResources().getQuantityString(R.plurals.mentee,
-								count));
-
-			}
-		});
+		final int count = user.getMentees().size();
+		tvMenteeCount.setText(Utils.formatNumber(Integer
+				.toString(count))
+				+ " "
+				+ getResources().getQuantityString(R.plurals.mentee,
+						count));
 	}
 
 	private void populateAvailability() {
@@ -279,14 +255,11 @@ public class ViewProfileActivity extends AppActivity {
 	}
 
 	private void populateAddReview() {
-		DataService.getRatingByUser(MentorMeApp.getCurrentUser().getFacebookId(), user.getFacebookId(), new GetCallback<Rating>() {
-			
+		DataService.getRatingByUser(User.meId(), user.getFacebookId(), new GetCallback<Rating>() {
 			@Override
 			public void done(Rating rating, ParseException e) {
 				if(e == null) {
 					if(rating != null) {
-						float numRating = 0;
-						numRating += rating.getRating();
 						tvAddReview.setText("Edit review");
 					} 
 				} else {
@@ -311,7 +284,6 @@ public class ViewProfileActivity extends AppActivity {
 								numRating += rating.getRating();
 							}
 						}
-						
 						numRating = numRating/count;
 						tvNoOfRating.setText(Integer.toString(count));
 						rbRating.setRating(numRating);
@@ -332,6 +304,7 @@ public class ViewProfileActivity extends AppActivity {
 		getMenuInflater().inflate(R.menu.view_profile, menu);
 		super.onCreateOptionsMenu(menu);
 		this.menu = menu;
+		updateMenuTitles();
 		return true;
 	}
 
@@ -345,28 +318,24 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void updateMenuTitles() {
+		if (menu == null || user == null) return;
 		final MenuItem item = menu.findItem(R.id.miProfileAction);
-		DataService.getUserMentor(MentorMeApp.getCurrentUser().getFacebookId(),
-				user.getFacebookId(), new GetCallback<Request>() {
-
-					@Override
-					public void done(Request request, ParseException e) {
-						if (user.getFacebookId() == MentorMeApp
-								.getCurrentUser().getFacebookId()) {
-							item.setTitle("Edit Profile");
-						} else {
-							if (e == null) {
-								if (request != null) {
-									item.setTitle("Connected");
-								}
-							} else {
-								item.setTitle("Connect");
-								e.printStackTrace();
-							}
-						}
-
+		final long meId = User.meId();
+		final long currentUserId = user.getFacebookId();
+		if (currentUserId == meId) {
+			item.setTitle("Edit Profile");
+		} else {
+			DataService.getMentors(meId, new Runnable() {
+				@Override
+				public void run() {
+					final ArrayList<Long> mentors = User.me().getMentors();
+					if (mentors.contains(currentUserId)) {
+						item.setTitle("Connected");
+					} else {
+						item.setTitle("Connect");
 					}
-				});
-
+				}
+			});
+		}
 	}
 }

@@ -15,10 +15,6 @@ public class Rating extends ParseObject{
 		super();
 	}
 
-	public String getObjectId() {
-		return getObjectId();
-	}
-	
 	public int getFacebookId() {
         return getInt(FACEBOOK_ID_KEY);
     }

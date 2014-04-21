@@ -3,6 +3,8 @@ package com.codepath.wwcmentorme.helpers;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -13,6 +15,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Utils {
@@ -109,5 +112,28 @@ public class Utils {
 
 		return String.format(Locale.US, "%.1f %c",
 				longNum / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
+	}
+	
+	// Returns the insertion index for a sorted array "container" by the same comparator.
+	public static <V> int insertDeduped(final List<V> container, V object, Comparator<V> comparator) {
+		// First we check if the object already exists and we remove it in that case.
+		for (int i = 0, count = container.size(); i < count; ++i) {
+			final V currentObj = container.get(i);
+			int compare = comparator.compare(object, currentObj);
+			if (compare == 0) {
+				container.remove(i);
+				break;
+			}
+		}
+		// We now insert in the right location.
+		int insertionIndex = 0;
+		for (int i = 0, count = container.size(); i < count; ++i) {
+			final V currentObj = container.get(i);
+			int compare = comparator.compare(object, currentObj);
+			if (compare < 0) break;
+			++insertionIndex;
+		}
+		container.add(insertionIndex, object);
+		return insertionIndex;
 	}
 }
