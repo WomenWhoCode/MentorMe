@@ -468,7 +468,7 @@ public class ViewProfileActivity extends AppActivity {
 		final MenuItem item = menu.findItem(R.id.miProfileAction);
 		final long meId = User.meId();
 		final long currentUserId = user.getFacebookId();
-		if (currentUserId == meId) {
+		if (currentUserId == meId && !mIsResponse) {
 			item.setTitle("Edit Profile");
 		} else {
 			DataService.getMentors(meId, new Runnable() {
