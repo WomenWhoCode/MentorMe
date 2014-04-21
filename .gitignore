@@ -55,3 +55,5 @@ build/*
 #
 # # PDT-specific
 # .buildpath
+
+*.properties

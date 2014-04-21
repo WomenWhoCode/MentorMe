@@ -37,24 +37,24 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
 public class MentorListActivity extends AppActivity implements
-		android.location.LocationListener, OnBackStackChangedListener {
+android.location.LocationListener, OnBackStackChangedListener {
 	public static final class ListFragment extends Fragment {
 		private View mCachedView;
 		private ViewGroup mCachedViewGroup;
 		public ListFragment() {
 			setRetainInstance(true);
-        }
+		}
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-        	if (mCachedViewGroup == container) return mCachedView;
-        	mCachedViewGroup = container;
-            mCachedView = inflater.inflate(R.layout.user_list_fragment, container, false);
-            return mCachedView;
-        }
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			if (mCachedViewGroup == container) return mCachedView;
+			mCachedViewGroup = container;
+			mCachedView = inflater.inflate(R.layout.user_list_fragment, container, false);
+			return mCachedView;
+		}
 	}
-	
+
 	private ListView lvMentors;
 	private MentorListAdapter mentorListAdapter;
 	private LocationManager locationManager;
@@ -63,7 +63,7 @@ public class MentorListActivity extends AppActivity implements
 	private Location mLocation;
 	private ParseGeoPoint mGeoPoint;
 	private boolean mShowingBack;
-	
+
 	private static final ListFragment sListFragment = new ListFragment();
 	private static final MapFragment sMapFragment = new MapFragment();
 
@@ -84,7 +84,7 @@ public class MentorListActivity extends AppActivity implements
 		} else {
 			mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
 		}
-		
+
 		Async.dispatchMain(new Runnable() {
 			@Override
 			public void run() {
@@ -94,9 +94,9 @@ public class MentorListActivity extends AppActivity implements
 		enableDrawer((DrawerLayout) findViewById(R.id.drawer_layout));
 		getFragmentManager().addOnBackStackChangedListener(this);
 	}
-	
-	
-	
+
+
+
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
 		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint);		
@@ -107,7 +107,7 @@ public class MentorListActivity extends AppActivity implements
 		setupListViewClickListener();
 		didChangeContentView();
 	}
-	
+
 	private void setupListViewClickListener() {
 		lvMentors.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -122,15 +122,15 @@ public class MentorListActivity extends AppActivity implements
 			}
 		});
 	}
-	
+
 	private void setupDrawer() {
 		final ListView listView = (ListView)findViewById(R.id.left_drawer);
 		final DrawerListAdapter adapter = new DrawerListAdapter(this);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new SlideMenuClickListener());
 		if (listView.findViewById(DrawerListAdapter.HEADER_ID) == null) {
 			listView.addHeaderView(adapter.getHeaderView());
 		}
+		listView.setAdapter(adapter);
+		listView.setOnItemClickListener(new SlideMenuClickListener());
 		if (User.me() != null) {
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
@@ -138,9 +138,9 @@ public class MentorListActivity extends AppActivity implements
 			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));
 		}
 	}
-	
+
 	private class SlideMenuClickListener implements
-			ListView.OnItemClickListener {
+	ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -150,18 +150,18 @@ public class MentorListActivity extends AppActivity implements
 
 	private void displayView(int position) {
 		switch (position) {
-			case 0:
-				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
-				intent.putExtra(ViewProfileActivity.USER_ID_KEY, User.meId());
-				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
-				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
-				startActivity(intent);				
-	            break;
-	        default:
-	            break;
+		case 0:
+			final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
+			intent.putExtra(ViewProfileActivity.USER_ID_KEY, User.meId());
+			intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
+			intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
+			startActivity(intent);
+			break;
+		default:
+			break;
 		}
 	}
-	
+
 	private void setCurrentLocation() {
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Criteria criteria = new Criteria();
@@ -208,7 +208,7 @@ public class MentorListActivity extends AppActivity implements
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (mShowingBack) {
@@ -239,7 +239,7 @@ public class MentorListActivity extends AppActivity implements
 	@Override
 	public void onProviderDisabled(String provider) {
 	}
-	
+
 	public void onRefineResultsPress(MenuItem mi) {
 		UIUtils.showActionSheet(this, getString(R.string.miRefineResults), getResources().getStringArray(R.array.skill_array), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int position) {
@@ -254,7 +254,7 @@ public class MentorListActivity extends AppActivity implements
 	@Override
 	public void onLocationChanged(Location location) {		
 	}
-	
+
 	private void flipCard() {
 		if (mShowingBack) {
 			getFragmentManager().popBackStack();
@@ -301,11 +301,16 @@ public class MentorListActivity extends AppActivity implements
 			}
 		});
 	}
-	
+
 	public void onShowMap(final MenuItem mi) {
 		if (mShowingBack) {
-			getProgressBar().setVisibility(View.INVISIBLE);
 			flipCard();
+			Async.dispatchMain(new Runnable() {
+				@Override
+				public void run() {
+					getProgressBar().setVisibility(View.INVISIBLE);
+				}
+			});
 		} else {
 			final ArrayList<String> markers = new ArrayList<String>();
 			for (int i = 0, count = mentorListAdapter.getCount(); i < count; ++i) {
@@ -322,11 +327,11 @@ public class MentorListActivity extends AppActivity implements
 		}
 	}
 
-	 @Override
-	    public void onBackStackChanged() {
-	        mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
-	        // When the back stack changes, invalidate the options menu (action bar).
-	        invalidateOptionsMenu();
-	    }
+	@Override
+	public void onBackStackChanged() {
+		mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
+		// When the back stack changes, invalidate the options menu (action bar).
+		invalidateOptionsMenu();
+	}
 
 }
