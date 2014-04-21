@@ -33,6 +33,7 @@ import com.codepath.wwcmentorme.models.User;
 import com.google.android.gms.maps.MapFragment;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.parse.FindCallback;
+import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
@@ -72,6 +73,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mentor_list);
 		setCurrentLocation();
+    	ParseAnalytics.trackAppOpened(getIntent());
 
 		if (savedInstanceState == null) {
 			// If there is no saved instance state, add a fragment representing the

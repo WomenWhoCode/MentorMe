@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -27,7 +33,9 @@ import android.widget.TextView;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Async.Block;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.MentorMeReceiver;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.models.Rating;
@@ -45,6 +53,10 @@ import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
+import com.parse.PushService;
 
 public class ViewProfileActivity extends AppActivity {
 	public static final String USER_ID_KEY = "userId";
@@ -76,11 +88,23 @@ public class ViewProfileActivity extends AppActivity {
 	private ImageView ivMentee;
 	private MapFragment fragment;
 	private Menu menu;
+	private MenuItem item;
+	
+	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {        	
+        	
+        }
+    };
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_profile);
+		
+		PushService.setDefaultPushCallback(this, ViewProfileActivity.class);
+
 		
 		if(getIntent().hasExtra(LATITUDE_KEY)) {
 			mLat = getIntent().getDoubleExtra(LATITUDE_KEY, 0);
@@ -98,6 +122,20 @@ public class ViewProfileActivity extends AppActivity {
 			updateMenuTitles();
 		}
 	}
+	
+	@Override
+    public void onPause() {
+        super.onPause();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+    }
+    
+	@Override
+    public void onResume() {
+        super.onResume();
+        
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter(MentorMeReceiver.intentAction));
+    }
 
 	private void setupViews() {
 		ivMentorProfile = (ImageView) findViewById(R.id.ivMentorProfile);
@@ -143,8 +181,10 @@ public class ViewProfileActivity extends AppActivity {
 		String formattedLocation = user.getCity()  + ", " + user.getZip();
 		tvLocation.setText(Html.fromHtml(formattedLocation));
 		
-		Double distance = Utils.getDistance(mLat, mLng, user.getLocation().getLatitude(), user.getLocation().getLongitude());
-		tvDistance.setText(Utils.formatDouble(distance) + "mi");	
+		if(mLat != null && mLng != null) {
+			Double distance = Utils.getDistance(mLat, mLng, user.getLocation().getLatitude(), user.getLocation().getLongitude());
+			tvDistance.setText(Utils.formatDouble(distance) + "mi");	
+		}
 		tvAboutMe.setText(user.getAboutMe());
 		tvYearsExperience.setText(Integer.toString(user.getYearsExperience()));
 
@@ -310,6 +350,89 @@ public class ViewProfileActivity extends AppActivity {
 		});
 	}
 	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.miProfileAction) {
+			if(item.getTitle().equals("Connect")) {
+				this.item = item;
+				final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				final View view = getLayoutInflater().inflate(R.layout.email_dialog, null);
+				
+				builder.setTitle("Send Email").setView(view).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								
+							}
+						}).setPositiveButton("Send", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								final EditText etSubject = (EditText) view.findViewById(R.id.etSubject);
+								final EditText etMessage = (EditText) view.findViewById(R.id.etMessage);
+								Intent email = new Intent(Intent.ACTION_SEND);
+								email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
+								email.putExtra(Intent.EXTRA_SUBJECT, etSubject.getText().toString());
+								email.putExtra(Intent.EXTRA_TEXT, etMessage.getText().toString());
+								email.setType("message/rfc822");
+								email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+								startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
+								
+							}
+						}).show();
+			}
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+	    if(requestCode == 1) {
+	    	sendPushNotification();
+//	       
+//	        	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
+//					
+//					@Override
+//					public void call(Boolean result) {
+//						if (result.booleanValue()) {					    
+//							item.setTitle("Connected");
+//							user.getMentees().add(User.meId());
+//							User.me().getMentors().add(user.getFacebookId());
+//							
+//							sendPushNotification();							
+//						}						
+//					}
+//				});
+	        
+	    }
+	}
+	
+	private void sendPushNotification() {
+		JSONObject obj;
+		try {
+			obj = new JSONObject();
+			obj.put("alert", User.me().getDisplayName() + " would like you to be her mentor.");
+			obj.put("action", MentorMeReceiver.intentAction);
+			obj.put(ViewProfileActivity.USER_ID_KEY, User.meId());
+
+			ParsePush push = new ParsePush();
+			ParseQuery query = ParseInstallation.getQuery();
+
+			// TODO: Replace with user.getFacebookId()
+			query.whereEqualTo("userId", User.meId()); 
+			push.setQuery(query);
+			push.setData(obj);
+			push.sendInBackground(); 
+			
+		} catch (JSONException e) {
+
+			e.printStackTrace();
+		}
+	}
+	
 	private void populateAverageRating() {
 		DataService.getAverageRating(user.getFacebookId(), new FindCallback<Rating>() {			
 			@Override
@@ -348,14 +471,7 @@ public class ViewProfileActivity extends AppActivity {
 		return true;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.miProfileAction) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+	
 	
 	private void updateMenuTitles() {
 		if (menu == null || user == null) return;
@@ -378,4 +494,5 @@ public class ViewProfileActivity extends AppActivity {
 			});
 		}
 	}
+
 }

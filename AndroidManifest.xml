@@ -18,6 +18,19 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+	
+	<!--
+	  IMPORTANT: Change "com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE" in the lines below
+	  to match your app's package name + ".permission.C2D_MESSAGE".
+	-->
+	<permission android:protectionLevel="signature"
+	    android:name="com.codepath.wwcmentorme.permission.C2D_MESSAGE" />
+	<uses-permission android:name="com.codepath.wwcmentorme.permission.C2D_MESSAGE" />
 
     <application
         android:name="com.codepath.wwcmentorme.app.MentorMeApp"
@@ -67,6 +80,34 @@
             android:name="com.codepath.wwcmentorme.activities.UserListActivity"
             android:label="@string/title_activity_user_list" >
         </activity>
+        
+        
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+<!--       IMPORTANT: Change "com.parse.tutorials.pushnotifications" to match your app's package name. -->
+                <category android:name="com.codepath.wwcmentorme" />
+            </intent-filter>
+        </receiver>
+		
+        <receiver android:name="com.codepath.wwcmentorme.helpers.MentorMeReceiver" >
+            <intent-filter>
+                <action android:name="SEND_PUSH" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
