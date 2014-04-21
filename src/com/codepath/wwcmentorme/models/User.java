@@ -191,11 +191,19 @@ public class User extends ParseObject {
 	}
 	
 	public String getProfileImageUrl() {
-		return new StringBuilder("https://graph.facebook.com/").append(getFacebookId()).append("/picture").toString();
+		return getProfileImageUrl(getFacebookId());
+	}
+	
+	public static String getProfileImageUrl(final long facebookId) {
+		return new StringBuilder("https://graph.facebook.com/").append(facebookId).append("/picture").toString();
 	}
 	
 	public String getProfileImageUrl(final int size) {
-		return new StringBuilder(getProfileImageUrl()).append("?width=").append(size).append("&height=").append(size).toString();
+		return getProfileImageUrl(getFacebookId(), size);
+	}
+	
+	public static String getProfileImageUrl(final long facebookId, final int size) {
+		return new StringBuilder(getProfileImageUrl(facebookId)).append("?width=").append(size).append("&height=").append(size).toString();
 	}
 	
 	public ParseGeoPoint getLocation() {

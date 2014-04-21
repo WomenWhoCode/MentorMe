@@ -3,6 +3,7 @@ package com.codepath.wwcmentorme.activities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,6 +63,7 @@ public class ViewProfileActivity extends AppActivity {
 	public static final String USER_ID_KEY = "userId";
 	public static final String LATITUDE_KEY = "latitude";
 	public static final String LONGITUDE_KEY = "longitude";
+	public static final String RESPOND_KEY = "inResponse";
 	private User user;
 	private ImageLoader mImageLoader;
 	private ImageView ivMentorProfile;
@@ -89,23 +91,13 @@ public class ViewProfileActivity extends AppActivity {
 	private MapFragment fragment;
 	private Menu menu;
 	private MenuItem item;
-	
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {        	
-        	
-        }
-    };
+	private boolean mIsResponse;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_profile);
-		
-		PushService.setDefaultPushCallback(this, ViewProfileActivity.class);
+		setContentView(R.layout.activity_view_profile);		
 
-		
 		if(getIntent().hasExtra(LATITUDE_KEY)) {
 			mLat = getIntent().getDoubleExtra(LATITUDE_KEY, 0);
 		}
@@ -117,26 +109,13 @@ public class ViewProfileActivity extends AppActivity {
 		if (getIntent().hasExtra(USER_ID_KEY)) {
 			final long userId = getIntent().getLongExtra(USER_ID_KEY, 0);
 			user = User.getUser(userId);
+			mIsResponse = MentorMeReceiver.sResponsesPending.contains(userId);
 			setupViews();
 			populateViews();
 			updateMenuTitles();
 		}
 	}
 	
-	@Override
-    public void onPause() {
-        super.onPause();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
-    }
-    
-	@Override
-    public void onResume() {
-        super.onResume();
-        
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, new IntentFilter(MentorMeReceiver.intentAction));
-    }
-
 	private void setupViews() {
 		ivMentorProfile = (ImageView) findViewById(R.id.ivMentorProfile);
 		tvFirstName = (TextView) findViewById(R.id.tvFirstName);
@@ -355,58 +334,41 @@ public class ViewProfileActivity extends AppActivity {
 		int id = item.getItemId();
 		if (id == R.id.miProfileAction) {
 			if(item.getTitle().equals("Connect")) {
-				this.item = item;
-				final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				final View view = getLayoutInflater().inflate(R.layout.email_dialog, null);
-				
-				builder.setTitle("Send Email").setView(view).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								
-							}
-						}).setPositiveButton("Send", new DialogInterface.OnClickListener() {
-							
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								final EditText etSubject = (EditText) view.findViewById(R.id.etSubject);
-								final EditText etMessage = (EditText) view.findViewById(R.id.etMessage);
-								Intent email = new Intent(Intent.ACTION_SEND);
-								email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
-								email.putExtra(Intent.EXTRA_SUBJECT, etSubject.getText().toString());
-								email.putExtra(Intent.EXTRA_TEXT, etMessage.getText().toString());
-								email.setType("message/rfc822");
-								email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-								startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
-								
-							}
-						}).show();
+				// markConnected();
+				sendPushNotification();
+				item.setTitle("Request Sent");
+			} else if (item.getTitle().equals("Email")) {
+				MentorMeReceiver.sResponsesPending.remove(user.getFacebookId());
+				Intent email = new Intent(Intent.ACTION_SEND);
+				email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
+				email.setType("message/rfc822");
+				email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
+				item.setTitle("Connected");
 			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	private void markConnected() {
+    	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
+			@Override
+			public void call(Boolean result) {
+				if (result.booleanValue()) {					    
+					user.getMentees().add(User.meId());
+					User.me().getMentors().add(user.getFacebookId());				
+				}						
+			}
+		});
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-	    if(requestCode == 1) {
-	    	sendPushNotification();
-//	       
-//	        	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
-//					
-//					@Override
-//					public void call(Boolean result) {
-//						if (result.booleanValue()) {					    
-//							item.setTitle("Connected");
-//							user.getMentees().add(User.meId());
-//							User.me().getMentors().add(user.getFacebookId());
-//							
-//							sendPushNotification();							
-//						}						
-//					}
-//				});
-	        
+	    if (requestCode == 1 && mIsResponse) {
+	        sendPushNotification();
 	    }
 	}
 	
@@ -414,8 +376,37 @@ public class ViewProfileActivity extends AppActivity {
 		JSONObject obj;
 		try {
 			obj = new JSONObject();
-			obj.put("alert", User.me().getDisplayName() + " would like you to be her mentor.");
+			obj.put(MentorMeReceiver.alertKey, User.me().getDisplayName());
+			obj.put(MentorMeReceiver.responseKey, mIsResponse);
 			obj.put("action", MentorMeReceiver.intentAction);
+			final StringBuilder builder = new StringBuilder();
+			final JSONArray menteeSkills = User.me().getMenteeSkills();
+			boolean useMentorSkills = true;
+			if (menteeSkills != null && !mIsResponse) {
+				useMentorSkills = false;
+				builder.append("Seeking to learn ");
+				for (int i = 0, count = menteeSkills.length(); i < count; ++i) {
+					final Object skill = menteeSkills.get(i);
+					builder.append(skill.toString());
+					if (i != count - 1) {
+						builder.append(", ");
+					}
+				}
+			}
+			if (useMentorSkills) {
+				builder.append("Expert in ");
+				final JSONArray mentorSkills = User.me().getMentorSkills();
+				if (mentorSkills != null) {
+					for (int i = 0, count = mentorSkills.length(); i < count; ++i) {
+						final Object skill = mentorSkills.get(i);
+						builder.append(skill.toString());
+						if (i != count - 1) {
+							builder.append(", ");
+						}
+					}
+				}
+			}
+			obj.put(MentorMeReceiver.skillsKey, builder.toString());
 			obj.put(ViewProfileActivity.USER_ID_KEY, User.meId());
 
 			ParsePush push = new ParsePush();
@@ -428,7 +419,6 @@ public class ViewProfileActivity extends AppActivity {
 			push.sendInBackground(); 
 			
 		} catch (JSONException e) {
-
 			e.printStackTrace();
 		}
 	}
@@ -488,7 +478,7 @@ public class ViewProfileActivity extends AppActivity {
 					if (mentors.contains(currentUserId)) {
 						item.setTitle("Connected");
 					} else {
-						item.setTitle("Connect");
+						item.setTitle(mIsResponse ? "Email" : "Connect");
 					}
 				}
 			});
