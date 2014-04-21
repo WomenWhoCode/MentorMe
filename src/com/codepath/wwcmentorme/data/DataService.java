@@ -1,6 +1,7 @@
 package com.codepath.wwcmentorme.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import android.content.Context;
@@ -9,7 +10,6 @@ import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -165,4 +165,31 @@ public class DataService {
 		});
 	}
 	
+	private static HashSet<Long> sResponsesPending = new HashSet<Long>();
+	
+	public static boolean isResponsePending(final long userId) {
+		return sResponsesPending.contains(userId);
+	}
+	
+	public static void removeResponsePending(final long userId) {
+		sResponsesPending.remove(userId);
+	}
+	
+	public static void addResponsePending(final long userId) {
+		sResponsesPending.add(userId);
+	}
+	
+	private static HashSet<Long> sRequestsSent = new HashSet<Long>();
+	
+	public static boolean isRequestsSent(final long userId) {
+		return sRequestsSent.contains(userId);
+	}
+	
+	public static void removeRequestsSent(final long userId) {
+		sRequestsSent.remove(userId);
+	}
+	
+	public static void addRequestsSent(final long userId) {
+		sRequestsSent.add(userId);
+	}
 }

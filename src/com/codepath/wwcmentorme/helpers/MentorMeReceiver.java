@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.codepath.wwcmentorme.activities.ViewProfileActivity;
+import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.models.User;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -28,8 +29,6 @@ public class MentorMeReceiver extends BroadcastReceiver {
 	public static final String alertKey = "username";
 	public static final String skillsKey = "skills";
 	public static final String responseKey = "inresponse";
-	
-	public static HashSet<Long> sResponsesPending = new HashSet<Long>();
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
@@ -62,7 +61,7 @@ public class MentorMeReceiver extends BroadcastReceiver {
 									Intent pupInt = new Intent(context, ViewProfileActivity.class);
 									pupInt.putExtra(ViewProfileActivity.USER_ID_KEY, userId);
 									if (!inResponse) {
-										sResponsesPending.add(userId);
+										DataService.addResponsePending(userId);
 									}
 									pupInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 									PendingIntent contentIntent = PendingIntent.getActivity(context, 0, pupInt, 0);

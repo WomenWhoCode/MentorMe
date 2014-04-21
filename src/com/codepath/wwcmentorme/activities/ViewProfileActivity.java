@@ -109,7 +109,7 @@ public class ViewProfileActivity extends AppActivity {
 		if (getIntent().hasExtra(USER_ID_KEY)) {
 			final long userId = getIntent().getLongExtra(USER_ID_KEY, 0);
 			user = User.getUser(userId);
-			mIsResponse = MentorMeReceiver.sResponsesPending.contains(userId);
+			mIsResponse = DataService.isResponsePending(userId);
 			setupViews();
 			populateViews();
 			updateMenuTitles();
@@ -334,11 +334,11 @@ public class ViewProfileActivity extends AppActivity {
 		int id = item.getItemId();
 		if (id == R.id.miProfileAction) {
 			if(item.getTitle().equals("Connect")) {
-				// markConnected();
 				sendPushNotification();
 				item.setTitle("Request Sent");
+				DataService.addRequestsSent(user.getFacebookId());
 			} else if (item.getTitle().equals("Email")) {
-				MentorMeReceiver.sResponsesPending.remove(user.getFacebookId());
+				DataService.removeResponsePending(user.getFacebookId());
 				Intent email = new Intent(Intent.ACTION_SEND);
 				email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
 				email.setType("message/rfc822");
@@ -477,7 +477,7 @@ public class ViewProfileActivity extends AppActivity {
 					if (mentors.contains(currentUserId)) {
 						item.setTitle("Email");
 					} else {
-						item.setTitle(mIsResponse ? "Email" : "Connect");
+						item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
 					}
 				}
 			});
