@@ -118,7 +118,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 				intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getFacebookId());
 				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
 				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
-				startActivity(intent);				
+				startActivity(intent);
 			}
 		});
 	}

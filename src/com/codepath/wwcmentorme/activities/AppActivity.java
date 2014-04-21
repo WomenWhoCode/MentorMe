@@ -3,6 +3,7 @@ package com.codepath.wwcmentorme.activities;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -206,6 +207,7 @@ public class AppActivity extends Activity {
 					 return mToggle.onOptionsItemSelected(item);
 				} else {
 					this.finish();
+					overridePendingTransition(R.anim.activity_slide_in_back, R.anim.activity_slide_out_back);
 				}
 				return true;
 			default:
@@ -213,5 +215,11 @@ public class AppActivity extends Activity {
 			}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+    public void startActivity(Intent intent) {
+		super.startActivity(intent);
+		overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
 	}
 }
