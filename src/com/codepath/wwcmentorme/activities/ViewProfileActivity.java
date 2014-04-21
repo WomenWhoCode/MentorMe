@@ -344,7 +344,6 @@ public class ViewProfileActivity extends AppActivity {
 				email.setType("message/rfc822");
 				email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
-				item.setTitle("Connected");
 			}
 			return true;
 		}
@@ -476,7 +475,7 @@ public class ViewProfileActivity extends AppActivity {
 				public void run() {
 					final ArrayList<Long> mentors = User.me().getMentors();
 					if (mentors.contains(currentUserId)) {
-						item.setTitle("Connected");
+						item.setTitle("Email");
 					} else {
 						item.setTitle(mIsResponse ? "Email" : "Connect");
 					}
