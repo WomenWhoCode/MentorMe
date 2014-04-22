@@ -47,7 +47,7 @@ public class MentorMeReceiver extends BroadcastReceiver {
 							final boolean inResponse = json.getBoolean(responseKey);
 							final int notificationId = (int)userId;
 							final String username = json.getString(alertKey);
-							final String message = username + (inResponse ? " has accepted your request." : " has requested to connect with you.");
+							final String message = username + (inResponse ? "has accepted your request." : " has requested to connect with you.");
 							final String skills = json.getString(skillsKey);
 							final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 							final NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()

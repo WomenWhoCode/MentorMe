@@ -416,7 +416,7 @@ public class ViewProfileActivity extends AppActivity {
 			query.whereEqualTo("userId", User.meId()); 
 			push.setQuery(query);
 			push.setData(obj);
-			push.sendInBackground(); 
+			push.sendInBackground();
 			
 		} catch (JSONException e) {
 			e.printStackTrace();

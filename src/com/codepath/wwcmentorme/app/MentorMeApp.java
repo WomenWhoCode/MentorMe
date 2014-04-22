@@ -40,7 +40,7 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     	ParseObject.registerSubclass(Rating.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
     	
-    	PushService.setDefaultPushCallback(this, ViewProfileActivity.class);
+    	PushService.setDefaultPushCallback(this, MentorListActivity.class);
     	ParseInstallation installation = ParseInstallation.getCurrentInstallation();
     	installation.put("userId", User.meId());
     	installation.saveInBackground();
