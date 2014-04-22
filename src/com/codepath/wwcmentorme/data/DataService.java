@@ -90,7 +90,7 @@ public class DataService {
 							@Override
 							public void done(List<User> users, ParseException e2) {
 								if (e2 == null) {
-									User.saveAll(users);
+									User.saveAllUsers(users);
 									processUsers.run();
 								} else {
 

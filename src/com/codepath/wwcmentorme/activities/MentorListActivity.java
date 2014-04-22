@@ -195,7 +195,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 			@Override
 			public void done(final List<User> users, ParseException e) {
 				if (e == null) {
-					User.saveAll(users);
+					User.saveAllUsers(users);
 					DataService.getMentees(User.getUserFacebookIds(users), new Runnable() {
 						@Override
 						public void run() {

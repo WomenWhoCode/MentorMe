@@ -10,12 +10,8 @@ import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileSkillsFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
-public class EditProfileFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-	protected static final int[] ICONS = new int[] {
-		R.drawable.edit_profile_step1, //location
-		R.drawable.edit_profile_step2, //experience
-		R.drawable.edit_profile_step3, //skills
-	};
+public class EditProfileFragmentAdapter extends FragmentPagerAdapter {
+	private static final int CNT = 3;
 	
 	public EditProfileFragmentAdapter(FragmentManager fm) {
 		super(fm);
@@ -23,7 +19,7 @@ public class EditProfileFragmentAdapter extends FragmentPagerAdapter implements 
 
 	@Override
 	public Fragment getItem(int position) {
-		switch (position % ICONS.length) {
+		switch (position % CNT) {
 			case 0: return new EditProfileLocationFragment();
 			case 1: return new EditProfileExperiencesFragment();
 			case 2: return new EditProfileSkillsFragment();
@@ -33,11 +29,6 @@ public class EditProfileFragmentAdapter extends FragmentPagerAdapter implements 
 
 	@Override
 	public int getCount() {
-		return ICONS.length;
-	}
-
-	@Override
-	public int getIconResId(int index) {
-		return ICONS[index % ICONS.length];
+		return CNT;
 	}
 }

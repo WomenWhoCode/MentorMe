@@ -18,14 +18,14 @@
         android:text="@string/location_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton1"
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/tvLearnLabel"
         android:layout_marginRight="8dp"
-        android:src="@drawable/ic_stat_location" />
+        android:src="@drawable/ic_map" />
     
     <LinearLayout
         android:id="@+id/llLocation"

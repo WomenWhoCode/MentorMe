@@ -309,7 +309,7 @@ public class User extends ParseObject {
 		Utils.insertDeduped(container, userId, sCompareByMenteeCountDescendingId);
 	}
 	
-	public static void saveAll(final List<User> users) {
+	public static void saveAllUsers(final List<User> users) {
 		for (final User user : users) {
 			sUsers.put(user.getFacebookId(), user);
 		}

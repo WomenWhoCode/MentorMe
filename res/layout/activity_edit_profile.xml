@@ -36,34 +36,50 @@
         android:text="Link accounts:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         tools:ignore="HardcodedText" />
-
-    <LinearLayout
-        android:id="@+id/llLinkAccounts"
+    
+    <TableLayout
+        android:id="@+id/tlAccountButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ivUserProfile"
-        android:layout_below="@+id/tvLinkAccountsLabel"
-        android:layout_marginTop="4dp" 
-        style="?android:attr/buttonBarStyle">
+        android:layout_below="@+id/separator_rating"
+        android:background="#ffffff"
+        android:paddingLeft="10dp"
+        android:stretchColumns="*" >
 
-        <Button
-            android:id="@+id/btnAddSkillsToLearn"
-            style="@style/AccountsBarButton"
-            android:background="@drawable/button_linkedin"
-            android:text="@string/btn_linkedin"/>
+        <TableRow
+            android:id="@+id/tableRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
 
-        <Button
-            android:id="@+id/button2"
-            style="@style/AccountsBarButton"
-            android:background="@drawable/button_github"
-            android:text="@string/btn_github"/>
+            <Button
+                android:id="@+id/btnGithub"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_github"
+                android:text="Github" >
+            </Button>
 
-        <Button
-            android:id="@+id/button3"
-           	style="@style/AccountsBarButton"
-           	android:background="@drawable/button_gplus"
-            android:text="@string/btn_gplus" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/btnLinkedin"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_linkedin"
+                android:text="Linkedin" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnWordpress"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_wordpress"
+                android:text="Wordpress" >
+            </Button>
+        </TableRow>
+    </TableLayout>
 
     <LinearLayout
         android:orientation="vertical"
