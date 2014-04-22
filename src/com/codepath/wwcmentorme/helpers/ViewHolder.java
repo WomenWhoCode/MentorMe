@@ -1,11 +1,13 @@
 package com.codepath.wwcmentorme.helpers;
 
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ViewHolder {
 	
 	public static class UserItem {
-		public RoundedImageView ivMentorProfile;
+		public ImageView ivMentorProfile;
 		public TextView tvFirstName;
 		public TextView tvLastName;
 		public TextView tvAboutMe;
@@ -16,6 +18,10 @@ public class ViewHolder {
 		public TextView tvSkill1;
 		public TextView tvSkill2;
 		public TextView tvSkill3;
+	}
+	
+	public static class DrawerItem {
+		public Button btnItem;
 	}
 	
 }

@@ -2,9 +2,17 @@ package com.codepath.wwcmentorme.adapters;
 
 import org.json.JSONException;
 
+import android.content.Context;
+import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.data.DataService;
-import com.codepath.wwcmentorme.helpers.RoundedImageView;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.models.User;
@@ -14,21 +22,19 @@ import com.parse.CountCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
-import android.content.Context;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
 public class MentorListAdapter extends ArrayAdapter<User> {
-	private ImageLoader mImageLoader;
 	private ParseGeoPoint currentGeoPoint;
+	
+	private static boolean sImageLoaderInitialized = false;
 
 	public MentorListAdapter(Context context, ParseGeoPoint geoPoint) {
 		super(context, 0);
 		currentGeoPoint = geoPoint;
+		if (!sImageLoaderInitialized) {
+			sImageLoaderInitialized = true;
+			final ImageLoader imageLoader = ImageLoader.getInstance();
+			imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+		}
 	}
 	
 	@Override
@@ -39,7 +45,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflator.inflate(R.layout.mentor_list_item, null);
 			final ViewHolder.UserItem holder = new ViewHolder.UserItem();
-			holder.ivMentorProfile = (RoundedImageView) view.findViewById(R.id.ivMentorProfile);
+			holder.ivMentorProfile = (ImageView) view.findViewById(R.id.ivMentorProfile);
 			holder.tvFirstName = (TextView) view.findViewById(R.id.tvFirstName);
 			holder.tvLastName = (TextView) view.findViewById(R.id.tvLastName);
 			holder.tvPosition = (TextView) view.findViewById(R.id.tvPosition);
@@ -51,8 +57,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvSkill3 = (TextView) view.findViewById(R.id.tvSkill3);
 			view.setTag(holder);
 		}
-		final ViewHolder.UserItem holder = (ViewHolder.UserItem) view
-				.getTag();
+		final ViewHolder.UserItem holder = (ViewHolder.UserItem) view.getTag();
 		final User user = (User) getItem(position);
 		try {
 			populate(holder, user);
@@ -63,9 +68,8 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 	}
 	
 	private void populate(final ViewHolder.UserItem holder, User user) throws JSONException {
-		mImageLoader = ImageLoader.getInstance();
-		mImageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-		mImageLoader.displayImage(user.getProfileImageUrl(200), holder.ivMentorProfile);
+		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.displayImage(user.getProfileImageUrl(200), holder.ivMentorProfile);
 		
 		holder.tvFirstName.setText(user.getFirstName());
 		holder.tvLastName.setText(user.getLastName());
@@ -84,15 +88,14 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvDistance.setText(Utils.formatDouble(distance) + "mi"); 
 		}
 		
-		DataService.getMenteeCount(user.getFacebookId(), new CountCallback() {
-			
-			@Override
-			public void done(int count, ParseException arg1) {
-				if(count > 0) {
-					holder.tvMenteeCount.setText(Integer.toString(count) + " mentees");
-				}
-			}
-		});
+		final int numMentees = user.getMentees().size();
+		
+		holder.tvMenteeCount.setText(Utils.formatNumber(Integer
+				.toString(numMentees)) + " " + getContext().getResources().getQuantityString(R.plurals.mentee, numMentees));
+		
+		holder.tvSkill1.setText(null);
+		holder.tvSkill2.setText(null);
+		holder.tvSkill3.setText(null);
 		
 		if(user.getMentorSkills() != null && user.getMentorSkills().length() > 0) {
 			for(int i = 0; i <= user.getMentorSkills().length() - 1; i++) {

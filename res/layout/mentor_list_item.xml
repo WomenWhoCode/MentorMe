@@ -6,6 +6,7 @@
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
+    android:background="#ffffff"
     android:padding="10dp" >
 
     <com.codepath.wwcmentorme.helpers.RoundedImageView
@@ -60,14 +61,7 @@
         android:layout_marginTop="10dp"
         android:textSize="12sp" />
 
-    <ImageView
-        android:id="@+id/ivLocation"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_alignBottom="@+id/tvDistance"
-        android:layout_toLeftOf="@+id/tvDistance"
-        android:contentDescription="@string/ivLocation"
-        android:src="@drawable/ic_stat_location" />
+
     
     <TextView
             android:id="@+id/tvMenteeCount"
@@ -76,7 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:textColor="#33b5e5"
+            android:textColor="@color/actionbar"
             android:textStyle="bold"
             android:layout_marginTop="4dp"/>
 
