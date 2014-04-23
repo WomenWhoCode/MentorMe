@@ -1,51 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
-    android:padding="10dp" >
+    android:fillViewport="true" >
 
-    <TextView
-        android:id="@+id/tvExperienceLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/Share_your_experience"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp" >
 
-    <EditText
-        android:id="@+id/etJobTitle"
-        android:layout_width="256sp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvExperienceLabel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:hint="@string/job_hint">
+        <TextView
+            android:id="@+id/tvExperienceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:text="@string/Share_your_experiences"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/etJobTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvExperienceLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:hint="@string/job_hint" 
+            android:imeOptions="actionNext" 
+            android:maxLines="1">
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/etCompany"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etJobTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:hint="@string/company_hint" 
+            android:imeOptions="actionNext" 
+            android:maxLines="1"/>
+
+        <EditText
+            android:id="@+id/etYearsExperience"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/etCompany"
+            android:layout_below="@+id/etCompany"
+            android:layout_marginTop="8dp"
+            android:hint="@string/years_experience_hint"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:maxLines="1"/>
         
-        <requestFocus />
-    </EditText>
+        <Button
+            android:id="@+id/btnGoToAddSkills"
+            style="@style/NextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="goToAddSkills"
+            android:text="Next" />
 
-    <EditText
-        android:id="@+id/etCompany"
-        android:layout_width="256sp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/etJobTitle"
-        android:layout_marginTop="8dp"
-        android:hint="@string/company_hint">
-    </EditText>
+    </RelativeLayout>
 
-    <EditText
-        android:id="@+id/etYearsExperience"
-        android:layout_width="256sp"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/etCompany"
-        android:layout_below="@+id/etCompany"
-        android:layout_marginTop="8dp"
-        android:hint="@string/years_experience_hint"
-        android:inputType="number" />
-
-</RelativeLayout>
+</ScrollView>

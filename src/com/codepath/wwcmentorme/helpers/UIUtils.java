@@ -3,6 +3,7 @@ package com.codepath.wwcmentorme.helpers;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +20,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -108,5 +111,20 @@ public class UIUtils {
 	public static final Bitmap decode(final byte[] bytes) {
 		if (bytes == null) return null;
 		return BitmapFactory.decodeByteArray(bytes, 0, (int)bytes.length);
+	}
+	
+	public static void hideSoftKeyboard(Activity activity, View view){
+		InputMethodManager imm =(InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+	
+	public static void disableButton(Button btn) {
+		btn.setEnabled(false);
+		btn.getBackground().setAlpha(64);
+	}
+
+	public static void enableButton(Button btn) {
+		btn.setEnabled(true);
+		btn.getBackground().setAlpha(255);
 	}
 }

@@ -7,7 +7,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/tvLearnLabel"
+        android:id="@+id/tvLocationLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -20,7 +20,7 @@
         android:id="@+id/btnAddSkillsToLearn"
         android:layout_width="256dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvLearnLabel"
+        android:layout_below="@+id/tvLocationLabel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="@string/btn_add_skills" />

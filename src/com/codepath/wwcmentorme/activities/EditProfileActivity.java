@@ -1,12 +1,10 @@
 package com.codepath.wwcmentorme.activities;
 
-import java.util.Arrays;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,101 +13,142 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.adapters.EditProfileFragmentAdapter;
-import com.codepath.wwcmentorme.fragments.FbLoginDialogFragment;
-import com.codepath.wwcmentorme.fragments.FbLoginDialogFragment.FbLoginDialogListener;
-import com.parse.LogInCallback;
+import com.codepath.wwcmentorme.fragments.EditProfileExperiencesFragment;
+import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
+import com.codepath.wwcmentorme.models.User;
+import com.facebook.FacebookRequestError;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.model.GraphUser;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
-import com.parse.ParseFacebookUtils.Permissions;
-import com.viewpagerindicator.IconPageIndicator;
-import com.viewpagerindicator.PageIndicator;
 
-public class EditProfileActivity extends FragmentActivity implements FbLoginDialogListener {
-	private FragmentPagerAdapter mAdapter;
-	private ViewPager mPager;
-	private PageIndicator mIndicator;
-	private TextView tvFullName;
+public class EditProfileActivity extends FragmentActivity {
+	public static final String PROFILE_REF = "profile";
+	
 	private ImageView ivUserProfile;
+	private TextView tvFirstName;
+	private TextView tvLastName;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
-		setupViewPager();
-		setupTopViews();
-		
-		// Fetch Facebook user info if the session is active
-//		Session session = ParseFacebookUtils.getSession();
-//		if (session != null && session.isOpened()) {
-//			// makeMeRequest();
-//		} else {
-//			// pop up dialog to prompt fb login
-//		}
-		
-		if (ParseUser.getCurrentUser() == null) {
-			// If facebook session isn't open. Show dialog fragment
-			showFbLoginDialog();
-			// Else updateTopView()
-		} else {
-			updateTopView();
-		}
+		setupViews();
 	}
 
-	private void showFbLoginDialog() {
-		FbLoginDialogFragment fbLoginDialog = new FbLoginDialogFragment();
-		fbLoginDialog.show(getSupportFragmentManager(), "fragment_fb_login");
-	}
-	
-	private void setupTopViews() {
-		tvFullName = (TextView) findViewById(R.id.tvFullName);
-		ivUserProfile = (ImageView) findViewById(R.id.ivUserProfile);
-	}
-	
-	private void updateTopView() {
+	@Override
+	public void onResume() {
+		super.onResume();
 		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser.get("profile") != null) {
-			try {
-//				if (userProfile.getString("facebookId") != null) {
-//					String facebookId = userProfile.get("facebookId")
-//							.toString();
-//					ivUserProfile.setProfileId(facebookId);
-//				} else {
-//					// Show the default, blank user profile picture
-//					userProfilePictureView.setProfileId(null);
-//				}
-//				if (userProfile.getString("name") != null) {
-//					userNameView.setText(userProfile.getString("name"));
-//				} else {
-//					userNameView.setText("");
-//				}
-//				if (userProfile.getString("location") != null) {
-//					userLocationView.setText(userProfile.getString("location"));
-//				} else {
-//					userLocationView.setText("");
-//				}
-//				if (userProfile.getString("gender") != null) {
-//					userGenderView.setText(userProfile.getString("gender"));
-//				} else {
-//					userGenderView.setText("");
-//				}
-			} catch (Exception e) {
-				Log.d("MentorMeApp",
-						"Error parsing saved user data.");
-			}
+		if (currentUser == null) {
+			// If the user is not logged in, go to the
+			// activity showing the login view.
+			startLoginActivity();
+		} else if (currentUser.get(PROFILE_REF) != null) {
+			// Check if the user is currently logged
+			// and show any cached content
+			User mentorMeUser = (User)currentUser.get(PROFILE_REF);
+			mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
 
+				@Override
+				public void done(User user, ParseException pe) {
+					if (pe == null) {
+						populateViewsWithUserInfo(user);
+					}
+				}
+			});
+		} else {
+			// user is logged in but profile hasn't been sync'd
+			// Fetch Facebook user info if the session is active
+			Session session = ParseFacebookUtils.getSession();
+			if (session != null && session.isOpened()) {
+				makeMeRequest();
+			} else {
+				startLoginActivity();
+			}
 		}
 	}
+
+	private void startLoginActivity() {
+		Intent intent = new Intent(this, FbLoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
+	}
 	
-	private void setupViewPager() {
-		mAdapter = new EditProfileFragmentAdapter(getSupportFragmentManager());
+	private void makeMeRequest() {
+		// Populate mentor me user with facebook profile info
+		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
+				new Request.GraphUserCallback() {
+					@Override
+					public void onCompleted(GraphUser fbGraphUser, Response response) {
+						if (fbGraphUser != null) {
+							User mentorMeUser = new User();
+							mentorMeUser.setFacebookId(Long.valueOf(fbGraphUser.getId()));
+							mentorMeUser.setFirstName(fbGraphUser.getFirstName());
+							mentorMeUser.setLastName(fbGraphUser.getLastName());
+							if (fbGraphUser.getProperty("email") != null) {
+								mentorMeUser.setEmail((String)fbGraphUser.getProperty("email"));
+							}
+							if (fbGraphUser.getLocation() != null && fbGraphUser.getLocation().getProperty("name") != null) {
+								String locationName = (String) fbGraphUser.getLocation().getProperty("name");
+								String city = TextUtils.substring(locationName, 0, locationName.indexOf(","));
+								mentorMeUser.setCity(city);
+							}
+							if (fbGraphUser.getProperty("gender") != null) {
+								mentorMeUser.setGender((String) fbGraphUser.getProperty("gender"));
+							}
+							if (fbGraphUser.getProperty("about") != null) {
+								mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
+							}
+							ParseUser currentUser = ParseUser.getCurrentUser();
+							currentUser.put(PROFILE_REF, mentorMeUser);
+							currentUser.saveInBackground();
 
-        mPager = (ViewPager)findViewById(R.id.vpPager);
-        mPager.setAdapter(mAdapter);
+							// Show the user info
+							populateViewsWithUserInfo(mentorMeUser);
 
-        mIndicator = (IconPageIndicator) findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+						} else if (response.getError() != null) {
+							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
+									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
+								Log.d("MentorMe", "The facebook session was invalidated.");
+								onLogoutButtonClicked();
+							} else {
+								Log.d("MentorMe", "Some other error: " + response.getError().getErrorMessage());
+							}
+						}
+					}
+				});
+		request.executeAsync();
+	}
+
+	private void onLogoutButtonClicked() {
+		// Log the user out
+		ParseUser.logOut();
+
+		// Go to the login view
+		startLoginActivity();
+	}
+	
+	private void populateViewsWithUserInfo(User mentorMeUser) {
+		User.setMe(mentorMeUser.getFacebookId());
+		ImageLoader.getInstance().displayImage(mentorMeUser.getProfileImageUrl(200), ivUserProfile);
+		tvFirstName.setText(mentorMeUser.getFirstName());
+		tvLastName.setText(mentorMeUser.getLastName());
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new EditProfileLocationFragment() );
+		ft.commit();
+	}
+	
+	private void setupViews() {
+		ivUserProfile = (ImageView) findViewById(R.id.ivUserProfile);
+		tvFirstName = (TextView) findViewById(R.id.tvFirstName);
+		tvLastName = (TextView) findViewById(R.id.tvLastName);
 	}
 	
 	@Override
@@ -131,21 +170,10 @@ public class EditProfileActivity extends FragmentActivity implements FbLoginDial
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	@Override
-	public void onFbLogin() {
-		ParseUser user = ParseUser.getCurrentUser();
-		if (user == null) {
-			// Show a fragment with login button that says you must login
-			Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-		} else {
-			Log.d("MyApp", "User logged in through Facebook!");
-		}
-	}
-	
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+
+	public void goToStep2(View v) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment()).addToBackStack(null);
+		ft.commit();
 	}
 }

@@ -3,7 +3,6 @@ package com.codepath.wwcmentorme.app;
 import android.content.Context;
 
 import com.codepath.wwcmentorme.activities.MentorListActivity;
-import com.codepath.wwcmentorme.activities.ViewProfileActivity;
 import com.codepath.wwcmentorme.helpers.Constants;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
@@ -12,6 +11,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
+import com.parse.ParseACL;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -46,5 +46,9 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     	installation.put("userId", User.meId());
     	installation.saveInBackground();
     	ParseFacebookUtils.initialize(Constants.FACEBOOK_APP_ID);
+    	
+    	ParseACL defaultACL = new ParseACL();
+    	defaultACL.setPublicReadAccess(true);
+    	ParseACL.setDefaultACL(defaultACL, true);
     }
 }

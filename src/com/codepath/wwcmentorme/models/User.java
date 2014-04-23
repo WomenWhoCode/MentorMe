@@ -82,9 +82,9 @@ public class User extends ParseObject {
         return getLong(FACEBOOK_ID_KEY);
     }
 	
-	public void setFacebookId(long facebookId) {
-		put(FACEBOOK_ID_KEY, facebookId);
-    	sUsers.put(facebookId, this);
+	public void setFacebookId(Long string) {
+		put(FACEBOOK_ID_KEY, string);
+    	sUsers.put(string, this);
 	}
 	
 	public String getFirstName() {

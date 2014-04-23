@@ -1,79 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent" 
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginTop="5dp"
-    android:padding="10dp">
+    android:fillViewport="true">
 
-    <TextView
-        android:id="@+id/tvLearnLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/location_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/imageButton1"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tvLearnLabel"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_map" />
-    
-    <LinearLayout
-        android:id="@+id/llLocation"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvLearnLabel"
-        android:layout_margin="8dp"
-        android:orientation="horizontal" >
+        android:padding="10dp" >
 
-        <MultiAutoCompleteTextView
-            android:id="@+id/mactvCity"
-            android:layout_width="176sp"
+        <TextView
+            android:id="@+id/tvLocationLabel"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/city_hint" >
+            android:layout_alignParentTop="true"
+            android:text="@string/location_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <requestFocus />
-        </MultiAutoCompleteTextView>
+        <ImageView
+            android:id="@+id/imageButton1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tvLocationLabel"
+            android:src="@drawable/ic_map" />
 
+        <RelativeLayout
+            android:id="@+id/rlLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvLocationLabel"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/etCity"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/etZip"
+                android:hint="@string/city_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords|textPostalAddress|textAutoComplete"
+                android:maxLines="1" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/etZip"
+                android:layout_width="88sp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:hint="@string/zipcode_hint"
+                android:imeOptions="actionNext"
+                android:inputType="number" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvAboutmeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvLocationLabel"
+            android:layout_below="@+id/rlLocation"
+            android:layout_marginTop="8dp"
+            android:text="@string/aboutme_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        
         <EditText
-            android:id="@+id/etZip"
-            android:layout_width="80sp"
+            android:id="@+id/etAboutme"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/zipcode_hint"
-            android:inputType="number" />
-    </LinearLayout>
+            android:layout_alignLeft="@+id/rlLocation"
+            android:layout_below="@+id/tvAboutmeLabel"
+            android:layout_above="@+id/btnGoToStep2"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="left|top"
+            android:hint="@string/aboutme_hint"
+            android:inputType="textMultiLine"
+            android:lines="5" />
 
-    <EditText
-        android:id="@+id/etAboutme"
-        android:gravity="left|top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/llLocation"
-        android:layout_below="@+id/tvAboutmeLabel"
-        android:layout_marginTop="15dp"
-        android:inputType="textMultiLine" 
-        android:minLines="5"
-        android:lines="10"
-        android:hint="@string/aboutme_hint"/>
+        <Button
+            android:id="@+id/btnGoToStep2"
+            style="@style/NextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvAboutmeLabel"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:onClick="goToStep2"
+            android:text="Next" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvAboutmeLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvLearnLabel"
-        android:layout_below="@+id/llLocation"
-        android:layout_marginTop="20dp"
-        android:text="@string/aboutme_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-</RelativeLayout>
+</ScrollView>

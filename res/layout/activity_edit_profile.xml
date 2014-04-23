@@ -3,45 +3,52 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
+    android:background="#ffffff"
+    android:padding="10dp"
     tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity">
 
     <com.codepath.wwcmentorme.helpers.RoundedImageView
         android:id="@+id/ivUserProfile"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/ic_launcher"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/ivMentorProfile"/>
 
     <TextView
-        android:id="@+id/tvFullName"
+        android:id="@+id/tvFirstName"
+        style="@style/TextViewThin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ivUserProfile"
-        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/ivUserProfile"
-        android:text="Lisa Simpson"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:ignore="HardcodedText" />
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvLastName"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvFirstName"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tvFirstName"
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/tvLinkAccountsLabel"
+        style="@style/TextViewThin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvFullName"
-        android:layout_below="@+id/tvFullName"
+        android:layout_alignLeft="@+id/tvFirstName"
+        android:layout_below="@+id/tvFirstName"
         android:layout_marginTop="8dp"
-        android:text="Link accounts:"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        tools:ignore="HardcodedText" />
+        android:text="Link accounts:"/>
     
     <TableLayout
         android:id="@+id/tlAccountButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/separator_rating"
+        android:layout_below="@+id/tvLinkAccountsLabel"
         android:background="#ffffff"
         android:paddingLeft="10dp"
         android:stretchColumns="*" >
@@ -81,25 +88,15 @@
         </TableRow>
     </TableLayout>
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/flContainer"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ivUserProfile"
-        android:layout_below="@+id/llLinkAccounts"
-        android:layout_marginTop="16dp" >
-        
-        <com.viewpagerindicator.IconPageIndicator
-            android:id="@+id/indicator"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
-        
-        <android.support.v4.view.ViewPager
-            android:id="@+id/vpPager"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp" 
-            android:layout_weight="1" />
-        
-	</LinearLayout>
+        android:layout_below="@+id/tlAccountButtons"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp" >
+	</FrameLayout>
     
 </RelativeLayout>

@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.activities.EditProfileActivity;
+import com.codepath.wwcmentorme.activities.FbLoginActivity;
 import com.codepath.wwcmentorme.activities.UserListActivity;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
@@ -105,8 +107,10 @@ public class DrawerListAdapter extends
 					intent.putExtra("usertype", UserType.MENTEE.toString());
 					intent.putExtra("userId", User.meId());
 					getContext().startActivity(intent);
+				} else if (buttonText == getContext().getResources().getString(R.string.drawer_edit_profile)) {
+					final Intent intent = new Intent(getContext(), FbLoginActivity.class);
+					getContext().startActivity(intent);
 				}
-
 			}
 		});
 		return view;
