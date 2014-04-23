@@ -1,9 +1,8 @@
 package com.codepath.wwcmentorme.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.fragments.EditProfileExperiencesFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
+import com.codepath.wwcmentorme.fragments.EditProfileSkillsFragment;
 import com.codepath.wwcmentorme.models.User;
 import com.facebook.FacebookRequestError;
 import com.facebook.Request;
@@ -27,7 +27,7 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 
-public class EditProfileActivity extends FragmentActivity {
+public class EditProfileActivity extends AppActivity {
 	public static final String PROFILE_REF = "profile";
 	
 	private ImageView ivUserProfile;
@@ -102,6 +102,7 @@ public class EditProfileActivity extends FragmentActivity {
 							}
 							if (fbGraphUser.getProperty("gender") != null) {
 								mentorMeUser.setGender((String) fbGraphUser.getProperty("gender"));
+								mentorMeUser.setIsMentee("female".equalsIgnoreCase(mentorMeUser.getGender()));
 							}
 							if (fbGraphUser.getProperty("about") != null) {
 								mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
@@ -140,8 +141,8 @@ public class EditProfileActivity extends FragmentActivity {
 		ImageLoader.getInstance().displayImage(mentorMeUser.getProfileImageUrl(200), ivUserProfile);
 		tvFirstName.setText(mentorMeUser.getFirstName());
 		tvLastName.setText(mentorMeUser.getLastName());
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileLocationFragment() );
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new EditProfileLocationFragment());
 		ft.commit();
 	}
 	
@@ -172,8 +173,14 @@ public class EditProfileActivity extends FragmentActivity {
 	}
 
 	public void goToStep2(View v) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment()).addToBackStack(null);
+		ft.commit();
+	}
+	
+	public void goToAddSkills(View v) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new EditProfileSkillsFragment()).addToBackStack(null);
 		ft.commit();
 	}
 }
