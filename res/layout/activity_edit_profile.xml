@@ -44,7 +44,7 @@
         android:layout_marginTop="8dp"
         android:text="Link accounts:"/>
     
-    <TableLayout
+	<TableLayout
         android:id="@+id/tlAccountButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,6 +87,12 @@
             </Button>
         </TableRow>
     </TableLayout>
+    
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/tlAccountButtons"
+        android:background="@android:color/darker_gray" />
 
     <FrameLayout
         android:id="@+id/flContainer"
