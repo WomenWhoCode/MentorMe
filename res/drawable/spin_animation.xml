@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/selected" android:oneshot="false">
+    <item android:drawable="@drawable/ic_wwc1" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc2" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc3" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc4" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc5" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc6" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc7" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc8" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc9" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc10" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc11" android:duration="6000" />
+    <item android:drawable="@drawable/ic_wwc12" android:duration="6000" />
+</animation-list>

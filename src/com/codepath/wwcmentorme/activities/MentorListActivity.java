@@ -52,6 +52,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 			if (mCachedViewGroup == container) return mCachedView;
 			mCachedViewGroup = container;
 			mCachedView = inflater.inflate(R.layout.user_list_fragment, container, false);
+			mCachedView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 			return mCachedView;
 		}
 	}
@@ -67,7 +68,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 
 	private static final ListFragment sListFragment = new ListFragment();
 	private static final MapFragment sMapFragment = new MapFragment();
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,8 +97,6 @@ android.location.LocationListener, OnBackStackChangedListener {
 		enableDrawer((DrawerLayout) findViewById(R.id.drawer_layout));
 		getFragmentManager().addOnBackStackChangedListener(this);
 	}
-
-
 
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);

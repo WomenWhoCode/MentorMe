@@ -105,6 +105,12 @@ public class AppActivity extends Activity {
 		setActionBarVisible(visible, true);
 	}
 	
+	@Override
+	public void onBackPressed() {
+	    super.onBackPressed();
+	    overridePendingTransition(R.anim.activity_slide_in_back, R.anim.activity_slide_out_back);
+	}
+	
 	public void setActionBarVisible(final boolean visible, final boolean animated) {
 		mActionBarVisible = visible;
 		if (mSettingActionBarVisible) return;
@@ -116,10 +122,10 @@ public class AppActivity extends Activity {
 			getActionBar().hide();
 		}
 		if (animated) {
-			findViewById(R.id.activity_bar).animate().y(yOffset - UIUtils.p(6));
+			findViewById(R.id.activity_bar).animate().y(yOffset);
 			findViewById(R.id.activity_frame).animate().y(yOffset);
 		} else {
-			findViewById(R.id.activity_bar).setY(yOffset - UIUtils.p(6));
+			findViewById(R.id.activity_bar).setY(yOffset);
 			findViewById(R.id.activity_frame).setY(yOffset);
 		}
 		Async.dispatchMain(new Runnable() {
