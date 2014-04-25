@@ -185,7 +185,10 @@ public class EditProfileActivity extends AppActivity {
 				boolean isOpen = heightDiff > 100;
 				if (isOpen != wasOpened) { // if more than 100 pixels, it's probably an open keyboard
 					wasOpened = isOpen;
-					((OnKeyboardVisibilityListener) getFragmentManager().findFragmentById(R.id.flContainer)).onVisibilityChanged(isOpen);
+					Fragment currentFragment = getFragmentManager().findFragmentById(R.id.flContainer);
+					if (currentFragment != null) {
+						((OnKeyboardVisibilityListener) currentFragment).onVisibilityChanged(isOpen);
+					}
 				}
 			}
 		}); 
