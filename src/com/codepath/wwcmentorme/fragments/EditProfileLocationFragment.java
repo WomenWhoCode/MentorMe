@@ -85,7 +85,6 @@ public class EditProfileLocationFragment extends Fragment {
 				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
 					saveUserData();
 					maybeEnableNextButton();
-					return true;
 				}
 				return false;
 			}
@@ -99,7 +98,6 @@ public class EditProfileLocationFragment extends Fragment {
 					UIUtils.hideSoftKeyboard(getActivity(), v);
 					saveUserData();
 					maybeEnableNextButton();
-					return true;
 				}
 				return false;
 			}

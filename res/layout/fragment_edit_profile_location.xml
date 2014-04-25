@@ -79,6 +79,7 @@
             android:gravity="left|top"
             android:hint="@string/aboutme_hint"
             android:inputType="textMultiLine"
+            android:imeOptions="actionDone|flagNoEnterAction"
             android:lines="5" />
 
         <Button
