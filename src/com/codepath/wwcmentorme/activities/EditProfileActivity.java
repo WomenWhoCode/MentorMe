@@ -1,5 +1,7 @@
 package com.codepath.wwcmentorme.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +41,15 @@ public class EditProfileActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
 		setupViews();
+		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
+			@Override
+			public void onBackStackChanged() {
+				Fragment f = getFragmentManager().findFragmentById(R.id.flContainer);
+			    if (f != null) {
+			    	updateTitle(f);
+			    }				
+			}
+		});
 	}
 
 	@Override
@@ -142,7 +153,7 @@ public class EditProfileActivity extends AppActivity {
 		tvFirstName.setText(mentorMeUser.getFirstName());
 		tvLastName.setText(mentorMeUser.getLastName());
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileLocationFragment());
+		ft.replace(R.id.flContainer, new EditProfileLocationFragment(), "1");
 		ft.commit();
 	}
 	
@@ -150,6 +161,10 @@ public class EditProfileActivity extends AppActivity {
 		ivUserProfile = (ImageView) findViewById(R.id.ivUserProfile);
 		tvFirstName = (TextView) findViewById(R.id.tvFirstName);
 		tvLastName = (TextView) findViewById(R.id.tvLastName);
+	}
+	
+	private void updateTitle(Fragment f) {
+		setTitle(String.format("%s %s/3", getString(R.string.title_activity_edit_profile), f.getTag()));
 	}
 	
 	@Override
@@ -174,13 +189,13 @@ public class EditProfileActivity extends AppActivity {
 
 	public void goToStep2(View v) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment()).addToBackStack(null);
+		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment(), "2").addToBackStack(null);
 		ft.commit();
 	}
 	
 	public void goToAddSkills(View v) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileSkillsFragment()).addToBackStack(null);
+		ft.replace(R.id.flContainer, new EditProfileSkillsFragment(), "3").addToBackStack(null);
 		ft.commit();
 	}
 }
