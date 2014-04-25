@@ -41,6 +41,18 @@
         android:valueTo="0.0"
         android:propertyName="alpha"
         android:duration="0" />
+    
+    <objectAnimator
+        android:valueFrom="1.0"
+        android:valueTo="0.5"
+        android:propertyName="scaleX"
+        android:duration="0" />
+    
+    <objectAnimator
+        android:valueFrom="1.0"
+        android:valueTo="0.5"
+        android:propertyName="scaleY"
+        android:duration="0" />
 
     <!-- Rotate. -->
     <objectAnimator
@@ -57,4 +69,18 @@
         android:propertyName="alpha"
         android:startOffset="@integer/card_flip_time_half"
         android:duration="1" />
+    
+    <objectAnimator
+        android:valueFrom="0.5"
+        android:valueTo="1.0"
+        android:propertyName="scaleX"
+        android:startOffset="@integer/card_flip_time_half"
+        android:duration="@integer/card_flip_time_half" />
+    
+    <objectAnimator
+        android:valueFrom="0.5"
+        android:valueTo="1.0"
+        android:propertyName="scaleY"
+        android:startOffset="@integer/card_flip_time_half"
+        android:duration="@integer/card_flip_time_half" />
 </set>
