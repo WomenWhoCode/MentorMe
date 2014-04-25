@@ -39,5 +39,4 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

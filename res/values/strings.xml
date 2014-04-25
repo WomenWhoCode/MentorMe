@@ -31,8 +31,9 @@
     <string name="job_hint">Job title</string>
     <string name="company_hint">Company</string>
     <string name="years_experience_hint">Years experience</string>
-    <string name="learn_label">I want to learn about:</string>
-    <string name="teach_label">I want to mentor:</string>
+    <string name="learn_label">I need help with:</string>
+    <string name="teach_label">I am an expert in:</string>
+    <string name="teach_availability_label">I am available to teach on:</string>
     <string name="btn_add_skills">Add skills</string>
 
     <string-array name="skill_array">
