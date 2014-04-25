@@ -68,23 +68,13 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 	}
 	
 	@Override
-	protected void saveUserData() {
+	protected void updateProfile() {
 		getProfileUser().setCity(etCity.getText().toString().trim());
 		String zipInput = etZip.getText().toString().trim();
 		if (!TextUtils.isEmpty(zipInput)) {
 			getProfileUser().setZip(Integer.valueOf(zipInput));
 		}
 		getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
-		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException pe) {
-				if (pe == null) {
-					Log.d("MentorMe", "Update user success!");
-				} else {
-					Log.d("MentorMe", "Update failed");
-				}
-			}
-		});
 	}
 
 	@Override
@@ -99,12 +89,12 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 	}
 	
 	@Override
-	void updateViews(User user) {
-		etCity.setText(user.getCity());
-		if (user.getZip() > 0) {
-			etZip.setText(String.valueOf(user.getZip()));
+	void updateViews(User profileUser) {
+		etCity.setText(profileUser.getCity());
+		if (profileUser.getZip() > 0) {
+			etZip.setText(String.valueOf(profileUser.getZip()));
 		}
-		etAboutme.setText(user.getAboutMe());
+		etAboutme.setText(profileUser.getAboutMe());
 		maybeEnableNextButton();
 	}
 }

@@ -1,26 +1,28 @@
 package com.codepath.wwcmentorme.fragments;
 
 import android.app.Fragment;
+import android.util.Log;
 
 import com.codepath.wwcmentorme.activities.EditProfileActivity.OnKeyboardVisibilityListener;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public abstract class AbstractEditProfileFragment extends Fragment implements OnKeyboardVisibilityListener {
 	private User profileUser;
 	
 	abstract void maybeEnableNextButton();
-	abstract void saveUserData();
 	abstract void updateViews(User user);
+	abstract void updateProfile();
 	
 	public User getProfileUser() {
 		return profileUser;
 	}
 
-	public void setmUser(User mUser) {
-		this.profileUser = mUser;
+	public void setProfileUser(User profileUser) {
+		this.profileUser = profileUser;
 	}
 	
 	@Override
@@ -52,5 +54,19 @@ public abstract class AbstractEditProfileFragment extends Fragment implements On
 			saveUserData();
 			maybeEnableNextButton();
 		}
+	}
+
+	void saveUserData() {
+		updateProfile();
+		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+			@Override
+			public void done(ParseException pe) {
+				if (pe == null) {
+					Log.d("MentorMe", "Update user success!");
+				} else {
+					Log.d("MentorMe", "Update failed");
+				}
+			}
+		});
 	}
 }

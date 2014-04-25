@@ -14,23 +14,28 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_edit_profile_skills, container, false);
+		setupViews(v);
 		return v;
 	}
 
+	private void setupViews(View v) {
+		
+	}
+	
 	@Override
-	void maybeEnableNextButton() {
+	protected void maybeEnableNextButton() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	void saveUserData() {
+	protected void updateProfile() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	void updateViews(User user) {
+	void updateViews(User profileUser) {
 		// TODO Auto-generated method stub
 		
 	}

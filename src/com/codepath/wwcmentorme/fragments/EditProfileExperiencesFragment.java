@@ -58,23 +58,13 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	}
 	
 	@Override
-	protected void saveUserData() {
+	protected void updateProfile() {
 		getProfileUser().setJobTitle(etJobTitle.getText().toString().trim());
 		getProfileUser().setCompanyName(etCompany.getText().toString().trim());
 		String yearsInput = etYearsExperience.getText().toString().trim();
 		if (!TextUtils.isEmpty(yearsInput)) {
 			getProfileUser().setYearsExperience(Integer.valueOf(yearsInput));
 		}
-		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException pe) {
-				if (pe == null) {
-					Log.d("MentorMe", "Update user success!");
-				} else {
-					Log.d("MentorMe", "Update failed");
-				}
-			}
-		});
 	}
 
 	@Override
@@ -89,10 +79,10 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	}
 	
 	@Override
-	void updateViews(User user) {
-		etJobTitle.setText(user.getJobTitle());
-		etCompany.setText(user.getCompanyName());
-		etYearsExperience.setText(String.valueOf(user.getYearsExperience()));
+	void updateViews(User profileUser) {
+		etJobTitle.setText(profileUser.getJobTitle());
+		etCompany.setText(profileUser.getCompanyName());
+		etYearsExperience.setText(String.valueOf(profileUser.getYearsExperience()));
 		maybeEnableNextButton();
 	}
 }
