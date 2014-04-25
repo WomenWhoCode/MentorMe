@@ -2,7 +2,6 @@ package com.codepath.wwcmentorme.fragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class EditProfileLocationFragment extends AbstractEditProfileFragment {	
 	private EditText etCity;
