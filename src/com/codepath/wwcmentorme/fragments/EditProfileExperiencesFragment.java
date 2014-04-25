@@ -1,6 +1,5 @@
 package com.codepath.wwcmentorme.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,13 +16,11 @@ import android.widget.TextView.OnEditorActionListener;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-public class EditProfileExperiencesFragment extends Fragment {
-	private User mentorMeUser;
+public class EditProfileExperiencesFragment extends AbstractEditProfileFragment {
 	private EditText etJobTitle;
 	private EditText etCompany;
 	private EditText etYearsExperience;
@@ -35,29 +32,6 @@ public class EditProfileExperiencesFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_edit_profile_experience, container, false);
 		setupViews(v);
 		return v;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser != null && currentUser.get("profile") != null) {
-			mentorMeUser = (User) currentUser.get("profile");
-			mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
-				@Override
-				public void done(User user, ParseException pe) {
-					if (pe == null) {
-						updateViews(user);
-					}
-				}
-			});
-		}
-	}
-	
-	@Override
-	public void onPause() {
-		saveUserData();
-		super.onPause();
 	}
 	
 	private void setupViews(View v) {
@@ -83,12 +57,13 @@ public class EditProfileExperiencesFragment extends Fragment {
 		etYearsExperience.setOnEditorActionListener(listener);
 	}
 	
+	@Override
 	protected void saveUserData() {
-		mentorMeUser.setJobTitle(etJobTitle.getText().toString().trim());
-		mentorMeUser.setCompanyName(etCompany.getText().toString().trim());
+		getProfileUser().setJobTitle(etJobTitle.getText().toString().trim());
+		getProfileUser().setCompanyName(etCompany.getText().toString().trim());
 		String yearsInput = etYearsExperience.getText().toString().trim();
 		if (!TextUtils.isEmpty(yearsInput)) {
-			mentorMeUser.setYearsExperience(Integer.valueOf(yearsInput));
+			getProfileUser().setYearsExperience(Integer.valueOf(yearsInput));
 		}
 		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
 			@Override
@@ -102,6 +77,7 @@ public class EditProfileExperiencesFragment extends Fragment {
 		});
 	}
 
+	@Override
 	protected void maybeEnableNextButton() {
 		if (TextUtils.getTrimmedLength(etJobTitle.getText().toString()) > 0 &&
 				TextUtils.getTrimmedLength(etYearsExperience.getText().toString()) > 0 &&
@@ -112,7 +88,8 @@ public class EditProfileExperiencesFragment extends Fragment {
 		}
 	}
 	
-	private void updateViews(User user) {
+	@Override
+	void updateViews(User user) {
 		etJobTitle.setText(user.getJobTitle());
 		etCompany.setText(user.getCompanyName());
 		etYearsExperience.setText(String.valueOf(user.getYearsExperience()));
