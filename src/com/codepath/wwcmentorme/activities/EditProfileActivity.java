@@ -4,12 +4,14 @@ import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +34,10 @@ import com.parse.ParseUser;
 public class EditProfileActivity extends AppActivity {
 	public static final String PROFILE_REF = "profile";
 	
+	public interface OnKeyboardVisibilityListener {
+		void onVisibilityChanged(boolean visible);
+	}
+	
 	private ImageView ivUserProfile;
 	private TextView tvFirstName;
 	private TextView tvLastName;
@@ -41,6 +47,7 @@ public class EditProfileActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
 		setupViews();
+		setupKeyboardVisibilityListener();
 		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override
 			public void onBackStackChanged() {
@@ -49,7 +56,7 @@ public class EditProfileActivity extends AppActivity {
 			    	updateTitle(f);
 			    }				
 			}
-		});
+		});		
 	}
 
 	@Override
@@ -163,6 +170,27 @@ public class EditProfileActivity extends AppActivity {
 		tvLastName = (TextView) findViewById(R.id.tvLastName);
 	}
 	
+	private void setupKeyboardVisibilityListener() {
+		final View activityRootView = findViewById(R.id.rlEditProfileRootContainer);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			private final Rect r = new Rect();
+			private boolean wasOpened;			
+			
+			@Override
+			public void onGlobalLayout() {
+				//r will be populated with the coordinates of your view that area still visible.
+				activityRootView.getWindowVisibleDisplayFrame(r);
+
+				int heightDiff = activityRootView.getRootView().getHeight() - r.height();
+				boolean isOpen = heightDiff > 100;
+				if (isOpen != wasOpened) { // if more than 100 pixels, it's probably an open keyboard
+					wasOpened = isOpen;
+					((OnKeyboardVisibilityListener) getFragmentManager().findFragmentById(R.id.flContainer)).onVisibilityChanged(isOpen);
+				}
+			}
+		}); 
+	}
+	
 	private void updateTitle(Fragment f) {
 		setTitle(String.format("%s %s/3", getString(R.string.title_activity_edit_profile), f.getTag()));
 	}
@@ -198,4 +226,14 @@ public class EditProfileActivity extends AppActivity {
 		ft.replace(R.id.flContainer, new EditProfileSkillsFragment(), "3").addToBackStack(null);
 		ft.commit();
 	}
+	
+	public void addMentorSkills(View v) {
+		
+	}
+	
+	public void addMenteeSkills(View v) {
+		
+	}
+	
+	
 }

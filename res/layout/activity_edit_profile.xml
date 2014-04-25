@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+    android:id="@+id/rlEditProfileRootContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:padding="10dp"
-    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity">
+    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity" >
 
     <com.codepath.wwcmentorme.helpers.RoundedImageView
         android:id="@+id/ivUserProfile"

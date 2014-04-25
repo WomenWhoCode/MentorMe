@@ -35,7 +35,8 @@
             android:layout_below="@+id/llLearnSkills"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:text="@string/btn_add_skills" />
+            android:text="@string/btn_add_skills"
+            android:onClick="addMenteeSkills" />
     </RelativeLayout>
 
     <TextView
@@ -54,7 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvTeachLabel"
         android:layout_margin="10dp"
-        android:layoutDirection="rtl"
         android:orientation="horizontal" >
     </LinearLayout>
 
@@ -65,6 +65,7 @@
         android:layout_below="@+id/llTeachSkills"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
+        android:onClick="addMentorSkills"
         android:text="@string/btn_add_skills" />
 
     <TextView
@@ -83,7 +84,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvAvailableLabel"
         android:layout_margin="10dp"
-        android:layoutDirection="rtl"
         android:orientation="horizontal" >
     </LinearLayout>
 

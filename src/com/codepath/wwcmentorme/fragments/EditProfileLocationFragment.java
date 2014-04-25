@@ -1,6 +1,5 @@
 package com.codepath.wwcmentorme.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,13 +17,11 @@ import android.widget.TextView.OnEditorActionListener;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-public class EditProfileLocationFragment extends Fragment {	
-	private User mentorMeUser;
+public class EditProfileLocationFragment extends AbstractEditProfileFragment {	
 	private EditText etCity;
 	private EditText etZip;
 	private EditText etAboutme;
@@ -37,30 +34,7 @@ public class EditProfileLocationFragment extends Fragment {
 		setupViews(v);
 		return v;
 	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser != null && currentUser.get("profile") != null) {
-			mentorMeUser = (User) currentUser.get("profile");
-			mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
-				@Override
-				public void done(User user, ParseException pe) {
-					if (pe == null) {
-						updateViews(user);
-					}
-				}
-			});
-		}
-	}
-	
-	@Override
-	public void onPause() {
-		saveUserData();
-		super.onPause();
-	}
-	
+		
 	private void setupViews(View v) {
 		v.setFocusableInTouchMode(true);
 		v.requestFocus();
@@ -68,7 +42,7 @@ public class EditProfileLocationFragment extends Fragment {
 		v.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if( keyCode == KeyEvent.KEYCODE_BACK && v.getId() != R.id.etAboutme)
+				if( keyCode == KeyEvent.KEYCODE_BACK)
 				{
 					return true;
 				}
@@ -91,26 +65,16 @@ public class EditProfileLocationFragment extends Fragment {
 		};
 		etCity.setOnEditorActionListener(listener);
 		etZip.setOnEditorActionListener(listener);
-		etAboutme.setOnKeyListener(new OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					UIUtils.hideSoftKeyboard(getActivity(), v);
-					saveUserData();
-					maybeEnableNextButton();
-				}
-				return false;
-			}
-		});
 	}
 	
+	@Override
 	protected void saveUserData() {
-		mentorMeUser.setCity(etCity.getText().toString().trim());
+		getProfileUser().setCity(etCity.getText().toString().trim());
 		String zipInput = etZip.getText().toString().trim();
 		if (!TextUtils.isEmpty(zipInput)) {
-			mentorMeUser.setZip(Integer.valueOf(zipInput));
+			getProfileUser().setZip(Integer.valueOf(zipInput));
 		}
-		mentorMeUser.setAboutMe(etAboutme.getText().toString().trim());
+		getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
 		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
 			@Override
 			public void done(ParseException pe) {
@@ -123,6 +87,7 @@ public class EditProfileLocationFragment extends Fragment {
 		});
 	}
 
+	@Override
 	protected void maybeEnableNextButton() {
 		if (TextUtils.getTrimmedLength(etCity.getText().toString()) > 0 &&
 				TextUtils.getTrimmedLength(etZip.getText().toString()) > 0 &&
@@ -133,7 +98,8 @@ public class EditProfileLocationFragment extends Fragment {
 		}
 	}
 	
-	private void updateViews(User user) {
+	@Override
+	void updateViews(User user) {
 		etCity.setText(user.getCity());
 		if (user.getZip() > 0) {
 			etZip.setText(String.valueOf(user.getZip()));
