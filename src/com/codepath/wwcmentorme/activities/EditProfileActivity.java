@@ -56,7 +56,8 @@ public class EditProfileActivity extends AppActivity {
 			    	updateTitle(f);
 			    }				
 			}
-		});		
+		});
+		goToStep1(null);
 	}
 
 	@Override
@@ -159,9 +160,6 @@ public class EditProfileActivity extends AppActivity {
 		ImageLoader.getInstance().displayImage(mentorMeUser.getProfileImageUrl(200), ivUserProfile);
 		tvFirstName.setText(mentorMeUser.getFirstName());
 		tvLastName.setText(mentorMeUser.getLastName());
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileLocationFragment(), "1");
-		ft.commit();
 	}
 	
 	private void setupViews() {
@@ -218,6 +216,12 @@ public class EditProfileActivity extends AppActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	public void goToStep1(View v) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, new EditProfileLocationFragment(), "1");
+		ft.commit();
+	}
+	
 	public void goToStep2(View v) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment(), "2").addToBackStack(null);

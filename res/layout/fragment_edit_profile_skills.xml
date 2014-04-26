@@ -75,7 +75,7 @@
         android:layout_below="@+id/btnAddSkillsToTeach"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="I'm available on:"
+        android:text="@string/teach_availability_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <LinearLayout

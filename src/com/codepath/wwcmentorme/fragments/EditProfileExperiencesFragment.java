@@ -2,7 +2,6 @@ package com.codepath.wwcmentorme.fragments;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,6 @@ import android.widget.TextView.OnEditorActionListener;
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public class EditProfileExperiencesFragment extends AbstractEditProfileFragment {
 	private EditText etJobTitle;
@@ -58,23 +54,13 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	}
 	
 	@Override
-	protected void saveUserData() {
+	protected void updateProfile() {
 		getProfileUser().setJobTitle(etJobTitle.getText().toString().trim());
 		getProfileUser().setCompanyName(etCompany.getText().toString().trim());
 		String yearsInput = etYearsExperience.getText().toString().trim();
 		if (!TextUtils.isEmpty(yearsInput)) {
 			getProfileUser().setYearsExperience(Integer.valueOf(yearsInput));
 		}
-		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException pe) {
-				if (pe == null) {
-					Log.d("MentorMe", "Update user success!");
-				} else {
-					Log.d("MentorMe", "Update failed");
-				}
-			}
-		});
 	}
 
 	@Override
@@ -89,10 +75,10 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	}
 	
 	@Override
-	void updateViews(User user) {
-		etJobTitle.setText(user.getJobTitle());
-		etCompany.setText(user.getCompanyName());
-		etYearsExperience.setText(String.valueOf(user.getYearsExperience()));
+	void updateViews(User profileUser) {
+		etJobTitle.setText(profileUser.getJobTitle());
+		etCompany.setText(profileUser.getCompanyName());
+		etYearsExperience.setText(String.valueOf(profileUser.getYearsExperience()));
 		maybeEnableNextButton();
 	}
 }
