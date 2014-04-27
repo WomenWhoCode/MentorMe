@@ -35,9 +35,9 @@
     <uses-permission android:name="com.codepath.wwcmentorme.permission.C2D_MESSAGE" />
 
     <application
-        android:hardwareAccelerated="true"
         android:name="com.codepath.wwcmentorme.app.MentorMeApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher_teal"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -58,40 +58,40 @@
             android:value="@string/fb_app_id" />
 
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.facebook.LoginActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.codepath.wwcmentorme.activities.MentorListActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.codepath.wwcmentorme.activities.ViewProfileActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity_view_profile" >
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.codepath.wwcmentorme.activities.EditProfileActivity"
-            android:label="@string/title_activity_edit_profile" 
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_edit_profile"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:windowSoftInputMode="stateVisible|adjustPan" >
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.codepath.wwcmentorme.activities.MapActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity_edit_profile" >
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher_teal"
             android:name="com.codepath.wwcmentorme.activities.HomeActivity"
+            android:icon="@drawable/ic_launcher_teal"
             android:label="@string/app_name"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar"
-            android:launchMode="singleTop" >
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -99,8 +99,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:icon="@drawable/ic_launcher"
             android:name="com.codepath.wwcmentorme.activities.UserListActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity_user_list" >
         </activity>
 
@@ -128,6 +128,12 @@
                 <action android:name="SEND_PUSH" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:icon="@drawable/ic_launcher"
+            android:name="com.codepath.wwcmentorme.activities.ThankMentorActivity"
+            android:label="@string/title_activity_thank_mentor" >
+        </activity>
     </application>
 
 </manifest>

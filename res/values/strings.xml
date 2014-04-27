@@ -47,10 +47,9 @@
         <item>Javascript</item>
         <item>PHP</item>
         <item>Python</item>
-        <item>Ruby</item>      
+        <item>Ruby</item>
         <item>Scala</item>
     </string-array>
-    
     <string-array name="dayofweek_array">
         <item>Su</item>
         <item>Mo</item>
@@ -70,5 +69,6 @@
     <string name="title_activity_user_list"></string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fb_login">Log in with Facebook</string>
+    <string name="title_activity_thank_mentor">Thank You!</string>
 
 </resources>
