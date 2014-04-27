@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
-import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.NotificationCenter;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.parse.ParseClassName;
@@ -24,8 +23,7 @@ public class User extends ParseObject {
 	public static String FIRST_NAME_KEY = "firstName";
 	public static String LAST_NAME_KEY  = "lastName";
 	public static String EMAIL_KEY  = "email";
-	public static String CITY_KEY = "city";
-	public static String ZIP_KEY = "zip";
+	public static String ADDRESS_KEY = "address";
 	public static String GENDER_KEY = "gender";
 	public static String ABOUT_ME_KEY = "aboutMe";
 	public static String JOB_TITLE_KEY = "jobTitle";
@@ -134,20 +132,12 @@ public class User extends ParseObject {
 		put(GENDER_KEY, gender);
 	}
 	
-	public String getCity() {
-		return getString(CITY_KEY);
+	public String getAddress() {
+		return getString(ADDRESS_KEY);
 	}
 	
-	public void setCity(String city) {
-		put(CITY_KEY, city);
-	}
-	
-	public int getZip() {
-        return getInt(ZIP_KEY);
-    }
-	
-	public void setZip(int zip) {
-		put(ZIP_KEY, zip);
+	public void setAddress(String address) {
+		put(ADDRESS_KEY, address);
 	}
 	
 	public String getAboutMe() {

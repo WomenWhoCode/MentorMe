@@ -157,7 +157,7 @@ public class ViewProfileActivity extends AppActivity {
 		String formattedPosition = user.getJobTitle()  + ", " + user.getCompanyName();
 		tvPosition.setText(Html.fromHtml(formattedPosition));
 		
-		String formattedLocation = user.getCity()  + ", " + user.getZip();
+		String formattedLocation = user.getAddress();
 		tvLocation.setText(Html.fromHtml(formattedLocation));
 		
 		if(mLat != null && mLng != null) {
