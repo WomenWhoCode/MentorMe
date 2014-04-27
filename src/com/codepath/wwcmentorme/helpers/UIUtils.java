@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,10 +30,12 @@ public class UIUtils {
 	public static final ColorDrawable TRANSPARENT = new ColorDrawable(Color.TRANSPARENT);
 	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
 	public static final Typeface SANS_SERIF_THIN = Typeface.create("sans-serif-thin", Typeface.NORMAL);
+	public static int selector = -1;
+	
 	public static void showActionSheet(final Context context, final CharSequence title, final CharSequence[] items,
 			final DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(title).setItems(items, onClickListener);
+		builder.setTitle(title).setSingleChoiceItems(items, selector, onClickListener);
 		final AlertDialog dialog = builder.create();
 		dialog.getWindow().setGravity(Gravity.BOTTOM);
 		dialog.getWindow().setWindowAnimations(android.R.style.Animation_InputMethod);
@@ -61,6 +64,7 @@ public class UIUtils {
 	public static void enumerateSubviews(final View view, final Async.Block<View> block, final AtomicBoolean stop) {
 		if (view instanceof ViewGroup) {
 			final ViewGroup vg = (ViewGroup)view;
+			
 			for (int i = 0, count = vg.getChildCount(); i < count; ++i) {
 				final View child = vg.getChildAt(i);
 				enumerateSubviews(child, block, stop);

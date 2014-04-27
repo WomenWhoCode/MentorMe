@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="actionbar">#00B6AA</color>
-<color name="drawerBackgroundColor">#dd000000</color>
+
+    <color name="actionbar">#00B6AA</color>
+    <color name="drawerBackgroundColor">#dd000000</color>
+    <color name="drawerBackgroundColorPressed">#aa404040</color>
+    <color name="translucent">#00000000</color>
+
 </resources>

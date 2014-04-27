@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid
-        android:color="@color/actionbar">
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <solid android:color="@color/drawerBackgroundColor" >
     </solid>
- 
+
     <padding
+        android:bottom="4dp"
         android:left="8dp"
-        android:top="4dp"
         android:right="8dp"
-        android:bottom="4dp"    >
+        android:top="4dp" >
     </padding>
- 
+
     <!-- Here is the corner radius -->
-    <corners
-        android:radius="4dp"   >
+    <corners android:radius="4dp" >
     </corners>
+
 </shape>

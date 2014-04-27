@@ -47,9 +47,10 @@
         <item>Javascript</item>
         <item>PHP</item>
         <item>Python</item>
-        <item>Ruby</item>
+        <item>Ruby</item>      
         <item>Scala</item>
     </string-array>
+    
     <string-array name="dayofweek_array">
         <item>Su</item>
         <item>Mo</item>

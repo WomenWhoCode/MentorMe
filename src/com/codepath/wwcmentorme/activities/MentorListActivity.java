@@ -243,11 +243,13 @@ android.location.LocationListener, OnBackStackChangedListener {
 
 	public void onRefineResultsPress(MenuItem mi) {
 		UIUtils.showActionSheet(this, getString(R.string.miRefineResults), getResources().getStringArray(R.array.skill_array), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int position) {
+			public void onClick(final DialogInterface dialog, final int position) {				
 				String[] skills = getResources().getStringArray(R.array.skill_array);
 				mSkill = skills[position];
-				mentorListAdapter.clear();
-				loadMentors(mGeoPoint);
+				UIUtils.selector = position;				
+				mentorListAdapter.clear();				
+				loadMentors(mGeoPoint);		
+				dialog.dismiss();
 			}
 		});
 	}
