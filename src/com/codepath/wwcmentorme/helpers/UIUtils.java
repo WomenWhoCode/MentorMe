@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -242,21 +243,25 @@ public class UIUtils {
 						}
 					} else {
 						final Runnable login = new Runnable() {
-							
 							@Override
 							public void run() {
+								final ProgressDialog progressDialog = ProgressDialog.show(context, null, "Logging in with Facebook");
 								List<String> permissions = Arrays.asList("basic_info", "email", "user_about_me", "user_location");
 								ParseFacebookUtils.logIn(permissions, context, new LogInCallback() {
 									@Override
 									public void done(ParseUser user, ParseException err) {
+										progressDialog.dismiss();
 										if (user == null) {
 											Log.d("MentorMe", "Uh oh. The user cancelled the Facebook login.");
-										} else if (user.isNew()) {
+											if (completion != null) {
+												logout(context);
+												completion.call(null);
+											}
+										} else if (user.isNew() || user.get(EditProfileActivity.PROFILE_REF) == null) {
 											Log.d("MentorMe", "User signed up and logged in through Facebook!");
 											showEditProfileActivity.run();
 										} else {
-											Log.d("MentorMe", "User logged in through Facebook!");
-											showEditProfileActivity.run();
+											getOrCreateLoggedInUser(context, completion);
 										}
 									}
 								});
@@ -267,19 +272,21 @@ public class UIUtils {
 						} else {
 							final View view = getLoginView(context);
 							final Button loginButton = (Button) view.findViewById(R.id.loginButton);
-							loginButton.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									login.run();
-								}
-							});
 							final AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(title).setView(view).setOnCancelListener(new OnCancelListener() {
 								@Override
 								public void onCancel(DialogInterface dialog) {
 									completion.call(null);
 								}
+							});							
+							final AlertDialog dialog = builder.create();
+							loginButton.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									login.run();
+									dialog.dismiss();
+								}
 							});
-							builder.show();
+							dialog.show();
 						}
 					}
 				}

@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.codepath.wwcmentorme.models.User;
 
 
 public class HomeActivity extends Activity {
@@ -20,7 +23,6 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		
 		ImageView img = (ImageView)findViewById(R.id.ivBackground);
 		img.setImageResource(R.drawable.spin_animation);
 		AnimationDrawable frameAnimation = (AnimationDrawable) img.getDrawable();
@@ -31,11 +33,31 @@ public class HomeActivity extends Activity {
 		tvFindMentors.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Intent intent = new Intent(HomeActivity.this, MentorListActivity.class);
-				startActivity(intent);
-				overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
+				presentMentorList();
 			}
 		});
+		final TextView tvBecomeAMentor = (TextView)findViewById(R.id.tvBecomeMentor);
+		tvBecomeAMentor.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				UIUtils.login(HomeActivity.this, "Login to become a mentor", new Async.Block<User>() {
+					@Override
+					public void call(final User user) {
+						if (user == null) {
+							
+						} else {
+							presentMentorList();
+						}
+					}
+				}, false);
+			}
+		});
+	}
+	
+	public void presentMentorList() {
+		final Intent intent = new Intent(HomeActivity.this, MentorListActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
 	}
 
 	@Override

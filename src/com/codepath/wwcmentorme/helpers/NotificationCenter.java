@@ -25,6 +25,7 @@ public class NotificationCenter {
 	
 	private static void prune(final String key) {
 		final ArrayList<WeakReference<Listener<? extends Object>>> references = sMap.get(key);
+		if (references == null) return;
 		final ArrayList<WeakReference<Listener<? extends Object>>> referencesToRemove = new ArrayList<WeakReference<Listener<? extends Object>>>();
 		for (final WeakReference<Listener<? extends Object>> weakReference : references) {
 			if (weakReference.get() == null) referencesToRemove.add(weakReference);
@@ -59,6 +60,7 @@ public class NotificationCenter {
 	
 	public static <V> void broadcastChange(final String key, final V oldValue, final V newValue) {
 		final ArrayList<WeakReference<Listener<? extends Object>>> references = sMap.get(key);
+		if (references == null) return;
 		for (final WeakReference<Listener<? extends Object>> weakReference : references) {
 			final Listener<V> listener = (Listener<V>)weakReference.get();
 			if (listener != null) {
