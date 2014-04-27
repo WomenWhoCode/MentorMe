@@ -23,10 +23,8 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        User.setMe(827064128L);
         MentorMeApp.context = this;
         initializeParse();
-       
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
         		cacheInMemory().cacheOnDisc().build();
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())

@@ -20,14 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.DrawerListAdapter;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
-import com.codepath.wwcmentorme.app.MentorMeApp;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.NotificationCenter;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
 import com.google.android.gms.maps.MapFragment;
@@ -38,7 +39,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
 public class MentorListActivity extends AppActivity implements
-android.location.LocationListener, OnBackStackChangedListener {
+android.location.LocationListener, OnBackStackChangedListener, NotificationCenter.Listener<User> {
 	public static final class ListFragment extends Fragment {
 		private View mCachedView;
 		private ViewGroup mCachedViewGroup;
@@ -96,6 +97,7 @@ android.location.LocationListener, OnBackStackChangedListener {
 		});
 		enableDrawer((DrawerLayout) findViewById(R.id.drawer_layout));
 		getFragmentManager().addOnBackStackChangedListener(this);
+		NotificationCenter.registerListener(this, User.NOTIFICATION_ME);
 	}
 
 	private void populateListView() {
@@ -123,21 +125,39 @@ android.location.LocationListener, OnBackStackChangedListener {
 			}
 		});
 	}
+	
+	@Override
+	public void didChange(User oldValue, User newValue) {
+		setupDrawer();
+	}
+	
+	private static final int HEADER_ID = android.R.id.home;
 
 	private void setupDrawer() {
-		final ListView listView = (ListView)findViewById(R.id.left_drawer);
-		final DrawerListAdapter adapter = new DrawerListAdapter(this);
-		if (listView.findViewById(DrawerListAdapter.HEADER_ID) == null) {
-			listView.addHeaderView(adapter.getHeaderView());
-		}
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(new SlideMenuClickListener());
-		if (User.me() != null) {
-			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
-			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
-			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
-			adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));
-		}
+		UIUtils.getOrCreateLoggedInUser(getActivity(), new Async.Block<User>() {
+			@Override
+			public void call(final User user) {
+				final ListView listView = (ListView)findViewById(R.id.left_drawer);
+				final DrawerListAdapter adapter = new DrawerListAdapter(getActivity());
+				LinearLayout headerView = (LinearLayout)listView.findViewById(HEADER_ID);
+				if (headerView == null) {
+					headerView = new LinearLayout(getActivity());
+					headerView.setOrientation(LinearLayout.VERTICAL);
+					headerView.setId(HEADER_ID);
+					listView.addHeaderView(headerView);
+				}
+				headerView.removeAllViews();
+				headerView.addView(adapter.getHeaderView());
+				listView.setAdapter(adapter);
+				listView.setOnItemClickListener(new SlideMenuClickListener());
+				if (User.me() != null) {
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));
+				}				
+			}
+		});
 	}
 
 	private class SlideMenuClickListener implements

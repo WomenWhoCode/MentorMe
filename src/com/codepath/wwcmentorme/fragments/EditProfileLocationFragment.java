@@ -65,12 +65,14 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 	
 	@Override
 	protected void updateProfile() {
-		getProfileUser().setCity(etCity.getText().toString().trim());
-		String zipInput = etZip.getText().toString().trim();
-		if (!TextUtils.isEmpty(zipInput)) {
-			getProfileUser().setZip(Integer.valueOf(zipInput));
+		if (etCity.getText() != null && etZip.getText() != null) {
+			getProfileUser().setCity(etCity.getText().toString().trim());
+			String zipInput = etZip.getText().toString().trim();
+			if (!TextUtils.isEmpty(zipInput)) {
+				getProfileUser().setZip(Integer.valueOf(zipInput));
+			}
+			getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
 		}
-		getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
 	}
 
 	@Override

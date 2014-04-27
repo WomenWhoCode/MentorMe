@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
+import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.NotificationCenter;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.parse.ParseClassName;
 import com.parse.ParseGeoPoint;
@@ -41,9 +43,18 @@ public class User extends ParseObject {
 	private ArrayList<Long> mMentors = new ArrayList<Long>();
 	
 	private static long sMe;
+	public static String NOTIFICATION_ME = "NOTIFICATION_ME";
 	
-	public static void setMe(final long me) {
-		sMe = me;
+	public static void setMe(final User me) {
+		final User oldValue = me();
+		if (me != null) {
+			sMe = me.getFacebookId();
+			sUsers.put(me.getFacebookId(), me);
+		} else {
+			sUsers.remove(sMe);
+			sMe = 0;
+		}
+		NotificationCenter.broadcastChange(NOTIFICATION_ME, oldValue, me);
 	}
 	
 	public static long meId() {

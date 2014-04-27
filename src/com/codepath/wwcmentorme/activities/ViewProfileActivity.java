@@ -351,13 +351,14 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void markConnected() {
+		if (User.me() == null) return;
     	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
 			@Override
 			public void call(Boolean result) {
-				if (result.booleanValue()) {					    
+				if (result.booleanValue()) {
 					user.getMentees().add(User.meId());
-					User.me().getMentors().add(user.getFacebookId());				
-				}						
+					User.me().getMentors().add(user.getFacebookId());
+				}
 			}
 		});
 	}
@@ -373,6 +374,7 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void sendPushNotification() {
+		if (User.me() == null) return;
 		JSONObject obj;
 		try {
 			obj = new JSONObject();
@@ -412,8 +414,7 @@ public class ViewProfileActivity extends AppActivity {
 			ParsePush push = new ParsePush();
 			ParseQuery query = ParseInstallation.getQuery();
 
-			// TODO: Replace with user.getFacebookId()
-			query.whereEqualTo("userId", User.meId()); 
+			query.whereEqualTo("userId", user.getFacebookId()); 
 			push.setQuery(query);
 			push.setData(obj);
 			push.sendInBackground();
@@ -472,11 +473,13 @@ public class ViewProfileActivity extends AppActivity {
 			DataService.getMentors(meId, new Runnable() {
 				@Override
 				public void run() {
-					final ArrayList<Long> mentors = User.me().getMentors();
-					if (mentors.contains(currentUserId)) {
-						item.setTitle("Email");
-					} else {
-						item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
+					if (User.me() != null) {
+						final ArrayList<Long> mentors = User.me().getMentors();
+						if (mentors.contains(currentUserId)) {
+							item.setTitle("Email");
+						} else {
+							item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
+						}
 					}
 				}
 			});
