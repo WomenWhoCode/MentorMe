@@ -27,6 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -54,18 +56,31 @@ public class UIUtils {
 		final AlertDialog dialog = builder.create();
 		dialog.getWindow().setGravity(Gravity.BOTTOM);
 		dialog.getWindow().setWindowAnimations(android.R.style.Animation_InputMethod);
+		final Async.Block<View> typefaceModifier = new Async.Block<View>() {
+			@Override
+			public void call(View result) {
+				if (result instanceof TextView) {
+					final TextView tv = (TextView)result;
+					tv.setTypeface(SANS_SERIF_LIGHT);
+				}
+			}
+		};
 		dialog.setOnShowListener(new OnShowListener() {
 			@Override
 			public void onShow(DialogInterface dialogInterface) {
-				enumerateSubviews(dialog.getWindow().getDecorView(), new Async.Block<View>() {
-					@Override
-					public void call(View result) {
-						if (result instanceof TextView) {
-							final TextView tv = (TextView)result;
-							tv.setTypeface(SANS_SERIF_LIGHT);
-						}
-					}
-				});
+				enumerateSubviews(dialog.getWindow().getDecorView(), typefaceModifier);
+			}
+		});
+		final ListView ls = dialog.getListView();
+		ls.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				enumerateSubviews(view, typefaceModifier);
 			}
 		});
 		dialog.show();

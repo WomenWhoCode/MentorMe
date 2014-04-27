@@ -344,7 +344,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 			Async.dispatchMain(new Runnable() {
 				@Override
 				public void run() {
-					MapActivity.populateMapFragment(sMapFragment, getProgressBar(), markers);
+					MapActivity.populateMapFragment(sMapFragment, getProgressBar(), markers, MentorListActivity.this, mGeoPoint);
 				}
 			});
 		}
