@@ -295,34 +295,40 @@ public class ViewProfileActivity extends AppActivity {
 				tvAddReview.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// Show an alert dialog to add a review
-						final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-						final View view = getLayoutInflater().inflate(R.layout.progress_dialog, null);
-						final RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
-						ratingBar.setStepSize(0.5f);
-						ratingBar.setRating(rating != null ? (float)(double)rating.getRating() : 0);
-						customizeProgressBar(ratingBar, true);
-						builder.setTitle(tvAddReview.getText()).setView(view).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+						UIUtils.login(getActivity(), "Login to add a review", new Async.Block<User>() {
 							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								
-							}
-						}).setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								getProgressBar().setVisibility(View.VISIBLE);
-								DataService.putRating(rating, user.getFacebookId(), ratingBar.getRating(), new Async.Block<Boolean>() {
+							public void call(final User result) {
+								if (result == null) return;
+								// Show an alert dialog to add a review
+								final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+								final View view = getLayoutInflater().inflate(R.layout.progress_dialog, null);
+								final RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
+								ratingBar.setStepSize(0.5f);
+								ratingBar.setRating(rating != null ? (float)(double)rating.getRating() : 0);
+								customizeProgressBar(ratingBar, true);
+								builder.setTitle(tvAddReview.getText()).setView(view).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 									@Override
-									public void call(Boolean result) {
-										if (result.booleanValue()) {
-											populateAverageRating();
-											populateAddReview();
-											getProgressBar().setVisibility(View.INVISIBLE);
-										}
+									public void onClick(DialogInterface dialog, int which) {
+										
 									}
-								});
+								}).setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										getProgressBar().setVisibility(View.VISIBLE);
+										DataService.putRating(rating, user.getFacebookId(), ratingBar.getRating(), new Async.Block<Boolean>() {
+											@Override
+											public void call(Boolean result) {
+												if (result.booleanValue()) {
+													populateAverageRating();
+													populateAddReview();
+													getProgressBar().setVisibility(View.INVISIBLE);
+												}
+											}
+										});
+									}
+								}).show();
 							}
-						}).show();
+						}, false);
 					}
 				});
 			}
@@ -330,13 +336,21 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(final MenuItem item) {
 		int id = item.getItemId();
+		if (item.getTitle() == null) return true;
 		if (id == R.id.miProfileAction) {
 			if(item.getTitle().equals("Connect")) {
-				sendPushNotification();
-				item.setTitle("Request Sent");
-				DataService.addRequestsSent(user.getFacebookId());
+				UIUtils.login(getActivity(), "Login to connect to your mentor", new Async.Block<User>() {
+					@Override
+					public void call(User result) {
+						if (result != null) {
+							sendPushNotification();
+							item.setTitle("Request Sent");
+							DataService.addRequestsSent(user.getFacebookId());
+						}
+					}
+				}, false);
 			} else if (item.getTitle().equals("Email")) {
 				DataService.removeResponsePending(user.getFacebookId());
 				Intent email = new Intent(Intent.ACTION_SEND);
@@ -351,13 +365,14 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void markConnected() {
+		if (User.me() == null) return;
     	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
 			@Override
 			public void call(Boolean result) {
-				if (result.booleanValue()) {					    
+				if (result.booleanValue()) {
 					user.getMentees().add(User.meId());
-					User.me().getMentors().add(user.getFacebookId());				
-				}						
+					User.me().getMentors().add(user.getFacebookId());
+				}
 			}
 		});
 	}
@@ -373,6 +388,7 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	private void sendPushNotification() {
+		if (User.me() == null) return;
 		JSONObject obj;
 		try {
 			obj = new JSONObject();
@@ -410,14 +426,12 @@ public class ViewProfileActivity extends AppActivity {
 			obj.put(ViewProfileActivity.USER_ID_KEY, User.meId());
 
 			ParsePush push = new ParsePush();
-			ParseQuery query = ParseInstallation.getQuery();
+			ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
 
-			// TODO: Replace with user.getFacebookId()
-			query.whereEqualTo("userId", User.meId()); 
+			query.whereEqualTo("userId", user.getFacebookId()); 
 			push.setQuery(query);
 			push.setData(obj);
 			push.sendInBackground();
-			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -455,8 +469,8 @@ public class ViewProfileActivity extends AppActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.view_profile, menu);
-		super.onCreateOptionsMenu(menu);
 		this.menu = menu;
+		super.onCreateOptionsMenu(menu);
 		updateMenuTitles();
 		return true;
 	}
@@ -464,6 +478,10 @@ public class ViewProfileActivity extends AppActivity {
 	private void updateMenuTitles() {
 		if (menu == null || user == null) return;
 		final MenuItem item = menu.findItem(R.id.miProfileAction);
+		if (User.me() == null) {
+			item.setTitle("Connect");
+			return;
+		}
 		final long meId = User.meId();
 		final long currentUserId = user.getFacebookId();
 		if (currentUserId == meId && !mIsResponse) {
@@ -472,11 +490,13 @@ public class ViewProfileActivity extends AppActivity {
 			DataService.getMentors(meId, new Runnable() {
 				@Override
 				public void run() {
-					final ArrayList<Long> mentors = User.me().getMentors();
-					if (mentors.contains(currentUserId)) {
-						item.setTitle("Email");
-					} else {
-						item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
+					if (User.me() != null) {
+						final ArrayList<Long> mentors = User.me().getMentors();
+						if (mentors.contains(currentUserId)) {
+							item.setTitle("Email");
+						} else {
+							item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
+						}
 					}
 				}
 			});

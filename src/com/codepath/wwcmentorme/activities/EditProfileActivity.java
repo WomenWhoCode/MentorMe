@@ -1,5 +1,8 @@
 package com.codepath.wwcmentorme.activities;
 
+import java.util.ArrayList;
+
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
@@ -41,6 +44,18 @@ public class EditProfileActivity extends AppActivity {
 	private ImageView ivUserProfile;
 	private TextView tvFirstName;
 	private TextView tvLastName;
+	
+	private static ArrayList<Runnable> sCompletion = new ArrayList<Runnable>();
+	
+	public static void startWithCompletion(final Activity context, final Runnable completion) {
+		if (sCompletion.size() > 0) {
+			// There is already one instance of EditProfileActivity waiting to get completed.
+			sCompletion.add(completion);
+		}
+		Intent intent = new Intent(context, EditProfileActivity.class);
+		context.startActivity(intent);
+		sCompletion.add(completion);
+	}
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {		
@@ -63,43 +78,12 @@ public class EditProfileActivity extends AppActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser == null) {
-			// If the user is not logged in, go to the
-			// activity showing the login view.
-			startLoginActivity();
-		} else if (currentUser.get(PROFILE_REF) != null) {
-			// Check if the user is currently logged
-			// and show any cached content
-			User mentorMeUser = (User)currentUser.get(PROFILE_REF);
-			mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
-
-				@Override
-				public void done(User user, ParseException pe) {
-					if (pe == null) {
-						populateViewsWithUserInfo(user);
-					}
-				}
-			});
-		} else {
-			// user is logged in but profile hasn't been sync'd
-			// Fetch Facebook user info if the session is active
-			Session session = ParseFacebookUtils.getSession();
-			if (session != null && session.isOpened()) {
-				makeMeRequest();
-			} else {
-				startLoginActivity();
-			}
+		Session session = ParseFacebookUtils.getSession();
+		if (session != null && session.isOpened()) {
+			makeMeRequest();
 		}
 	}
 
-	private void startLoginActivity() {
-		Intent intent = new Intent(this, FbLoginActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(intent);
-	}
-	
 	private void makeMeRequest() {
 		// Populate mentor me user with facebook profile info
 		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
@@ -129,6 +113,7 @@ public class EditProfileActivity extends AppActivity {
 							ParseUser currentUser = ParseUser.getCurrentUser();
 							currentUser.put(PROFILE_REF, mentorMeUser);
 							currentUser.saveInBackground();
+							User.setMe(mentorMeUser);
 
 							// Show the user info
 							populateViewsWithUserInfo(mentorMeUser);
@@ -137,7 +122,7 @@ public class EditProfileActivity extends AppActivity {
 							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
 								Log.d("MentorMe", "The facebook session was invalidated.");
-								onLogoutButtonClicked();
+								finish();
 							} else {
 								Log.d("MentorMe", "Some other error: " + response.getError().getErrorMessage());
 							}
@@ -146,17 +131,17 @@ public class EditProfileActivity extends AppActivity {
 				});
 		request.executeAsync();
 	}
-
-	private void onLogoutButtonClicked() {
-		// Log the user out
-		ParseUser.logOut();
-
-		// Go to the login view
-		startLoginActivity();
-	}
 	
+	@Override
+	public void finish() {
+		for (final Runnable runnable : sCompletion) {
+			runnable.run();
+		}
+		sCompletion.clear();
+		super.finish();
+	}
+
 	private void populateViewsWithUserInfo(User mentorMeUser) {
-		User.setMe(mentorMeUser.getFacebookId());
 		ImageLoader.getInstance().displayImage(mentorMeUser.getProfileImageUrl(200), ivUserProfile);
 		tvFirstName.setText(mentorMeUser.getFirstName());
 		tvLastName.setText(mentorMeUser.getLastName());

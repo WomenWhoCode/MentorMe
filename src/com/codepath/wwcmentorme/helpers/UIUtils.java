@@ -1,12 +1,16 @@
 package com.codepath.wwcmentorme.helpers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -17,7 +21,9 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +31,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.activities.EditProfileActivity;
+import com.codepath.wwcmentorme.models.User;
+import com.parse.GetCallback;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
 
 public class UIUtils {
 	public static final ColorDrawable TRANSPARENT = new ColorDrawable(Color.TRANSPARENT);
@@ -130,5 +145,157 @@ public class UIUtils {
 	public static void enableButton(Button btn) {
 		btn.setEnabled(true);
 		btn.getBackground().setAlpha(255);
+	}
+	
+	public static View getLoginView(final Context context) {
+		LayoutInflater inflator = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		final View view = inflator.inflate(R.layout.activity_fb_login, null);
+		final Button loginButton = (Button) view.findViewById(R.id.loginButton);
+		loginButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.com_facebook_inverse_icon, 0, 0, 0);
+		loginButton.setCompoundDrawablePadding(
+				context.getResources().getDimensionPixelSize(R.dimen.com_facebook_loginview_compound_drawable_padding));
+		loginButton.setPadding(context.getResources().getDimensionPixelSize(R.dimen.com_facebook_loginview_padding_left),
+				context.getResources().getDimensionPixelSize(R.dimen.com_facebook_loginview_padding_top),
+				context.getResources().getDimensionPixelSize(R.dimen.com_facebook_loginview_padding_right),
+				context.getResources().getDimensionPixelSize(R.dimen.com_facebook_loginview_padding_bottom));
+		return view;
+	}
+	
+	public static void logout(final Context context) {
+		ParseUser.logOut();
+		User.setMe(null);
+	}
+	
+	public static void getOrCreateLoggedInUser(final Activity activity, final Async.Block<User> completion) {
+		if (User.me() != null) {
+			if (completion != null) {
+				completion.call(User.me());
+			}
+			return;
+		}
+		ParseUser currentUser = ParseUser.getCurrentUser();
+		if (currentUser != null) {
+			if (currentUser.get(EditProfileActivity.PROFILE_REF) != null) {
+				// Check if the user is currently logged
+				// and show any cached content
+				final User mentorMeUser = (User)currentUser.get(EditProfileActivity.PROFILE_REF);
+				mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
+					@Override
+					public void done(User user, ParseException pe) {
+						if (pe == null) {
+							User.setMe(mentorMeUser);
+							if (completion != null) {
+								completion.call(mentorMeUser);
+							}
+						}
+					}
+				});
+			} else {
+				if (completion != null) {
+					completion.call(null);
+				}
+			}
+		} else {
+			if (completion != null) {
+				completion.call(null);
+			}
+		}
+	}
+	
+	public static void login(final Activity context, final String title, final Async.Block<User> completion, final boolean skipUI) {
+		getOrCreateLoggedInUser(context, new Async.Block<User>() {
+			@Override
+			public void call(User result) {
+				if (result != null) {
+					if (completion != null) {
+						completion.call(result);
+					}
+				} else {
+					ParseUser currentUser = ParseUser.getCurrentUser();
+					final Runnable showEditProfileActivity = new Runnable() {
+						@Override
+						public void run() {
+							EditProfileActivity.startWithCompletion(context, new Runnable() {
+								@Override
+								public void run() {
+									if (completion != null) {
+										completion.call(User.me());
+									}
+								}
+							});
+						}
+					};
+					if (currentUser != null) {
+						if (currentUser.get(EditProfileActivity.PROFILE_REF) != null) {
+							// Check if the user is currently logged
+							// and show any cached content
+							final User mentorMeUser = (User)currentUser.get(EditProfileActivity.PROFILE_REF);
+							mentorMeUser.fetchIfNeededInBackground(new GetCallback<User>() {
+								@Override
+								public void done(User user, ParseException pe) {
+									if (pe == null) {
+										User.setMe(mentorMeUser);
+										if (completion != null) {
+											completion.call(mentorMeUser);
+										}
+									}
+								}
+							});
+						} else {
+							// The login process has not yet been completed.
+							showEditProfileActivity.run();
+						}
+					} else {
+						final Runnable login = new Runnable() {
+							@Override
+							public void run() {
+								final ProgressDialog progressDialog = ProgressDialog.show(context, null, "Logging in with Facebook");
+								List<String> permissions = Arrays.asList("basic_info", "email", "user_about_me", "user_location");
+								ParseFacebookUtils.logIn(permissions, context, new LogInCallback() {
+									@Override
+									public void done(ParseUser user, ParseException err) {
+										progressDialog.dismiss();
+										if (user == null) {
+											Log.d("MentorMe", "Uh oh. The user cancelled the Facebook login.");
+											if (completion != null) {
+												logout(context);
+												completion.call(null);
+											}
+										} else if (user.isNew() || user.get(EditProfileActivity.PROFILE_REF) == null) {
+											Log.d("MentorMe", "User signed up and logged in through Facebook!");
+											showEditProfileActivity.run();
+										} else {
+											getOrCreateLoggedInUser(context, completion);
+										}
+									}
+								});
+							}
+						};
+						if (skipUI) {
+							login.run();
+						} else {
+							final View view = getLoginView(context);
+							final Button loginButton = (Button) view.findViewById(R.id.loginButton);
+							final AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle(title).setView(view).setOnCancelListener(new OnCancelListener() {
+								@Override
+								public void onCancel(DialogInterface dialog) {
+									completion.call(null);
+								}
+							});							
+							final AlertDialog dialog = builder.create();
+							loginButton.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									login.run();
+									dialog.dismiss();
+								}
+							});
+							dialog.show();
+						}
+					}
+				}
+			}
+		});
+		
 	}
 }

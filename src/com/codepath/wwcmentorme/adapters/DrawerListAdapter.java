@@ -2,6 +2,7 @@ package com.codepath.wwcmentorme.adapters;
 
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
@@ -15,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.activities.FbLoginActivity;
+import com.codepath.wwcmentorme.activities.EditProfileActivity;
 import com.codepath.wwcmentorme.activities.UserListActivity;
+import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -25,7 +28,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class DrawerListAdapter extends
 		ArrayAdapter<DrawerListAdapter.DrawerItem> {
-	public static final int HEADER_ID = android.R.id.home;
 
 	public static class DrawerItem {
 		public int stringId;
@@ -44,13 +46,24 @@ public class DrawerListAdapter extends
 	public View getHeaderView() {
 		final User user = User.me();
 		if (user == null) {
-			return getView(new DrawerItem(R.string.fb_login,
-					R.drawable.ic_fb_login), null, null);
+			final View view = UIUtils.getLoginView(getContext());
+			final Button loginButton = (Button) view.findViewById(R.id.loginButton);
+			loginButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					UIUtils.login((Activity)getContext(), null, new Async.Block<User>() {
+						@Override
+						public void call(User result) {
+							
+						}
+						
+					}, true);
+				}
+			});
+			return view;
 		}
-		LayoutInflater inflator = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		final View view = inflator.inflate(R.layout.user_header, null);
-		view.setId(HEADER_ID);
 		final ViewHolder.UserItem holder = new ViewHolder.UserItem();
 		holder.ivMentorProfile = (ImageView) view
 				.findViewById(R.id.ivMentorProfile);
@@ -104,8 +117,10 @@ public class DrawerListAdapter extends
 					intent.putExtra("userId", User.meId());
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(R.string.drawer_edit_profile)) {
-					final Intent intent = new Intent(getContext(), FbLoginActivity.class);
+					final Intent intent = new Intent(getContext(), EditProfileActivity.class);
 					getContext().startActivity(intent);
+				} else if (buttonText == getContext().getResources().getString(R.string.drawer_sign_out)) {
+					UIUtils.logout(getContext());
 				}
 			}
 		});
