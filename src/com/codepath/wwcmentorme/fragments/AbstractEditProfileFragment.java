@@ -2,46 +2,30 @@ package com.codepath.wwcmentorme.fragments;
 
 import android.app.Fragment;
 import android.util.Log;
+import android.view.View;
 
-import com.codepath.wwcmentorme.activities.EditProfileActivity.OnKeyboardVisibilityListener;
+import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-public abstract class AbstractEditProfileFragment extends Fragment implements OnKeyboardVisibilityListener {
-	private User profileUser;
+public abstract class AbstractEditProfileFragment extends Fragment {
+	private long profileUserId;
 	
-	abstract void maybeEnableNextButton();
+	public abstract void validateInputs(final Async.Block<View> invalidView);
 	abstract void updateViews(User user);
 	abstract void updateProfile();
 	
 	public User getProfileUser() {
-		return profileUser;
+		return User.getUser(profileUserId);
+	}
+	
+	public AbstractEditProfileFragment setProfileId(long profileId) {
+		this.profileUserId = profileId;
+		return this;
 	}
 
-	public void setProfileUser(User profileUser) {
-		this.profileUser = profileUser;
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		ParseUser currentUser = ParseUser.getCurrentUser();
-		if (currentUser != null && currentUser.get("profile") != null) {
-			profileUser = (User) currentUser.get("profile");
-			profileUser.fetchIfNeededInBackground(new GetCallback<User>() {
-				@Override
-				public void done(User user, ParseException pe) {
-					if (pe == null) {
-						updateViews(user);
-					}
-				}
-			});
-		}
-	}
-	
 	@Override
 	public void onPause() {
 		saveUserData();
@@ -49,13 +33,11 @@ public abstract class AbstractEditProfileFragment extends Fragment implements On
 	}
 	
 	@Override
-	public void onVisibilityChanged(boolean visible) {
-		if (!visible) {
-			saveUserData();
-			maybeEnableNextButton();
-		}
+	public void onResume() {
+		super.onResume();
+		updateViews(getProfileUser());
 	}
-
+	
 	void saveUserData() {
 		updateProfile();
 		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {

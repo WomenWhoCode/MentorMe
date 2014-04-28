@@ -1,5 +1,6 @@
 package com.codepath.wwcmentorme.fragments;
 
+import android.location.Address;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -14,12 +15,13 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.models.User;
+import com.parse.ParseGeoPoint;
 
 public class EditProfileLocationFragment extends AbstractEditProfileFragment {	
-	private EditText etCity;
-	private EditText etZip;
+	private EditText etAddress;
 	private EditText etAboutme;
 	private Button btnGoToStep2;
 	
@@ -45,8 +47,7 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 				return false;
 			}
 		});
-		etCity = (EditText) v.findViewById(R.id.etCity);
-		etZip = (EditText) v.findViewById(R.id.etZip);
+		etAddress = (EditText) v.findViewById(R.id.etAddress);
 		etAboutme = (EditText) v.findViewById(R.id.etAboutme);
 		btnGoToStep2 = (Button) v.findViewById(R.id.btnGoToStep2);
 		OnEditorActionListener listener = new OnEditorActionListener() {
@@ -54,45 +55,46 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
 					saveUserData();
-					maybeEnableNextButton();
 				}
 				return false;
 			}
 		};
-		etCity.setOnEditorActionListener(listener);
-		etZip.setOnEditorActionListener(listener);
+		etAddress.setOnEditorActionListener(listener);
 	}
 	
 	@Override
 	protected void updateProfile() {
-		if (etCity.getText() != null && etZip.getText() != null) {
-			getProfileUser().setCity(etCity.getText().toString().trim());
-			String zipInput = etZip.getText().toString().trim();
-			if (!TextUtils.isEmpty(zipInput)) {
-				getProfileUser().setZip(Integer.valueOf(zipInput));
-			}
+		if (etAddress.getText() != null) {
+			getProfileUser().setAddress(etAddress.getText().toString().trim());
 			getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
 		}
 	}
 
 	@Override
-	protected void maybeEnableNextButton() {
-		if (TextUtils.getTrimmedLength(etCity.getText().toString()) > 0 &&
-				TextUtils.getTrimmedLength(etZip.getText().toString()) > 0 &&
-				TextUtils.getTrimmedLength(etAboutme.getText().toString()) > 0) {
-			UIUtils.enableButton(btnGoToStep2);
-		} else {
-			UIUtils.disableButton(btnGoToStep2);
-		}
+	void updateViews(User profileUser) {
+		etAddress.setText(profileUser.getAddress());
+		etAboutme.setText(profileUser.getAboutMe());
 	}
 	
-	@Override
-	void updateViews(User profileUser) {
-		etCity.setText(profileUser.getCity());
-		if (profileUser.getZip() > 0) {
-			etZip.setText(String.valueOf(profileUser.getZip()));
+	@Override 
+	public void validateInputs(final Async.Block<View> invalidView) {
+		View view = null;
+		if (TextUtils.getTrimmedLength(etAddress.getText().toString()) == 0) view = etAddress;
+		if (view == null && TextUtils.getTrimmedLength(etAboutme.getText().toString()) == 0) view = etAboutme;
+		if (view == null) {
+			Utils.geocode(getActivity(), new Utils.LocationParams(etAddress.getText().toString()), new Async.Block<Address>() {
+				@Override
+				public void call(final Address address) {
+					if (address == null) {
+						invalidView.call(etAddress);
+					} else {
+						getProfileUser().setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
+						invalidView.call(null);
+					}
+				}
+			});
+		} else {
+			invalidView.call(view);
 		}
-		etAboutme.setText(profileUser.getAboutMe());
-		maybeEnableNextButton();
 	}
 }

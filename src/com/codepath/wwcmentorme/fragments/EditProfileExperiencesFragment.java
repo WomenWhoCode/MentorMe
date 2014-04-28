@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
 
@@ -42,7 +43,6 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
 					saveUserData();
-					maybeEnableNextButton();
 					return true;
 				}
 				return false;
@@ -58,19 +58,20 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 		getProfileUser().setJobTitle(etJobTitle.getText().toString().trim());
 		getProfileUser().setCompanyName(etCompany.getText().toString().trim());
 		String yearsInput = etYearsExperience.getText().toString().trim();
+		int years = Integer.valueOf(yearsInput);
 		if (!TextUtils.isEmpty(yearsInput)) {
-			getProfileUser().setYearsExperience(Integer.valueOf(yearsInput));
+			getProfileUser().setYearsExperience(years);
 		}
 	}
 
 	@Override
-	protected void maybeEnableNextButton() {
-		if (TextUtils.getTrimmedLength(etJobTitle.getText().toString()) > 0 &&
-				TextUtils.getTrimmedLength(etYearsExperience.getText().toString()) > 0 &&
-				TextUtils.getTrimmedLength(etCompany.getText().toString()) > 0) {
-			UIUtils.enableButton(btnGoToAddSkills);
-		} else {
-			UIUtils.disableButton(btnGoToAddSkills);
+	public void validateInputs(final Async.Block<View> invalidView) {
+		View view = null;
+		if (TextUtils.getTrimmedLength(etJobTitle.getText().toString()) == 0) view = etJobTitle;
+		if (view == null && TextUtils.getTrimmedLength(etCompany.getText().toString()) == 0) view = etCompany;
+		if (view == null && TextUtils.getTrimmedLength(etYearsExperience.getText().toString()) == 0) view = etYearsExperience;
+		if (invalidView != null) {
+			invalidView.call(view);
 		}
 	}
 	
@@ -78,7 +79,9 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	void updateViews(User profileUser) {
 		etJobTitle.setText(profileUser.getJobTitle());
 		etCompany.setText(profileUser.getCompanyName());
-		etYearsExperience.setText(String.valueOf(profileUser.getYearsExperience()));
-		maybeEnableNextButton();
+		int years = profileUser.getYearsExperience();
+		if (years > 0) {
+			etYearsExperience.setText(String.valueOf(years));
+		}
 	}
 }

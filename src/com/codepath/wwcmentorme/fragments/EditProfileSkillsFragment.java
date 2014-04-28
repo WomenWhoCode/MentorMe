@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.models.User;
 
 public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
@@ -22,10 +23,10 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 		
 	}
 	
-	@Override
-	protected void maybeEnableNextButton() {
-		// TODO Auto-generated method stub
-		
+	
+	@Override 
+	public void validateInputs(final Async.Block<View> invalidView) {
+		invalidView.call(null);
 	}
 
 	@Override
