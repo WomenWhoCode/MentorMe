@@ -39,23 +39,14 @@
         android:layout_toRightOf="@+id/tvFirstName"
         android:textSize="28sp" />
 
-    <TextView
-        android:id="@+id/tvLinkAccountsLabel"
-        style="@style/TextViewThin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvFirstName"
-        android:layout_below="@+id/tvFirstName"
-        android:layout_marginTop="8dp"
-        android:text="Link accounts:"/>
     
 	<TableLayout
         android:id="@+id/tlAccountButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvLinkAccountsLabel"
+        android:layout_below="@+id/tvFirstName"
         android:background="#ffffff"
-        android:paddingLeft="10dp"
+        android:layout_marginLeft="64dp"
         android:stretchColumns="*" >
 
         <TableRow
