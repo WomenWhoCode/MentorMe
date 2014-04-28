@@ -6,22 +6,30 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.location.Address;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.fragments.AbstractEditProfileFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileExperiencesFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileSkillsFragment;
+import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.models.User;
 import com.facebook.FacebookRequestError;
 import com.facebook.Request;
@@ -29,21 +37,16 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseUser;
+import com.parse.ParseGeoPoint;
 
 public class EditProfileActivity extends AppActivity {
 	public static final String PROFILE_REF = "profile";
 	
-	public interface OnKeyboardVisibilityListener {
-		void onVisibilityChanged(boolean visible);
-	}
-	
 	private ImageView ivUserProfile;
 	private TextView tvFirstName;
 	private TextView tvLastName;
+	private long mUserId;
 	
 	private static ArrayList<Runnable> sCompletion = new ArrayList<Runnable>();
 	
@@ -62,18 +65,39 @@ public class EditProfileActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
 		setupViews();
-		setupKeyboardVisibilityListener();
 		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override
 			public void onBackStackChanged() {
-				Fragment f = getFragmentManager().findFragmentById(R.id.flContainer);
-			    if (f != null) {
-			    	updateTitle(f);
-			    }				
+				updateTitle();
 			}
 		});
-		goToStep1(null);
+		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		setupKeyboardVisibilityListener();
 	}
+	
+	private void setupKeyboardVisibilityListener() {
+		final View activityRootView = findViewById(R.id.rlEditProfileRootContainer);
+		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+			private final Rect r = new Rect();
+			private boolean wasOpened;			
+			
+			@Override
+			public void onGlobalLayout() {
+				//r will be populated with the coordinates of your view that area still visible.
+				activityRootView.getWindowVisibleDisplayFrame(r);
+				int heightDiff = activityRootView.getRootView().getHeight() - r.height();
+				boolean isOpen = heightDiff > 100;
+				if (isOpen != wasOpened) { // if more than 100 pixels, it's probably an open keyboard
+					wasOpened = isOpen;
+					final ScrollView sv = (ScrollView)findViewById(R.id.svEditProfileRoot);
+					int y = isOpen ? sv.getHeight() : 0;
+					sv.smoothScrollTo(0, y);
+					setActionBarVisible(!isOpen);
+				}
+			}
+		}); 
+	}
+
 
 	@Override
 	public void onResume() {
@@ -91,8 +115,9 @@ public class EditProfileActivity extends AppActivity {
 					@Override
 					public void onCompleted(GraphUser fbGraphUser, Response response) {
 						if (fbGraphUser != null) {
-							User mentorMeUser = new User();
-							mentorMeUser.setFacebookId(Long.valueOf(fbGraphUser.getId()));
+							mUserId = Long.valueOf(fbGraphUser.getId());
+							final User mentorMeUser = new User();
+							mentorMeUser.setFacebookId(mUserId);
 							mentorMeUser.setFirstName(fbGraphUser.getFirstName());
 							mentorMeUser.setLastName(fbGraphUser.getLastName());
 							if (fbGraphUser.getProperty("email") != null) {
@@ -100,8 +125,22 @@ public class EditProfileActivity extends AppActivity {
 							}
 							if (fbGraphUser.getLocation() != null && fbGraphUser.getLocation().getProperty("name") != null) {
 								String locationName = (String) fbGraphUser.getLocation().getProperty("name");
-								String city = TextUtils.substring(locationName, 0, locationName.indexOf(","));
-								mentorMeUser.setCity(city);
+								mentorMeUser.setAddress(locationName);
+								Utils.geocode(getActivity(), new Utils.LocationParams(locationName), new Async.Block<Address>() {
+									@Override
+									public void call(Address address) {
+										if (address != null) {
+											mentorMeUser.setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
+											goToStep1(null);
+											Async.dispatchMain(new Runnable() {
+												@Override
+												public void run() {
+													updateTitle();
+												}
+											});
+										}
+									}
+								});
 							}
 							if (fbGraphUser.getProperty("gender") != null) {
 								mentorMeUser.setGender((String) fbGraphUser.getProperty("gender"));
@@ -110,14 +149,8 @@ public class EditProfileActivity extends AppActivity {
 							if (fbGraphUser.getProperty("about") != null) {
 								mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
 							}
-							ParseUser currentUser = ParseUser.getCurrentUser();
-							currentUser.put(PROFILE_REF, mentorMeUser);
-							currentUser.saveInBackground();
-							User.setMe(mentorMeUser);
-
 							// Show the user info
 							populateViewsWithUserInfo(mentorMeUser);
-
 						} else if (response.getError() != null) {
 							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
@@ -153,32 +186,15 @@ public class EditProfileActivity extends AppActivity {
 		tvLastName = (TextView) findViewById(R.id.tvLastName);
 	}
 	
-	private void setupKeyboardVisibilityListener() {
-		final View activityRootView = findViewById(R.id.rlEditProfileRootContainer);
-		activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-			private final Rect r = new Rect();
-			private boolean wasOpened;			
-			
-			@Override
-			public void onGlobalLayout() {
-				//r will be populated with the coordinates of your view that area still visible.
-				activityRootView.getWindowVisibleDisplayFrame(r);
-
-				int heightDiff = activityRootView.getRootView().getHeight() - r.height();
-				boolean isOpen = heightDiff > 100;
-				if (isOpen != wasOpened) { // if more than 100 pixels, it's probably an open keyboard
-					wasOpened = isOpen;
-					Fragment currentFragment = getFragmentManager().findFragmentById(R.id.flContainer);
-					if (currentFragment != null) {
-						((OnKeyboardVisibilityListener) currentFragment).onVisibilityChanged(isOpen);
-					}
-				}
-			}
-		}); 
-	}
-	
-	private void updateTitle(Fragment f) {
-		setTitle(String.format("%s %s/3", getString(R.string.title_activity_edit_profile), f.getTag()));
+	private void updateTitle() {
+		Fragment f = getFragmentManager().findFragmentById(R.id.flContainer);
+		if (f != null) {
+			int step = Integer.valueOf(f.getTag());
+			final String s1 = step == 1 ? "\u2776" : "\u2780";
+			final String s2 = step == 2 ? "\u2777" : "\u2781";
+			final String s3 = step == 3 ? "\u2778" : "\u2782";
+			setTitle(String.format("%s %s\u2015%s\u2015%s", getString(R.string.title_activity_edit_profile), s1, s2, s3));
+		}
 	}
 	
 	@Override
@@ -200,23 +216,60 @@ public class EditProfileActivity extends AppActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	public void validate(final Async.Block<Boolean> completion) {
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+		AbstractEditProfileFragment f = (AbstractEditProfileFragment)getFragmentManager().findFragmentById(R.id.flContainer);
+		if (f != null) {
+			f.validateInputs(new Async.Block<View>() {
+				@Override
+				public void call(View result) {
+					if (result != null) {
+						result.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
+					}
+					completion.call(result == null);
+				}
+			});
+		} else {
+			completion.call(true);
+		}
+	}
+	
 	public void goToStep1(View v) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileLocationFragment(), "1");
-		ft.commit();
+		validate(new Async.Block<Boolean>() {
+			@Override
+			public void call(Boolean result) {
+				if (!result.booleanValue()) return;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.replace(R.id.flContainer, new EditProfileLocationFragment().setProfileId(mUserId), "1");
+				ft.commit();
+			}
+		});
 	}
 	
 	public void goToStep2(View v) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileExperiencesFragment(), "2").addToBackStack(null);
-		ft.commit();
+		validate(new Async.Block<Boolean>() {
+			@Override
+			public void call(Boolean result) {
+				if (!result.booleanValue()) return;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.replace(R.id.flContainer, new EditProfileExperiencesFragment().setProfileId(mUserId), "2").addToBackStack(null);
+				ft.commit();
+			}
+		});
 	}
 	
 	public void goToAddSkills(View v) {
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, new EditProfileSkillsFragment(), "3").addToBackStack(null);
-		ft.commit();
+		validate(new Async.Block<Boolean>() {
+			@Override
+			public void call(Boolean result) {
+				if (!result.booleanValue()) return;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.replace(R.id.flContainer, new EditProfileSkillsFragment().setProfileId(mUserId), "3").addToBackStack(null);
+				ft.commit();
+			}
+		});
 	}
 	
 	public void addMentorSkills(View v) {
