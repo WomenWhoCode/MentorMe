@@ -45,14 +45,28 @@ import com.parse.ParseUser;
 
 public class UIUtils {
 	public static final ColorDrawable TRANSPARENT = new ColorDrawable(Color.TRANSPARENT);
-	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
 	public static final Typeface SANS_SERIF_THIN = Typeface.create("sans-serif-thin", Typeface.NORMAL);
+	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
+	public static final Typeface SANS_SERIF = Typeface.create("sans-serif", Typeface.NORMAL);
+	public static final Typeface SANS_SERIF_BOLD = Typeface.create("sans-serif-bold", Typeface.BOLD);
+	public static final int COLOR_ACTIONBAR = Color.parseColor("#00B6AA");
 	public static int selector = -1;
 	
 	public static void showActionSheet(final Context context, final CharSequence title, final CharSequence[] items,
 			final DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(title).setSingleChoiceItems(items, selector, onClickListener);
+		showActionSheet(context, builder);
+	}
+	
+	public static void showActionSheet(final Context context, final CharSequence title, final CharSequence[] items, 
+			final boolean[] checkedItems, final DialogInterface.OnMultiChoiceClickListener onClickListener) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(title).setMultiChoiceItems(items, checkedItems, onClickListener);
+		showActionSheet(context, builder);
+	}
+	
+	public static void showActionSheet(final Context context, final AlertDialog.Builder builder) {
 		final AlertDialog dialog = builder.create();
 		dialog.getWindow().setGravity(Gravity.BOTTOM);
 		dialog.getWindow().setWindowAnimations(android.R.style.Animation_InputMethod);
@@ -217,7 +231,7 @@ public class UIUtils {
 		}
 	}
 	
-	public static void login(final Activity context, final String title, final Async.Block<User> completion, final boolean skipUI) {
+	public static void login(final Activity context, final String title, final int persona, final Async.Block<User> completion, final boolean skipUI) {
 		getOrCreateLoggedInUser(context, new Async.Block<User>() {
 			@Override
 			public void call(User result) {
@@ -230,7 +244,7 @@ public class UIUtils {
 					final Runnable showEditProfileActivity = new Runnable() {
 						@Override
 						public void run() {
-							EditProfileActivity.startWithCompletion(context, new Runnable() {
+							EditProfileActivity.startWithCompletion(context, persona, new Runnable() {
 								@Override
 								public void run() {
 									if (completion != null) {

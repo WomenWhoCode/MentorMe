@@ -51,7 +51,7 @@ public class DrawerListAdapter extends
 			loginButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					UIUtils.login((Activity)getContext(), null, new Async.Block<User>() {
+					UIUtils.login((Activity)getContext(), null, EditProfileActivity.PERSONA_BOTH, new Async.Block<User>() {
 						@Override
 						public void call(User result) {
 							

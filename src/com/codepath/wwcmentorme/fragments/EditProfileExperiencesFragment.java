@@ -54,13 +54,17 @@ public class EditProfileExperiencesFragment extends AbstractEditProfileFragment 
 	}
 	
 	@Override
-	protected void updateProfile() {
-		getProfileUser().setJobTitle(etJobTitle.getText().toString().trim());
-		getProfileUser().setCompanyName(etCompany.getText().toString().trim());
+	protected void updateProfile(final User profileUser) {
+		profileUser.setJobTitle(etJobTitle.getText().toString().trim());
+		profileUser.setCompanyName(etCompany.getText().toString().trim());
 		String yearsInput = etYearsExperience.getText().toString().trim();
-		int years = Integer.valueOf(yearsInput);
+		int years = 0; 
+		try {
+			years = Integer.valueOf(yearsInput);
+		} catch (Exception e) {
+		}
 		if (!TextUtils.isEmpty(yearsInput)) {
-			getProfileUser().setYearsExperience(years);
+			profileUser.setYearsExperience(years);
 		}
 	}
 

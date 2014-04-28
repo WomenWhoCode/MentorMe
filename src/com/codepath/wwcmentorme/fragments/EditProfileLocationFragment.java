@@ -36,7 +36,7 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 	private void setupViews(View v) {
 		v.setFocusableInTouchMode(true);
 		v.requestFocus();
-		// suppress back button for this fragment
+		// Suppress back button for this fragment.
 		v.setOnKeyListener(new OnKeyListener() {
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -63,10 +63,18 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 	}
 	
 	@Override
-	protected void updateProfile() {
+	protected void updateProfile(final User profileUser) {
 		if (etAddress.getText() != null) {
-			getProfileUser().setAddress(etAddress.getText().toString().trim());
-			getProfileUser().setAboutMe(etAboutme.getText().toString().trim());
+			profileUser.setAddress(etAddress.getText().toString().trim());
+			profileUser.setAboutMe(etAboutme.getText().toString().trim());
+			Utils.geocode(getActivity(), new Utils.LocationParams(etAddress.getText().toString()), new Async.Block<Address>() {
+				@Override
+				public void call(final Address address) {
+					if (address != null) {
+						profileUser.setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
+					}
+				}
+			});
 		}
 	}
 
@@ -88,7 +96,6 @@ public class EditProfileLocationFragment extends AbstractEditProfileFragment {
 					if (address == null) {
 						invalidView.call(etAddress);
 					} else {
-						getProfileUser().setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
 						invalidView.call(null);
 					}
 				}

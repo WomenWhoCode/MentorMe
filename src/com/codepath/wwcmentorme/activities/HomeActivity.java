@@ -49,7 +49,7 @@ public class HomeActivity extends Activity {
 		tvBecomeAMentor.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				UIUtils.login(HomeActivity.this, "Login to become a mentor", new Async.Block<User>() {
+				UIUtils.login(HomeActivity.this, "Login to become a mentor", EditProfileActivity.PERSONA_MENTOR, new Async.Block<User>() {
 					@Override
 					public void call(final User user) {
 						if (user == null) {

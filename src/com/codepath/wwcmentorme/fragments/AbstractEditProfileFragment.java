@@ -12,17 +12,23 @@ import com.parse.SaveCallback;
 
 public abstract class AbstractEditProfileFragment extends Fragment {
 	private long profileUserId;
+	private int persona;
 	
 	public abstract void validateInputs(final Async.Block<View> invalidView);
-	abstract void updateViews(User user);
-	abstract void updateProfile();
+	abstract void updateViews(final User user);
+	abstract void updateProfile(final User user);
 	
 	public User getProfileUser() {
 		return User.getUser(profileUserId);
 	}
 	
-	public AbstractEditProfileFragment setProfileId(long profileId) {
+	public int getPersona() {
+		return persona;
+	}
+	
+	public AbstractEditProfileFragment setProfileId(long profileId, int persona) {
 		this.profileUserId = profileId;
+		this.persona = persona;
 		return this;
 	}
 
@@ -39,16 +45,7 @@ public abstract class AbstractEditProfileFragment extends Fragment {
 	}
 	
 	void saveUserData() {
-		updateProfile();
-		ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
-			@Override
-			public void done(ParseException pe) {
-				if (pe == null) {
-					Log.d("MentorMe", "Update user success!");
-				} else {
-					Log.d("MentorMe", "Update failed");
-				}
-			}
-		});
+		updateProfile(getProfileUser());
+		getProfileUser().saveInBackground();
 	}
 }
