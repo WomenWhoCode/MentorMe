@@ -204,6 +204,9 @@ public class EditProfileActivity extends AppActivity {
 			User.setMe(User.getUser(mUserId));
 			ParseUser.getCurrentUser().put(PROFILE_REF, User.me());
 			ParseUser.getCurrentUser().saveInBackground();
+			User.me().setIsMentee(User.me().getMenteeSkills().length() > 0);
+			User.me().setIsMentor(User.me().getMentorSkills().length() > 0);
+			User.me().saveInBackground();
 		}
 		finish();
 	}
