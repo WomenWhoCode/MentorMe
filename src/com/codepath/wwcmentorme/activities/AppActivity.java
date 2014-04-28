@@ -26,6 +26,7 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Async.Block;
 import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.parse.ParseFacebookUtils;
 
 
 public class AppActivity extends Activity {
@@ -227,5 +228,11 @@ public class AppActivity extends Activity {
     public void startActivity(Intent intent) {
 		super.startActivity(intent);
 		overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
 }

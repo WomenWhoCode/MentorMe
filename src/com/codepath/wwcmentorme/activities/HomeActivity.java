@@ -15,6 +15,7 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
+import com.parse.ParseFacebookUtils;
 
 
 public class HomeActivity extends Activity {
@@ -23,6 +24,14 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		UIUtils.getOrCreateLoggedInUser(this, new Async.Block<User>() {
+			@Override
+			public void call(final User user) {
+				if (user != null) {
+					presentMentorList();
+				}
+			}
+		});
 		ImageView img = (ImageView)findViewById(R.id.ivBackground);
 		img.setImageResource(R.drawable.spin_animation);
 		AnimationDrawable frameAnimation = (AnimationDrawable) img.getDrawable();
@@ -78,6 +87,12 @@ public class HomeActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
 
 }
