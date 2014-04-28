@@ -74,7 +74,7 @@
             android:label="@string/title_activity_edit_profile" 
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustPan">
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name="com.codepath.wwcmentorme.activities.MapActivity"
