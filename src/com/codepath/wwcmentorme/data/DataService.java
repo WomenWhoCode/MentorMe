@@ -150,16 +150,27 @@ public class DataService {
 		});
 	}
 	
-	public static void putRequest(final long menteeId, final Async.Block<Boolean> completion) {
-		Request request = new Request();
-		request.put(Request.MENTEE_ID_KEY, menteeId);
-		request.put(Request.MENTOR_ID_KEY, User.meId());
-		request.saveInBackground(new SaveCallback() {
+	public static void upsertRequest(final long menteeId, final long mentorId, final boolean accepted, final Async.Block<Boolean> completion) {
+		ParseQuery<Request> query = Request.getQuery();
+		query.whereEqualTo(Request.MENTEE_ID_KEY, menteeId);
+		query.whereEqualTo(Request.MENTOR_ID_KEY, mentorId);
+		query.getFirstInBackground(new GetCallback<Request>() {
 			@Override
-			public void done(ParseException e) {
-				if (completion != null) {
-					completion.call(e == null);
-				}				
+			public void done(Request request, ParseException e) {
+				if (e != null || request == null) {
+					request = new Request();
+					request.put(Request.MENTEE_ID_KEY, menteeId);
+					request.put(Request.MENTOR_ID_KEY, mentorId);
+				}
+				request.put(Request.ACCEPTED_KEY, accepted);
+				request.saveInBackground(new SaveCallback() {
+					@Override
+					public void done(ParseException e) {
+						if (completion != null) {
+							completion.call(e == null);
+						}				
+					}
+				});
 			}
 		});
 	}

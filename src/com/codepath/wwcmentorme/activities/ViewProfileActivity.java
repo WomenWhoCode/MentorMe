@@ -382,14 +382,16 @@ public class ViewProfileActivity extends AppActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void markConnected() {
+	private void markConnected(final User mentee, final User mentor, final boolean confirmed) {
 		if (User.me() == null) return;
-    	DataService.putRequest(user.getFacebookId(), new Block<Boolean>() {
+    	DataService.upsertRequest(mentee.getFacebookId(), mentor.getFacebookId(), confirmed, new Block<Boolean>() {
 			@Override
 			public void call(Boolean result) {
 				if (result.booleanValue()) {
-					user.getMentees().add(User.meId());
-					User.me().getMentees().add(user.getFacebookId());
+					mentee.getMentors().add(mentor.getFacebookId());
+					if (confirmed) {
+						mentor.getMentees().add(mentee.getFacebookId());
+					}
 				}
 			}
 		});
@@ -402,7 +404,7 @@ public class ViewProfileActivity extends AppActivity {
 	    if (requestCode == 1) {
 	    	if (mIsResponse) {
 	    		sendPushNotification();
-	    		markConnected();
+	    		markConnected(user, User.me(), true);
 	    	}
 	    } else {
 	    	super.onActivityResult(requestCode, resultCode, data);
@@ -454,6 +456,9 @@ public class ViewProfileActivity extends AppActivity {
 			push.setQuery(query);
 			push.setData(obj);
 			push.sendInBackground();
+			if (!mIsResponse) {
+				markConnected(User.me(), user, false);
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

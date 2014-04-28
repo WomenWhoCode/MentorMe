@@ -11,6 +11,7 @@ import com.parse.ParseQuery;
 public class Request extends ParseObject {
 	public static String MENTEE_ID_KEY = "menteeId";
 	public static String MENTOR_ID_KEY = "mentorId";
+	public static String ACCEPTED_KEY = "accepted";
 	public static String CREATED_AT_KEY = "createdAt";
 	
 	public Request() {
@@ -39,6 +40,14 @@ public class Request extends ParseObject {
 	
 	public void setCreatedAt(Date createdAt) {
 		put(CREATED_AT_KEY, createdAt);
+	}
+	
+	public void setAccepted(boolean accepted) {
+		put(ACCEPTED_KEY, accepted);
+	}
+	
+	public boolean getAccepted() {
+		return getBoolean(ACCEPTED_KEY);
 	}
 	
 	public static ParseQuery<Request> getQuery() {
