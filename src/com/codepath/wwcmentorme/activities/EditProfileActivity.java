@@ -2,6 +2,8 @@ package com.codepath.wwcmentorme.activities;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager.OnBackStackChangedListener;
@@ -204,8 +206,10 @@ public class EditProfileActivity extends AppActivity {
 			User.setMe(User.getUser(mUserId));
 			ParseUser.getCurrentUser().put(PROFILE_REF, User.me());
 			ParseUser.getCurrentUser().saveInBackground();
-			User.me().setIsMentee(User.me().getMenteeSkills().length() > 0);
-			User.me().setIsMentor(User.me().getMentorSkills().length() > 0);
+			final JSONArray menteeSkills = User.me().getMenteeSkills();
+			final JSONArray mentorSkills = User.me().getMentorSkills();
+			User.me().setIsMentee(menteeSkills != null && menteeSkills.length() > 0);
+			User.me().setIsMentor(mentorSkills != null && mentorSkills.length() > 0);
 			User.me().saveInBackground();
 		}
 		finish();
@@ -284,7 +288,7 @@ public class EditProfileActivity extends AppActivity {
 	
 	private void presentFragment(final AbstractEditProfileFragment fragment, final String tag) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		ft.replace(R.id.flContainer, fragment.setProfileId(mUserId, mPersona), tag);
+		ft.replace(R.id.flContainer, fragment.setProfileId(mUserId, mPersona), tag).addToBackStack(null);
 		ft.commit();
 		Async.dispatchMain(new Runnable() {
 			@Override

@@ -1,6 +1,5 @@
 package com.codepath.wwcmentorme.helpers;
 
-import java.util.HashSet;
 import java.util.Iterator;
 
 import org.json.JSONException;
@@ -16,6 +15,7 @@ import android.media.RingtoneManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.activities.ViewProfileActivity;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.models.User;
@@ -66,7 +66,9 @@ public class MentorMeReceiver extends BroadcastReceiver {
 									pupInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 									PendingIntent contentIntent = PendingIntent.getActivity(context, 0, pupInt, 0);
 									 final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-						               .setSmallIcon(context.getApplicationContext().getApplicationInfo().icon)
+						               .setSmallIcon(R.drawable.ic_launcher)
+						               .setContentTitle(username)
+						               .setContentText(message)
 						               .setOnlyAlertOnce(true)
 						               .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 						               .setAutoCancel(true)

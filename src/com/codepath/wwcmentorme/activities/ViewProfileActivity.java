@@ -109,15 +109,38 @@ public class ViewProfileActivity extends AppActivity {
 		if (getIntent().hasExtra(USER_ID_KEY)) {
 			final long userId = getIntent().getLongExtra(USER_ID_KEY, 0);
 			user = User.getUser(userId);
-			mIsResponse = DataService.isResponsePending(userId);
-			UIUtils.getOrCreateLoggedInUser(getActivity(), new Async.Block<User>() {
+			final Runnable currentUserRunnable = new Runnable() {
 				@Override
-				public void call(final User user) {
-					setupViews();
-					populateViews();
-					updateMenuTitles();
+				public void run() {
+					UIUtils.getOrCreateLoggedInUser(getActivity(), new Async.Block<User>() {
+						@Override
+						public void call(final User user) {
+							setupViews();
+							populateViews();
+							updateMenuTitles();
+						}
+					});
 				}
-			});
+			};
+			if (user == null) {
+				getProgressBar().setVisibility(View.VISIBLE);
+				DataService.getUser(userId, new GetCallback<User>() {
+					@Override
+					public void done(User result, ParseException e) {
+						getProgressBar().setVisibility(View.INVISIBLE);
+						if (result != null && e == null) {
+							user = result;
+							user.setFacebookId(userId);
+							currentUserRunnable.run();
+						} else {
+							finish();
+						}
+					}
+				});
+			} else {
+				currentUserRunnable.run();
+			}
+			mIsResponse = DataService.isResponsePending(userId);
 		}
 	}
 	
@@ -163,6 +186,7 @@ public class ViewProfileActivity extends AppActivity {
 		tvPosition.setText(Html.fromHtml(formattedPosition));
 		
 		String formattedLocation = user.getAddress();
+		if (formattedLocation == null) formattedLocation = "";
 		tvLocation.setText(Html.fromHtml(formattedLocation));
 		
 		if(mLat != null && mLng != null) {
@@ -365,7 +389,7 @@ public class ViewProfileActivity extends AppActivity {
 			public void call(Boolean result) {
 				if (result.booleanValue()) {
 					user.getMentees().add(User.meId());
-					User.me().getMentors().add(user.getFacebookId());
+					User.me().getMentees().add(user.getFacebookId());
 				}
 			}
 		});
@@ -373,12 +397,15 @@ public class ViewProfileActivity extends AppActivity {
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-	    if (requestCode == 1 && mIsResponse) {
-	        sendPushNotification();
-	        markConnected();
+	    if (requestCode == 1) {
+	    	if (mIsResponse) {
+	    		sendPushNotification();
+	    		markConnected();
+	    	}
+	    } else {
+	    	super.onActivityResult(requestCode, resultCode, data);
 	    }
 	}
 	

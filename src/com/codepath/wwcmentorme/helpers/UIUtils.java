@@ -41,6 +41,7 @@ import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 public class UIUtils {
@@ -213,6 +214,9 @@ public class UIUtils {
 					public void done(User user, ParseException pe) {
 						if (pe == null) {
 							User.setMe(mentorMeUser);
+							ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+					    	installation.put("userId", User.meId());
+					    	installation.saveInBackground();
 							if (completion != null) {
 								completion.call(mentorMeUser);
 							}

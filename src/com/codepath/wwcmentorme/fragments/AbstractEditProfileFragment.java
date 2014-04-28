@@ -1,14 +1,10 @@
 package com.codepath.wwcmentorme.fragments;
 
 import android.app.Fragment;
-import android.util.Log;
 import android.view.View;
 
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.models.User;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 public abstract class AbstractEditProfileFragment extends Fragment {
 	private long profileUserId;

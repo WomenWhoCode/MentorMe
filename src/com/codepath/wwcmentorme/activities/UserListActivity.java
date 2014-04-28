@@ -95,10 +95,14 @@ public class UserListActivity extends AppActivity implements
 		provider = locationManager.getBestProvider(criteria, false);
 		mLocation = locationManager.getLastKnownLocation(provider);
 
-		mGeoPoint = new ParseGeoPoint();
-		mGeoPoint.setLatitude(mLocation.getLatitude());
-		mGeoPoint.setLongitude(mLocation.getLongitude());
-		locationManager.removeUpdates(this);
+		if (mLocation != null) {
+			mGeoPoint = new ParseGeoPoint();
+			mGeoPoint.setLatitude(mLocation.getLatitude());
+			mGeoPoint.setLongitude(mLocation.getLongitude());
+			locationManager.removeUpdates(this);
+		} else {
+			mGeoPoint = new ParseGeoPoint(37.7833, -122.4167);
+		}
 	}
 
 	@Override
