@@ -69,5 +69,6 @@
     <string name="title_activity_user_list"></string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fb_login">Log in with Facebook</string>
+    <string name="title_activity_thank_mentor">Thank You!</string>
 
 </resources>

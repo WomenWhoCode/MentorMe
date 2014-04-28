@@ -27,7 +27,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -44,25 +47,40 @@ public class UIUtils {
 	public static final ColorDrawable TRANSPARENT = new ColorDrawable(Color.TRANSPARENT);
 	public static final Typeface SANS_SERIF_LIGHT = Typeface.create("sans-serif-light", Typeface.NORMAL);
 	public static final Typeface SANS_SERIF_THIN = Typeface.create("sans-serif-thin", Typeface.NORMAL);
+	public static int selector = -1;
+	
 	public static void showActionSheet(final Context context, final CharSequence title, final CharSequence[] items,
 			final DialogInterface.OnClickListener onClickListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(title).setItems(items, onClickListener);
+		builder.setTitle(title).setSingleChoiceItems(items, selector, onClickListener);
 		final AlertDialog dialog = builder.create();
 		dialog.getWindow().setGravity(Gravity.BOTTOM);
 		dialog.getWindow().setWindowAnimations(android.R.style.Animation_InputMethod);
+		final Async.Block<View> typefaceModifier = new Async.Block<View>() {
+			@Override
+			public void call(View result) {
+				if (result instanceof TextView) {
+					final TextView tv = (TextView)result;
+					tv.setTypeface(SANS_SERIF_LIGHT);
+				}
+			}
+		};
 		dialog.setOnShowListener(new OnShowListener() {
 			@Override
 			public void onShow(DialogInterface dialogInterface) {
-				enumerateSubviews(dialog.getWindow().getDecorView(), new Async.Block<View>() {
-					@Override
-					public void call(View result) {
-						if (result instanceof TextView) {
-							final TextView tv = (TextView)result;
-							tv.setTypeface(SANS_SERIF_LIGHT);
-						}
-					}
-				});
+				enumerateSubviews(dialog.getWindow().getDecorView(), typefaceModifier);
+			}
+		});
+		final ListView ls = dialog.getListView();
+		ls.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				enumerateSubviews(view, typefaceModifier);
 			}
 		});
 		dialog.show();
@@ -76,6 +94,7 @@ public class UIUtils {
 	public static void enumerateSubviews(final View view, final Async.Block<View> block, final AtomicBoolean stop) {
 		if (view instanceof ViewGroup) {
 			final ViewGroup vg = (ViewGroup)view;
+			
 			for (int i = 0, count = vg.getChildCount(); i < count; ++i) {
 				final View child = vg.getChildAt(i);
 				enumerateSubviews(child, block, stop);

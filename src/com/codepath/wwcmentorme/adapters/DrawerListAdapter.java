@@ -99,23 +99,20 @@ public class DrawerListAdapter extends
 		holder.btnItem.setCompoundDrawablesWithIntrinsicBounds(item.iconId, 0,
 				0, 0);
 		holder.btnItem.setText(item.stringId);
+		
 		holder.btnItem.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Button btnItem = (Button) v;
+				Button btnItem = (Button) v;				
 				String buttonText = btnItem.getText().toString();
-				if (buttonText == getContext().getResources().getString(
-						R.string.drawer_requests_received)) {
-					final Intent intent = new Intent(getContext(),
-							UserListActivity.class);
+				if (buttonText == getContext().getResources().getString(R.string.drawer_requests_received)) {
+					final Intent intent = new Intent(getContext(), UserListActivity.class);
 					intent.putExtra("usertype", UserType.MENTOR.toString());
 					intent.putExtra("userId", User.meId());
 					getContext().startActivity(intent);
-				} else if (buttonText == getContext().getResources().getString(
-						R.string.drawer_requests_Sent)) {
-					final Intent intent = new Intent(getContext(),
-							UserListActivity.class);
+				} else if (buttonText == getContext().getResources().getString(R.string.drawer_requests_Sent)) {
+					final Intent intent = new Intent(getContext(), UserListActivity.class);
 					intent.putExtra("usertype", UserType.MENTEE.toString());
 					intent.putExtra("userId", User.meId());
 					getContext().startActivity(intent);

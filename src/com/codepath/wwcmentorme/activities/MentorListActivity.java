@@ -263,11 +263,13 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 
 	public void onRefineResultsPress(MenuItem mi) {
 		UIUtils.showActionSheet(this, getString(R.string.miRefineResults), getResources().getStringArray(R.array.skill_array), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int position) {
+			public void onClick(final DialogInterface dialog, final int position) {				
 				String[] skills = getResources().getStringArray(R.array.skill_array);
 				mSkill = skills[position];
-				mentorListAdapter.clear();
-				loadMentors(mGeoPoint);
+				UIUtils.selector = position;				
+				mentorListAdapter.clear();				
+				loadMentors(mGeoPoint);		
+				dialog.dismiss();
 			}
 		});
 	}
@@ -342,7 +344,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 			Async.dispatchMain(new Runnable() {
 				@Override
 				public void run() {
-					MapActivity.populateMapFragment(sMapFragment, getProgressBar(), markers);
+					MapActivity.populateMapFragment(sMapFragment, getProgressBar(), markers, MentorListActivity.this, mGeoPoint);
 				}
 			});
 		}
@@ -353,6 +355,11 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 		mShowingBack = (getFragmentManager().getBackStackEntryCount() > 0);
 		// When the back stack changes, invalidate the options menu (action bar).
 		invalidateOptionsMenu();
+	}
+	
+	public void onThankMentor(final MenuItem mi) {
+		Intent intent = new Intent(MentorListActivity.this, ThankMentorActivity.class);
+		startActivity(intent);
 	}
 
 }

@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/spin_animation"
+    tools:context=".ThankMentorActivity" >
+    
+    <ImageView
+        android:id="@+id/ivBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop" />
+
+   <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/ivBackground"
+        android:background="#aa000000" >
+
+    <TextView
+        android:id="@+id/tvThankyou"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="64dp"
+        style="@style/TextViewThin"
+        android:textColor="@android:color/white"
+        android:textSize="42sp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="You are a Mentor!" />
+
+    <TextView
+        android:id="@+id/tvLine1"
+        style="@style/TextViewThin"
+        android:textSize="22sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvThankyou"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:text="Thank you for helping out by becoming a mentor." />
+    
+    <TextView
+        android:id="@+id/tvLine2"
+        style="@style/TextViewThin"
+        android:textSize="22sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tvLine1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:text="Potential mentees will now be able to find and connect with you." />
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="image"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_close" />
+    
+    <TextView
+            android:id="@+id/tvShare"
+            style="@style/TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvLine2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:text="Share the word"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/actionbar"
+            android:textSize="28sp" />
+    
+</RelativeLayout>
+
+    </RelativeLayout>

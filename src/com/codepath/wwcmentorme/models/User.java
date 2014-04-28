@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
-import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.NotificationCenter;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.parse.ParseClassName;
@@ -140,7 +139,6 @@ public class User extends ParseObject {
 	public void setAddress(String address) {
 		put(ADDRESS_KEY, address);
 	}
-	
 	
 	public String getAboutMe() {
 		return getString(ABOUT_ME_KEY);
