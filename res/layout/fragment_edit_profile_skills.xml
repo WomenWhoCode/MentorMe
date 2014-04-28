@@ -1,90 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="10dp" >
     
-    <RelativeLayout
-        android:id="@+id/rlSkillsToLearnContainer"
+    <Button
+        android:id="@+id/btMenteeSkills"
+        style="@style/ICButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_edit"
+        android:text="Need help in"
+        android:textSize="18sp" >
+    </Button>
+
+    <HorizontalScrollView
+        android:id="@+id/svMenteeSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llMenteeSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/btMenteeSkills"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/btMentorSkills"
+        style="@style/ICButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_edit"
+        android:text="Expert in"
+        android:textSize="18sp" >
+    </Button>
+
+    <HorizontalScrollView
+        android:id="@+id/svMentorSkills"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/tvLearnLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/learn_label"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
         <LinearLayout
-            android:id="@+id/llLearnSkills"
+            android:id="@+id/llMentorSkills"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvLearnLabel"
-            android:layout_margin="10dp"
-            android:layoutDirection="rtl"
+            android:layout_height="40dp"
             android:orientation="horizontal" >
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnAddSkillsToLearn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/llLearnSkills"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"
-            android:text="@string/btn_add_skills"
-            android:onClick="addMenteeSkills" />
-    </RelativeLayout>
+    </HorizontalScrollView>
 
     <TextView
-        android:id="@+id/tvTeachLabel"
+        android:id="@+id/tvAvailable"
+        style="@style/TextViewThin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlSkillsToLearnContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="@string/teach_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginTop="10dp"
+        android:text="Available on"
+        android:textSize="22sp" />
 
     <LinearLayout
-        android:id="@+id/llTeachSkills"
+        android:id="@+id/llAvailable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvTeachLabel"
-        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal" >
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/btnAddSkillsToTeach"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/llTeachSkills"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:onClick="addMentorSkills"
-        android:text="@string/btn_add_skills" />
+        <TextView
+            android:id="@+id/tvM"
+            style="@style/DaysOfWeek"
+            android:text="Mon" />
 
-    <TextView
-        android:id="@+id/tvAvailableLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnAddSkillsToTeach"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:text="@string/teach_availability_label"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+            android:id="@+id/tvT"
+            style="@style/DaysOfWeek"
+            android:text="Tue" />
 
-    <LinearLayout
-        android:id="@+id/llAvailability"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvAvailableLabel"
-        android:layout_margin="10dp"
-        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/tvW"
+            style="@style/DaysOfWeek"
+            android:text="Wed" />
+
+        <TextView
+            android:id="@+id/tvR"
+            style="@style/DaysOfWeek"
+            android:text="Thu" />
+
+        <TextView
+            android:id="@+id/tvF"
+            style="@style/DaysOfWeek"
+            android:text="Fri" />
+
+        <TextView
+            android:id="@+id/tvSat"
+            style="@style/DaysOfWeek"
+            android:text="Sat" />
+
+        <TextView
+            android:id="@+id/tvSun"
+            style="@style/DaysOfWeek"
+            android:text="Sun" />
     </LinearLayout>
 
     <Button
@@ -92,8 +110,7 @@
         style="@style/NextButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/llAvailability"
         android:onClick="goToDoneEditProfile"
         android:text="Done" />
 
-</RelativeLayout>
+</LinearLayout>
