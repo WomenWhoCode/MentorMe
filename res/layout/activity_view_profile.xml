@@ -277,8 +277,6 @@
             android:text="years of industry experience"
             android:textSize="22sp" />
 
-        
-
         <TextView
             android:id="@+id/tvMentorSkills"
             style="@style/TextViewThin"
@@ -296,7 +294,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvMentorSkills"
             android:layout_margin="10dp"
-            android:layoutDirection="rtl"
             android:orientation="horizontal" >
         </LinearLayout>
 
@@ -317,7 +314,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvMenteeSkills"
             android:layout_margin="10dp"
-            android:layoutDirection="rtl"
             android:orientation="horizontal" >
         </LinearLayout>
         
