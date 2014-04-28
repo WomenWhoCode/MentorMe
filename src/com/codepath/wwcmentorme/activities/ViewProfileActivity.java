@@ -110,9 +110,14 @@ public class ViewProfileActivity extends AppActivity {
 			final long userId = getIntent().getLongExtra(USER_ID_KEY, 0);
 			user = User.getUser(userId);
 			mIsResponse = DataService.isResponsePending(userId);
-			setupViews();
-			populateViews();
-			updateMenuTitles();
+			UIUtils.getOrCreateLoggedInUser(getActivity(), new Async.Block<User>() {
+				@Override
+				public void call(final User user) {
+					setupViews();
+					populateViews();
+					updateMenuTitles();
+				}
+			});
 		}
 	}
 	
@@ -157,7 +162,7 @@ public class ViewProfileActivity extends AppActivity {
 		String formattedPosition = user.getJobTitle()  + ", " + user.getCompanyName();
 		tvPosition.setText(Html.fromHtml(formattedPosition));
 		
-		String formattedLocation = user.getCity()  + ", " + user.getZip();
+		String formattedLocation = user.getAddress();
 		tvLocation.setText(Html.fromHtml(formattedLocation));
 		
 		if(mLat != null && mLng != null) {
@@ -378,7 +383,8 @@ public class ViewProfileActivity extends AppActivity {
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
 	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 	    if (requestCode == 1 && mIsResponse) {
