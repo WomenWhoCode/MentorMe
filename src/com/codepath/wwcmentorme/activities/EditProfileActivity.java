@@ -24,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.fragments.AbstractEditProfileFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileExperiencesFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
@@ -37,8 +38,11 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseUser;
 
 public class EditProfileActivity extends AppActivity {
 	public static final String PROFILE_REF = "profile";
@@ -47,15 +51,21 @@ public class EditProfileActivity extends AppActivity {
 	private TextView tvFirstName;
 	private TextView tvLastName;
 	private long mUserId;
+	private int mPersona;
+	
+	public static final int PERSONA_BOTH = 0;
+	public static final int PERSONA_MENTEE = 1;
+	public static final int PERSONA_MENTOR = 2;
 	
 	private static ArrayList<Runnable> sCompletion = new ArrayList<Runnable>();
 	
-	public static void startWithCompletion(final Activity context, final Runnable completion) {
+	public static void startWithCompletion(final Activity context, final int persona, final Runnable completion) {
 		if (sCompletion.size() > 0) {
 			// There is already one instance of EditProfileActivity waiting to get completed.
 			sCompletion.add(completion);
 		}
 		Intent intent = new Intent(context, EditProfileActivity.class);
+		intent.putExtra("persona", persona);
 		context.startActivity(intent);
 		sCompletion.add(completion);
 	}
@@ -64,6 +74,7 @@ public class EditProfileActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
+		mPersona = getIntent().getIntExtra("persona", PERSONA_BOTH);
 		setupViews();
 		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override
@@ -110,47 +121,69 @@ public class EditProfileActivity extends AppActivity {
 
 	private void makeMeRequest() {
 		// Populate mentor me user with facebook profile info
+		getProgressBar().setVisibility(View.VISIBLE);
 		Request request = Request.newMeRequest(ParseFacebookUtils.getSession(),
 				new Request.GraphUserCallback() {
 					@Override
-					public void onCompleted(GraphUser fbGraphUser, Response response) {
+					public void onCompleted(final GraphUser fbGraphUser, Response response) {
 						if (fbGraphUser != null) {
 							mUserId = Long.valueOf(fbGraphUser.getId());
-							final User mentorMeUser = new User();
-							mentorMeUser.setFacebookId(mUserId);
-							mentorMeUser.setFirstName(fbGraphUser.getFirstName());
-							mentorMeUser.setLastName(fbGraphUser.getLastName());
-							if (fbGraphUser.getProperty("email") != null) {
-								mentorMeUser.setEmail((String)fbGraphUser.getProperty("email"));
-							}
-							if (fbGraphUser.getLocation() != null && fbGraphUser.getLocation().getProperty("name") != null) {
-								String locationName = (String) fbGraphUser.getLocation().getProperty("name");
-								mentorMeUser.setAddress(locationName);
-								Utils.geocode(getActivity(), new Utils.LocationParams(locationName), new Async.Block<Address>() {
-									@Override
-									public void call(Address address) {
-										if (address != null) {
-											mentorMeUser.setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
-											goToStep1(null);
-											Async.dispatchMain(new Runnable() {
+							DataService.getUser(mUserId, new GetCallback<User>() {
+								@Override
+								public void done(User mentorMeUser, ParseException e) {
+									boolean isGeocoding = false;
+									if (mentorMeUser == null || e != null) {
+										mentorMeUser = new User();
+										mentorMeUser.setFacebookId(mUserId);
+										mentorMeUser.setFirstName(fbGraphUser.getFirstName());
+										mentorMeUser.setLastName(fbGraphUser.getLastName());
+										if (fbGraphUser.getProperty("email") != null) {
+											mentorMeUser.setEmail((String)fbGraphUser.getProperty("email"));
+										}
+										if (fbGraphUser.getLocation() != null && fbGraphUser.getLocation().getProperty("name") != null) {
+											String locationName = (String) fbGraphUser.getLocation().getProperty("name");
+											mentorMeUser.setAddress(locationName);
+											final User user = mentorMeUser;
+											Utils.geocode(getActivity(), new Utils.LocationParams(locationName), new Async.Block<Address>() {
 												@Override
-												public void run() {
-													updateTitle();
+												public void call(final Address address) {
+													if (address != null) {
+														user.setLocation(new ParseGeoPoint(address.getLatitude(), address.getLongitude()));
+													}
+													goToStep1(null);
+													Async.dispatchMain(new Runnable() {
+														@Override
+														public void run() {
+															updateTitle();
+														}
+													});
 												}
 											});
+											isGeocoding = true;
+										}
+										if (fbGraphUser.getProperty("gender") != null) {
+											mentorMeUser.setGender((String) fbGraphUser.getProperty("gender"));
+											mentorMeUser.setIsMentee("female".equalsIgnoreCase(mentorMeUser.getGender()));
+										}
+										if (fbGraphUser.getProperty("about") != null) {
+											mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
 										}
 									}
-								});
-							}
-							if (fbGraphUser.getProperty("gender") != null) {
-								mentorMeUser.setGender((String) fbGraphUser.getProperty("gender"));
-								mentorMeUser.setIsMentee("female".equalsIgnoreCase(mentorMeUser.getGender()));
-							}
-							if (fbGraphUser.getProperty("about") != null) {
-								mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
-							}
-							// Show the user info
-							populateViewsWithUserInfo(mentorMeUser);
+									mentorMeUser.setFacebookId(mUserId);
+									mentorMeUser.saveInBackground();
+									populateViewsWithUserInfo(mentorMeUser);
+									getProgressBar().setVisibility(View.INVISIBLE);
+									if (!isGeocoding) {
+										goToStep1(null);
+										Async.dispatchMain(new Runnable() {
+											@Override
+											public void run() {
+												updateTitle();
+											}
+										});
+									}
+								}
+							});
 						} else if (response.getError() != null) {
 							if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 									|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
@@ -159,10 +192,19 @@ public class EditProfileActivity extends AppActivity {
 							} else {
 								Log.d("MentorMe", "Some other error: " + response.getError().getErrorMessage());
 							}
+							getProgressBar().setVisibility(View.INVISIBLE);
 						}
 					}
 				});
 		request.executeAsync();
+	}
+	
+	public void finishWithSuccess() {
+		if (mUserId != 0) {
+			User.setMe(User.getUser(mUserId));
+			ParseUser.getCurrentUser().put(PROFILE_REF, User.me());
+		}
+		finish();
 	}
 	
 	@Override
@@ -242,7 +284,7 @@ public class EditProfileActivity extends AppActivity {
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileLocationFragment().setProfileId(mUserId), "1");
+				ft.replace(R.id.flContainer, new EditProfileLocationFragment().setProfileId(mUserId, mPersona), "1");
 				ft.commit();
 			}
 		});
@@ -254,7 +296,7 @@ public class EditProfileActivity extends AppActivity {
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileExperiencesFragment().setProfileId(mUserId), "2").addToBackStack(null);
+				ft.replace(R.id.flContainer, new EditProfileExperiencesFragment().setProfileId(mUserId, mPersona), "2").addToBackStack(null);
 				ft.commit();
 			}
 		});
@@ -266,19 +308,19 @@ public class EditProfileActivity extends AppActivity {
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileSkillsFragment().setProfileId(mUserId), "3").addToBackStack(null);
+				ft.replace(R.id.flContainer, new EditProfileSkillsFragment().setProfileId(mUserId, mPersona), "3").addToBackStack(null);
 				ft.commit();
 			}
 		});
 	}
 	
-	public void addMentorSkills(View v) {
-		
+	public void goToDoneEditProfile(final View v) {
+		validate(new Async.Block<Boolean>() {
+			@Override
+			public void call(Boolean result) {
+				if (!result.booleanValue()) return;
+				finishWithSuccess();
+			}
+		});
 	}
-	
-	public void addMenteeSkills(View v) {
-		
-	}
-	
-	
 }
