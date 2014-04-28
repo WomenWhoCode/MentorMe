@@ -245,46 +245,33 @@ public class ViewProfileActivity extends AppActivity {
 			llAvailability.setVisibility(View.GONE);
 		}
 	}
-
-	private void populateMenteeSkills() {
-		if(user.getMenteeSkills() != null && user.getMenteeSkills().length() > 0) {
-			for(int i = 0; i <= user.getMenteeSkills().length() - 1; i++) {
-				TextView tvMenteeSkill = (TextView) getLayoutInflater().inflate(R.layout.skill_textview_item, null);
+	
+	private void populateSkills(final JSONArray array, final LinearLayout ll, final View container) {
+		if(array != null && array.length() > 0) {
+			for(int i = 0; i <= array.length() - 1; i++) {
+				TextView tvSkill = (TextView) getLayoutInflater().inflate(R.layout.skill_textview_item, null);
 				try {
-					tvMenteeSkill.setText(user.getMenteeSkills().get(i).toString());
+					tvSkill.setText(array.get(i).toString());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				params.setMargins(0,0,10,0);
-				tvMenteeSkill.setLayoutParams(params);
-				
-			    llMenteeSkills.addView(tvMenteeSkill); 
+				params.setMargins(0,0,UIUtils.p(4),0);
+				tvSkill.setLayoutParams(params);
+				ll.addView(tvSkill); 
 			}
 		} else {
-			tvMenteeSkills.setVisibility(View.GONE);
+			container.setVisibility(View.GONE);
 		}
 	}
 
+	private void populateMenteeSkills() {
+		populateSkills(user.getMenteeSkills(), llMenteeSkills, tvMenteeSkills);
+	}
+
 	private void populateMentorSkills() {
-		if(user.getMentorSkills() != null && user.getMentorSkills().length() > 0) {
-			for(int i = 0; i <= user.getMentorSkills().length() - 1; i++) {
-				TextView tvMentorSkill = (TextView) getLayoutInflater().inflate(R.layout.skill_textview_item, null);
-				try {
-					tvMentorSkill.setText(user.getMentorSkills().get(i).toString());
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}				
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-				params.setMargins(0,0,10,0);
-				tvMentorSkill.setLayoutParams(params);
-				
-			    llMentorSkills.addView(tvMentorSkill);
-			}
-		} else {
-			tvMentorSkills.setVisibility(View.GONE);
-		}
+		populateSkills(user.getMentorSkills(), llMentorSkills, tvMentorSkills);
 	}
 
 	private void populateAddReview() {
@@ -300,7 +287,7 @@ public class ViewProfileActivity extends AppActivity {
 				tvAddReview.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						UIUtils.login(getActivity(), "Login to add a review", new Async.Block<User>() {
+						UIUtils.login(getActivity(), "Login to add a review", EditProfileActivity.PERSONA_MENTEE, new Async.Block<User>() {
 							@Override
 							public void call(final User result) {
 								if (result == null) return;
@@ -346,7 +333,7 @@ public class ViewProfileActivity extends AppActivity {
 		if (item.getTitle() == null) return true;
 		if (id == R.id.miProfileAction) {
 			if(item.getTitle().equals("Connect")) {
-				UIUtils.login(getActivity(), "Login to connect to your mentor", new Async.Block<User>() {
+				UIUtils.login(getActivity(), "Login to connect to your mentor", EditProfileActivity.PERSONA_MENTEE, new Async.Block<User>() {
 					@Override
 					public void call(User result) {
 						if (result != null) {
