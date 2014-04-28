@@ -51,13 +51,13 @@
         <item>Scala</item>
     </string-array>
     <string-array name="dayofweek_array">
-        <item>Su</item>
-        <item>Mo</item>
-        <item>Tu</item>
-        <item>We</item>
-        <item>Th</item>
-        <item>Fr</item>
-        <item>Sa</item>
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
     </string-array>
 
     <plurals name="mentee">
