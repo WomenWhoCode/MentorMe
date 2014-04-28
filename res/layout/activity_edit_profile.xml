@@ -1,8 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlEditProfileRootContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svEditProfileRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rlEditProfileRootContainer"
     android:background="#ffffff"
     android:padding="10dp"
     tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity" >
@@ -101,8 +106,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/ivUserProfile"
         android:layout_below="@+id/tlAccountButtons"
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp" >
 	</FrameLayout>
     
 </RelativeLayout>
+</ScrollView>
