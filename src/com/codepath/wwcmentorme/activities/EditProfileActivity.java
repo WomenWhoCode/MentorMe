@@ -203,6 +203,7 @@ public class EditProfileActivity extends AppActivity {
 		if (mUserId != 0) {
 			User.setMe(User.getUser(mUserId));
 			ParseUser.getCurrentUser().put(PROFILE_REF, User.me());
+			ParseUser.getCurrentUser().saveInBackground();
 		}
 		finish();
 	}
@@ -278,14 +279,24 @@ public class EditProfileActivity extends AppActivity {
 		}
 	}
 	
+	private void presentFragment(final AbstractEditProfileFragment fragment, final String tag) {
+		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.replace(R.id.flContainer, fragment.setProfileId(mUserId, mPersona), tag);
+		ft.commit();
+		Async.dispatchMain(new Runnable() {
+			@Override
+			public void run() {
+				updateTitle();
+			}
+		});
+	}
+	
 	public void goToStep1(View v) {
 		validate(new Async.Block<Boolean>() {
 			@Override
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileLocationFragment().setProfileId(mUserId, mPersona), "1");
-				ft.commit();
+				presentFragment(new EditProfileLocationFragment(), "1");
 			}
 		});
 	}
@@ -295,9 +306,7 @@ public class EditProfileActivity extends AppActivity {
 			@Override
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileExperiencesFragment().setProfileId(mUserId, mPersona), "2").addToBackStack(null);
-				ft.commit();
+				presentFragment(new EditProfileExperiencesFragment(), "2");
 			}
 		});
 	}
@@ -307,9 +316,7 @@ public class EditProfileActivity extends AppActivity {
 			@Override
 			public void call(Boolean result) {
 				if (!result.booleanValue()) return;
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.replace(R.id.flContainer, new EditProfileSkillsFragment().setProfileId(mUserId, mPersona), "3").addToBackStack(null);
-				ft.commit();
+				presentFragment(new EditProfileSkillsFragment(), "3");
 			}
 		});
 	}

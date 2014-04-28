@@ -356,10 +356,5 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 		// When the back stack changes, invalidate the options menu (action bar).
 		invalidateOptionsMenu();
 	}
-	
-	public void onThankMentor(final MenuItem mi) {
-		Intent intent = new Intent(MentorListActivity.this, ThankMentorActivity.class);
-		startActivity(intent);
-	}
 
 }

@@ -350,6 +350,8 @@ public class ViewProfileActivity extends AppActivity {
 				email.setType("message/rfc822");
 				email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
+			} else if (item.getTitle().equals("Edit Profile")) {
+				UIUtils.startActivity(getActivity(), EditProfileActivity.class);
 			}
 			return true;
 		}

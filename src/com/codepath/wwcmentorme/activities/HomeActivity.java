@@ -56,6 +56,9 @@ public class HomeActivity extends Activity {
 							
 						} else {
 							presentMentorList();
+							final Intent intent2 = new Intent(HomeActivity.this, ThankMentorActivity.class);
+							startActivity(intent2);
+							overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
 						}
 					}
 				}, false);
