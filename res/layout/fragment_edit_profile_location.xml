@@ -62,7 +62,7 @@
             android:layout_marginTop="8dp"
             android:gravity="left|top"
             android:hint="@string/aboutme_hint"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences|textAutoComplete"
             android:imeOptions="actionNext"
             android:lines="3" />
 

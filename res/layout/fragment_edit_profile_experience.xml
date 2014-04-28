@@ -21,8 +21,9 @@
             android:layout_below="@+id/tvExperienceLabel"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
-            android:hint="@string/job_hint" 
-            android:imeOptions="actionNext" 
+            android:hint="@string/job_hint"
+            android:inputType="textCapWords|textAutoComplete"
+            android:imeOptions="actionNext"
             android:maxLines="1">
         </EditText>
 
@@ -33,8 +34,9 @@
             android:layout_below="@+id/etJobTitle"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:hint="@string/company_hint" 
-            android:imeOptions="actionNext" 
+            android:hint="@string/company_hint"
+            android:imeOptions="actionNext"
+            android:inputType="textCapWords"
             android:maxLines="1"/>
 
         <EditText
