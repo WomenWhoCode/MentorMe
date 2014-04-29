@@ -166,11 +166,11 @@ public class Utils {
 	private static Address getLocationInfo(String address) {
 		JSONObject jsonObject = null;
 		String query = "https://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
-				+ "&sensor=false&key=AIzaSyCwhOZqlGg3wLJR2zoYEkkxKDzcD4B-RsA";
+				+ "&sensor=false&key=AIzaSyBjd6VS-AlZ0Jc1nvDA1FNBBGz64k6NTv0";
 		Address addr = null;
 		HttpClient client = AndroidHttpClient.newInstance("ReverseGeocoder");
 		HttpGet httpGet = new HttpGet(query);
-
+		httpGet.setHeader("Referer", "http://www.mentorme.com");
 		HttpResponse response;
 		StringBuilder stringBuilder = new StringBuilder();
 
