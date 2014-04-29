@@ -1,5 +1,6 @@
 package com.codepath.wwcmentorme.adapters;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.content.Context;
@@ -12,24 +13,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.data.DataService;
+import com.codepath.wwcmentorme.activities.EditProfileActivity;
 import com.codepath.wwcmentorme.helpers.Utils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.models.User;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.parse.CountCallback;
-import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 
 public class MentorListAdapter extends ArrayAdapter<User> {
 	private ParseGeoPoint currentGeoPoint;
+	private int persona;
 	
 	private static boolean sImageLoaderInitialized = false;
 
-	public MentorListAdapter(Context context, ParseGeoPoint geoPoint) {
+	public MentorListAdapter(Context context, ParseGeoPoint geoPoint, final int persona) {
 		super(context, 0);
 		currentGeoPoint = geoPoint;
+		this.persona = persona;
 		if (!sImageLoaderInitialized) {
 			sImageLoaderInitialized = true;
 			final ImageLoader imageLoader = ImageLoader.getInstance();
@@ -89,30 +90,34 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 		}
 		
 		final int numMentees = user.getMentees().size();
-		
-		holder.tvMenteeCount.setText(Utils.formatNumber(Integer
-				.toString(numMentees)) + " " + getContext().getResources().getQuantityString(R.plurals.mentee, numMentees));
-		
+		if (persona == EditProfileActivity.PERSONA_MENTEE) {
+			holder.tvMenteeCount.setText("Needs help in");
+		} else {
+			holder.tvMenteeCount.setText(Utils.formatNumber(Integer
+					.toString(numMentees)) + " " + getContext().getResources().getQuantityString(R.plurals.mentee, numMentees));
+		}
 		holder.tvSkill1.setText(null);
 		holder.tvSkill2.setText(null);
 		holder.tvSkill3.setText(null);
 		
-		if(user.getMentorSkills() != null && user.getMentorSkills().length() > 0) {
-			for(int i = 0; i <= user.getMentorSkills().length() - 1; i++) {
+		final JSONArray skills = persona == EditProfileActivity.PERSONA_MENTOR ? user.getMentorSkills() : user.getMenteeSkills();
+		
+		if(skills != null && skills.length() > 0) {
+			for(int i = 0; i <= skills.length() - 1; i++) {
 				if(i == 0) {
-					holder.tvSkill3.setText(user.getMentorSkills().get(i).toString());
+					holder.tvSkill3.setText(skills.get(i).toString());
 				}
 				if(i == 1) {
-					holder.tvSkill2.setText(user.getMentorSkills().get(i).toString());
+					holder.tvSkill2.setText(skills.get(i).toString());
 				}
 				if(i == 2) {
-					holder.tvSkill1.setText(user.getMentorSkills().get(i).toString());
+					holder.tvSkill1.setText(skills.get(i).toString());
 					break; 
 				}
 			}
-			if(holder.tvSkill1.getText().length() == 0)  holder.tvSkill1.setVisibility(View.INVISIBLE);
-			if(holder.tvSkill2.getText().length() == 0)  holder.tvSkill2.setVisibility(View.INVISIBLE);
-			if(holder.tvSkill3.getText().length() == 0)  holder.tvSkill3.setVisibility(View.INVISIBLE);
 		}
+		if(holder.tvSkill1.getText().length() == 0)  holder.tvSkill1.setVisibility(View.INVISIBLE);
+		if(holder.tvSkill2.getText().length() == 0)  holder.tvSkill2.setVisibility(View.INVISIBLE);
+		if(holder.tvSkill3.getText().length() == 0)  holder.tvSkill3.setVisibility(View.INVISIBLE);
 	}
 }

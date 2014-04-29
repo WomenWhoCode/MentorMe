@@ -102,7 +102,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
-		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint);		
+		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint, EditProfileActivity.PERSONA_MENTOR);		
 		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mentorListAdapter);
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);

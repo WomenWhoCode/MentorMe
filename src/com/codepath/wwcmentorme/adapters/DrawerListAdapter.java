@@ -110,6 +110,7 @@ public class DrawerListAdapter extends
 					final Intent intent = new Intent(getContext(), UserListActivity.class);
 					intent.putExtra("usertype", UserType.MENTOR.toString());
 					intent.putExtra("userId", User.meId());
+					intent.putExtra("persona", EditProfileActivity.PERSONA_MENTEE);
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(R.string.drawer_requests_Sent)) {
 					final Intent intent = new Intent(getContext(), UserListActivity.class);

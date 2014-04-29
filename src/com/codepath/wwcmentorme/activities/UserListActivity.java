@@ -34,6 +34,7 @@ public class UserListActivity extends AppActivity implements
 	private String provider;
 	private UserType usertype;
 	private long userId;
+	private int mPersona;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class UserListActivity extends AppActivity implements
 		if (getIntent().hasExtra("userId")) {
 			userId = getIntent().getLongExtra("userId", 0);
 		}
+		
+		mPersona = getIntent().getIntExtra("persona", EditProfileActivity.PERSONA_MENTOR);
 		
 		setTitle();		
 
@@ -120,7 +123,7 @@ public class UserListActivity extends AppActivity implements
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
 		mentorListAdapter = new MentorListAdapter(UserListActivity.this,
-				mGeoPoint);
+				mGeoPoint, mPersona);
 		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(
 				mentorListAdapter);
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
