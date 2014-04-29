@@ -288,6 +288,9 @@ public class EditProfileActivity extends AppActivity {
 	
 	private void presentFragment(final AbstractEditProfileFragment fragment, final String tag) {
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
+		ft.setCustomAnimations(
+				R.animator.card_slide_right_in, R.animator.card_slide_right_out,
+				R.animator.card_slide_left_in, R.animator.card_slide_left_out);
 		ft.replace(R.id.flContainer, fragment.setProfileId(mUserId, mPersona), tag).addToBackStack(null);
 		ft.commit();
 		Async.dispatchMain(new Runnable() {

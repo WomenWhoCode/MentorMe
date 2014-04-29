@@ -168,7 +168,7 @@ public class Utils {
 		String query = "https://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
 				+ "&sensor=false&key=AIzaSyBjd6VS-AlZ0Jc1nvDA1FNBBGz64k6NTv0";
 		Address addr = null;
-		HttpClient client = AndroidHttpClient.newInstance("ReverseGeocoder");
+		AndroidHttpClient client = AndroidHttpClient.newInstance("ReverseGeocoder");
 		HttpGet httpGet = new HttpGet(query);
 		httpGet.setHeader("Referer", "http://www.mentorme.com");
 		HttpResponse response;
@@ -228,6 +228,8 @@ public class Utils {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			client.close();
 		}
 		return addr;
 	}
