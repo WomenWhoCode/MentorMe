@@ -34,13 +34,10 @@ public class MapActivity extends AppActivity {
 	}
 	
 	public static void populateMapFragment(final MapFragment fragment, final ProgressBar progressBar, final ArrayList<String> markers, final Context context, final ParseGeoPoint mGeoPoint) {
-		progressBar.setVisibility(View.VISIBLE);
 		final GoogleMap map = fragment.getMap();
-		
 		map.setOnMapLoadedCallback(new OnMapLoadedCallback() {
 			@Override
 			public void onMapLoaded() {
-				progressBar.setVisibility(View.INVISIBLE);
 			}
 		});
 		map.setMyLocationEnabled(true);
