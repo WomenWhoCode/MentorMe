@@ -5,14 +5,14 @@
     android:layout_height="match_parent"
     android:alwaysDrawnWithCache="true"
     android:background="#000000" >
-
+    
     <ImageView
         android:id="@+id/ivBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/app_name"
         android:scaleType="centerCrop" />
-
+    
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/tvAppName"
-            style="@style/TextViewThin"
+            style="@style/TextViewThinShadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/tvHeading"
-            style="@style/TextView"
+            style="@style/TextViewShadow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvAppName"
@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/tvMentorCount"
-                style="@style/TextViewThin"
+                style="@style/TextViewThinShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
@@ -70,7 +70,7 @@
 
             <TextView
                 android:id="@+id/tvMenteeCount"
-                style="@style/TextViewThin"
+                style="@style/TextViewThinShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
@@ -82,7 +82,7 @@
 
         <TextView
             android:id="@+id/tvFindMentor"
-            style="@style/TextView"
+            style="@style/TextViewCapsuleColor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tableRow"
@@ -90,7 +90,7 @@
             android:layout_marginTop="60dp"
             android:text="Find Your Mentor"
             android:fontFamily="sans-serif"
-            android:textColor="@color/actionbar"
+            android:textColor="#ffffff"
             android:textSize="28sp" />
 
         <LinearLayout
@@ -110,7 +110,7 @@
                 android:background="@android:color/white" />
 
             <TextView
-                style="@style/TextView"
+                style="@style/TextViewShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -128,7 +128,7 @@
 
         <TextView
             android:id="@+id/tvBecomeMentor"
-            style="@style/TextViewThin"
+            style="@style/TextViewThinShadow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/seperatorHorizontal"

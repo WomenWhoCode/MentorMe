@@ -29,6 +29,24 @@
 
     <style name="TextViewThin" parent="@android:style/Widget.TextView">
         <item name="android:fontFamily">sans-serif-thin</item>
+        android:shadowColor="#000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="18"
+    </style>
+    
+    <style name="TextViewThinShadow" parent="TextViewThin">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">10</item>
+    </style>
+    
+    <style name="TextViewShadow" parent="TextView">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowRadius">6</item>
     </style>
     
     <style name="TextViewCapsule" parent="@android:style/Widget.TextView">
