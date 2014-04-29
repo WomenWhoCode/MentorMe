@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -163,7 +164,10 @@ public class Utils {
 	
 	public static LocationParams DEFAULT_LOCATION = new LocationParams("San Francisco, CA");
 	
+	private static HashMap<String, Address> sCache = new HashMap<String, Address>();
+	
 	private static Address getLocationInfo(String address) {
+		if (sCache.containsKey(address)) return sCache.get(address);
 		JSONObject jsonObject = null;
 		String query = "https://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
 				+ "&sensor=false&key=AIzaSyBjd6VS-AlZ0Jc1nvDA1FNBBGz64k6NTv0";
@@ -230,6 +234,9 @@ public class Utils {
 			e.printStackTrace();
 		} finally {
 			client.close();
+		}
+		if (addr != null && !(addr.getLatitude() == 0 && addr.getLongitude() == 0)) {
+			sCache.put(address, addr);
 		}
 		return addr;
 	}
