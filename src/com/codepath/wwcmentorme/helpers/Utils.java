@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -164,8 +165,8 @@ public class Utils {
 	
 	private static Address getLocationInfo(String address) {
 		JSONObject jsonObject = null;
-		String query = "http://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
-				+ "&sensor=false";
+		String query = "https://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
+				+ "&sensor=false&key=AIzaSyCwhOZqlGg3wLJR2zoYEkkxKDzcD4B-RsA";
 		Address addr = null;
 		HttpClient client = AndroidHttpClient.newInstance("ReverseGeocoder");
 		HttpGet httpGet = new HttpGet(query);
