@@ -15,9 +15,6 @@ MentorMe is a mentorship app specifically designed for Women Who Code which will
 ![alt tag](https://raw.githubusercontent.com/WWC-MentorMe/MentorMe/master/screenshots/Screenshot_2014-05-01-15-53-53.png)
 
 
-![alt tag](https://raw.githubusercontent.com/WWC-MentorMe/MentorMe/master/screenshots/Screenshot_2014-05-01-14-09-04.png)
-
-
 ![alt tag](https://raw.githubusercontent.com/WWC-MentorMe/MentorMe/master/screenshots/Screenshot_2014-05-01-14-09-17.png)
 
 
