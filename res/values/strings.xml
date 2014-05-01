@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="blank"></string>
     <string name="app_name">MentorMe</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="fb_app_id">382558558549144</string>
+    <string name="ivMentorProfile">profile</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_view_profile">ViewProfileActivity</string>
-    <string name="title_activity_edit_profile">EditProfileActivity</string>
+    <string name="title_activity_view_profile">Profile</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="ivLocation">Location</string>
+    <string name="miRefineResults">Refine results</string>
+    <string name="btnOK">OK</string>
+    <string name="btnCancel">Cancel</string>
+    <string name="drawer_edit_profile">Edit Profile</string>
+    <string name="drawer_requests_received">Incoming Requests</string>
+    <string name="drawer_requests_Sent">Outgoing Requests</string>
+    <string name="drawer_sign_out">Sign Out</string>
+    <string name="fb_login">Log in with Facebook</string>
+    <string name="list">list</string>
+    <string name="btn_linkedin">LinkedIn</string>
+    <string name="btn_github">GitHub</string>
+    <string name="btn_gplus">Google+</string>
+    <string name="location_label">Where are you based?</string>
+    <string name="address_hint">Address</string>
+    <string name="zipcode_hint">Zip</string>
+    <string name="aboutme_label">About me</string>
+    <string name="aboutme_hint">E.g. Developer seeking to transition to Android</string>
+    <string name="Share_your_experiences">Share your Experience</string>
+    <string name="job_hint">Job title</string>
+    <string name="company_hint">Company</string>
+    <string name="years_experience_hint">Years experience</string>
+    <string name="learn_label">I need help with:</string>
+    <string name="teach_label">I am an expert in:</string>
+    <string name="teach_availability_label">I am available to teach on:</string>
+    <string name="btn_add_skills">Add skills</string>
+
+    <string-array name="skill_array">
+        <item>All</item>
+        <item>Android</item>
+        <item>C++</item>
+        <item>CSS3</item>
+        <item>HTML</item>
+        <item>iOS</item>
+        <item>Java</item>
+        <item>Javascript</item>
+        <item>PHP</item>
+        <item>Python</item>
+        <item>Ruby</item>
+        <item>Scala</item>
+    </string-array>
+    <string-array name="dayofweek_array">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+
+    <plurals name="mentee">
+        <item quantity="zero">mentees</item>
+        <item quantity="one">mentee</item>
+        <item quantity="other">mentees</item>
+    </plurals>
+
+    <string name="title_activity_user_list"></string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fb_login">Log in with Facebook</string>
+    <string name="title_activity_thank_mentor">Thank You!</string>
 
 </resources>

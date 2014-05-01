@@ -1,32 +1,70 @@
 package com.codepath.wwcmentorme.activities;
 
-import com.codepath.wwcmentorme.R;
-import com.codepath.wwcmentorme.R.id;
-import com.codepath.wwcmentorme.R.layout;
-import com.codepath.wwcmentorme.R.menu;
-
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.codepath.wwcmentorme.models.User;
+import com.parse.ParseFacebookUtils;
+import com.parse.ParseUser;
+
 
 public class HomeActivity extends Activity {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+		if (ParseUser.getCurrentUser() != null) {
+			presentMentorList();
 		}
+		ImageView img = (ImageView)findViewById(R.id.ivBackground);
+		img.setImageResource(R.drawable.spin_animation);
+		AnimationDrawable frameAnimation = (AnimationDrawable) img.getDrawable();
+		frameAnimation.setEnterFadeDuration(3000);
+		frameAnimation.setExitFadeDuration(3000);
+		frameAnimation.start();
+		final TextView tvFindMentors = (TextView)findViewById(R.id.tvFindMentor);
+		tvFindMentors.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				presentMentorList();
+			}
+		});
+		final TextView tvBecomeAMentor = (TextView)findViewById(R.id.tvBecomeMentor);
+		tvBecomeAMentor.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				UIUtils.login(HomeActivity.this, "Login to become a mentor", EditProfileActivity.PERSONA_MENTOR, new Async.Block<User>() {
+					@Override
+					public void call(final User user) {
+						if (user == null) {
+							
+						} else {
+							presentMentorList();
+							final Intent intent2 = new Intent(HomeActivity.this, ThankMentorActivity.class);
+							startActivity(intent2);
+							overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
+						}
+					}
+				}, false);
+			}
+		});
+	}
+	
+	public void presentMentorList() {
+		final Intent intent = new Intent(HomeActivity.this, MentorListActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out);
 	}
 
 	@Override
@@ -48,22 +86,11 @@ public class HomeActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_home, container,
-					false);
-			return rootView;
-		}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 	}
 
 }

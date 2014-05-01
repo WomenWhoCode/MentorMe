@@ -1,7 +1,105 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/svEditProfileRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity"
-    tools:ignore="MergeRootFrame" />
+    android:layout_height="match_parent">
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rlEditProfileRootContainer"
+    android:background="#ffffff"
+    android:padding="10dp"
+    tools:context="com.codepath.wwcmentorme.activities.EditProfileActivity" >
+
+    <com.codepath.wwcmentorme.helpers.RoundedImageView
+        android:id="@+id/ivUserProfile"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_launcher"
+        android:contentDescription="@string/ivMentorProfile"/>
+
+    <TextView
+        android:id="@+id/tvFirstName"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivUserProfile"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvLastName"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvFirstName"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tvFirstName"
+        android:textSize="28sp" />
+
+    
+	<TableLayout
+        android:id="@+id/tlAccountButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvFirstName"
+        android:background="#ffffff"
+        android:layout_marginLeft="64dp"
+        android:stretchColumns="*" >
+
+        <TableRow
+            android:id="@+id/tableRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/btnGithub"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_github"
+                android:text="Github" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnLinkedin"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_linkedin"
+                android:text="Linkedin" >
+            </Button>
+
+            <Button
+                android:id="@+id/btnWordpress"
+                style="@style/ICButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_wordpress"
+                android:text="Wordpress" >
+            </Button>
+        </TableRow>
+    </TableLayout>
+    
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/tlAccountButtons"
+        android:background="@android:color/darker_gray" />
+
+    <FrameLayout
+        android:id="@+id/flContainer"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="#ffffff"
+        android:layout_alignLeft="@+id/ivUserProfile"
+        android:layout_below="@+id/tlAccountButtons"
+        android:layout_marginTop="10dp" >
+	</FrameLayout>
+    
+</RelativeLayout>
+</ScrollView>

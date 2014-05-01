@@ -1,7 +1,149 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/listFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codepath.wwcmentorme.activities.HomeActivity"
-    tools:ignore="MergeRootFrame" />
+    android:alwaysDrawnWithCache="true"
+    android:background="#000000" >
+    
+    <ImageView
+        android:id="@+id/ivBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop" />
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/ivBackground"
+        android:background="#aa000000" >
+
+        <TextView
+            android:id="@+id/tvAppName"
+            style="@style/TextViewThinShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="MentorMe"
+            android:textColor="@color/actionbar"
+            android:textSize="64sp" />
+
+        <TextView
+            android:id="@+id/tvHeading"
+            style="@style/TextViewShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvAppName"
+            android:gravity="center_horizontal"
+            android:text="Discover the power of personal mentorship."
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TableRow
+            android:id="@+id/tableRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvHeading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp" >
+
+            <TextView
+                android:id="@+id/tvMentorCount"
+                style="@style/TextViewThinShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_weight="0.4"
+                android:gravity="center_horizontal"
+                android:text="1,000+\nMentors"
+                android:textSize="22sp" />
+
+            <View
+                android:id="@+id/seperator"
+                android:layout_width="1px"
+                android:layout_height="50dp"
+                android:layout_column="1"
+                android:background="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tvMenteeCount"
+                style="@style/TextViewThinShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="2"
+                android:layout_weight="0.4"
+                android:gravity="center_horizontal"
+                android:text="10,000+\nMentees"
+                android:textSize="22sp" />
+        </TableRow>
+
+        <TextView
+            android:id="@+id/tvFindMentor"
+            style="@style/TextViewCapsuleColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tableRow"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:text="Find Your Mentor"
+            android:fontFamily="sans-serif"
+            android:textColor="#ffffff"
+            android:textSize="28sp" />
+
+        <LinearLayout
+            android:id="@+id/seperatorHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvFindMentor"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="50dp"
+                android:layout_height="1px"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white" />
+
+            <TextView
+                style="@style/TextViewShadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center_horizontal"
+                android:text="or"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="50dp"
+                android:layout_height="1px"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/white" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvBecomeMentor"
+            style="@style/TextViewThinShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/seperatorHorizontal"
+            android:layout_centerHorizontal="true"
+            android:text="Become A Mentor"
+            android:textColor="@color/actionbar"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_women_who_code" />
+    </RelativeLayout>
+
+</RelativeLayout>

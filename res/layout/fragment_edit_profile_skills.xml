@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="400dp"
+    android:padding="10dp" >
+    
+    <Button
+        android:id="@+id/btMenteeSkills"
+        style="@style/ICButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_edit"
+        android:text="Need help in"
+        android:textSize="18sp" >
+    </Button>
+
+    <HorizontalScrollView
+        android:id="@+id/svMenteeSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llMenteeSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@+id/btMenteeSkills"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <Button
+        android:id="@+id/btMentorSkills"
+        style="@style/ICButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_edit"
+        android:text="Expert in"
+        android:textSize="18sp" >
+    </Button>
+
+    <HorizontalScrollView
+        android:id="@+id/svMentorSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/llMentorSkills"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tvAvailable"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Available on"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:id="@+id/llAvailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvM"
+            style="@style/DaysOfWeek"
+            android:text="Mon" />
+
+        <TextView
+            android:id="@+id/tvT"
+            style="@style/DaysOfWeek"
+            android:text="Tue" />
+
+        <TextView
+            android:id="@+id/tvW"
+            style="@style/DaysOfWeek"
+            android:text="Wed" />
+
+        <TextView
+            android:id="@+id/tvR"
+            style="@style/DaysOfWeek"
+            android:text="Thu" />
+
+        <TextView
+            android:id="@+id/tvF"
+            style="@style/DaysOfWeek"
+            android:text="Fri" />
+
+        <TextView
+            android:id="@+id/tvSat"
+            style="@style/DaysOfWeek"
+            android:text="Sat" />
+
+        <TextView
+            android:id="@+id/tvSun"
+            style="@style/DaysOfWeek"
+            android:text="Sun" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDoneEditProfile"
+        style="@style/NextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="goToDoneEditProfile"
+        android:text="Done" />
+
+</LinearLayout>

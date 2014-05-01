@@ -1,11 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.codepath.wwcmentorme.MentorListActivity" >
-
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
-
+        android:id="@+id/miRefineResults"
+        android:icon="@drawable/ic_filter"
+        android:onClick="onRefineResultsPress"
+        android:showAsAction="always"
+        android:title="@string/miRefineResults">
+    </item>
+    
+    <item
+        android:id="@+id/miShowMap"
+        android:icon="@drawable/ic_map"
+        android:onClick="onShowMap"
+        android:showAsAction="always"
+        android:title="@string/miRefineResults">
+    </item>
+    
 </menu>

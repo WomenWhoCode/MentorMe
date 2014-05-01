@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:background="#ffffff"
+    android:padding="10dp" >
+
+    <com.codepath.wwcmentorme.helpers.RoundedImageView
+        android:id="@+id/ivMentorProfile"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/ivMentorProfile" />
+
+    <TextView
+        android:id="@+id/tvFirstName"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivMentorProfile"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvLastName"
+        style="@style/TextViewThin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/tvFirstName"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tvFirstName"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/tvPosition"
+        style="@style/TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLastName"
+        android:layout_toRightOf="@+id/ivMentorProfile"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvAbout"
+        style="@style/TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivMentorProfile"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvDistance"
+        style="@style/TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp" />
+
+
+    
+    <TextView
+            android:id="@+id/tvMenteeCount"
+            style="@style/TextView"
+            android:layout_below="@+id/tvAbout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/actionbar"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"/>
+
+    <LinearLayout
+        android:id="@+id/llSkills"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_alignParentRight="true"
+        android:layoutDirection="rtl" >
+        <TextView
+            android:id="@+id/tvSkill1"
+            style="@style/TextViewCapsule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tvSkill2"
+            style="@style/TextViewCapsule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tvSkill3"
+            style="@style/TextViewCapsule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>

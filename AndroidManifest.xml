@@ -2,19 +2,43 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codepath.wwcmentorme"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0.0" >
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!--
+	  IMPORTANT: Change "com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE" in the lines below
+	  to match your app's package name + ".permission.C2D_MESSAGE".
+    -->
+    <permission
+        android:name="com.codepath.wwcmentorme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.codepath.wwcmentorme.permission.C2D_MESSAGE" />
 
     <application
-        android:name="com.codepath.wwcmentorme.restclient.MentoMeApp"
+        android:name="com.codepath.wwcmentorme.app.MentorMeApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher_teal"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data
@@ -23,10 +47,52 @@
         <meta-data
             android:name="AA_DB_VERSION"
             android:value="1" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCwhOZqlGg3wLJR2zoYEkkxKDzcD4B-RsA" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/fb_app_id" />
 
         <activity
-            android:name="com.codepath.wwcmentorme.activities.MentorListActivity"
+            android:name="com.facebook.LoginActivity"
+            android:icon="@drawable/ic_launcher"
             android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.codepath.wwcmentorme.activities.MentorListActivity"
+            android:icon="@drawable/ic_launcher"
+            android:launchMode="singleTop"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.codepath.wwcmentorme.activities.ViewProfileActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_view_profile" >
+        </activity>
+        <activity
+            android:name="com.codepath.wwcmentorme.activities.EditProfileActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_edit_profile"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name="com.codepath.wwcmentorme.activities.MapActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_edit_profile" >
+        </activity>
+        <activity
+            android:name="com.codepath.wwcmentorme.activities.HomeActivity"
+            android:icon="@drawable/ic_launcher_teal"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,30 +100,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.codepath.wwcmentorme.activities.ViewProfileActivity"
-            android:label="@string/title_activity_view_profile" >
+            android:name="com.codepath.wwcmentorme.activities.UserListActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_user_list" >
         </activity>
-        <activity
-            android:name="com.codepath.wwcmentorme.activities.EditProfileActivity"
-            android:label="@string/title_activity_edit_profile" >
-        </activity>
-        <activity
-            android:name="com.codepath.wwcmentorme.activities.HomeActivity"
-            android:label="@string/title_activity_home" >
-        </activity>
-        <activity
-            android:name="com.codepath.wwcmentorme.activities.LoginActivity"
-            android:label="@string/app_name" >
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="cprest"
-                    android:scheme="oauth" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <!-- IMPORTANT: Change "com.parse.tutorials.pushnotifications" to match your app's package name. -->
+                <category android:name="com.codepath.wwcmentorme" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.codepath.wwcmentorme.helpers.MentorMeReceiver" >
+            <intent-filter>
+                <action android:name="SEND_PUSH" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:icon="@drawable/ic_launcher"
+            android:name="com.codepath.wwcmentorme.activities.ThankMentorActivity"
+            android:label="@string/title_activity_thank_mentor" >
         </activity>
     </application>
 

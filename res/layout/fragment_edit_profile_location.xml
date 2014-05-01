@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="#ffffff"
+        android:padding="10dp" >
+
+        <TextView
+            android:id="@+id/tvLocationLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="@string/location_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageView
+            android:id="@+id/imageButton1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/tvLocationLabel"
+            android:src="@drawable/ic_map" />
+
+        <RelativeLayout
+            android:id="@+id/rlLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvLocationLabel"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/etAddress"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_hint"
+                android:imeOptions="actionNext"
+                android:inputType="textCapWords|textPostalAddress|textAutoComplete"
+                android:maxLines="1" >
+            </EditText>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvAboutmeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvLocationLabel"
+            android:layout_below="@+id/rlLocation"
+            android:layout_marginTop="16dp"
+            android:text="@string/aboutme_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <EditText
+            android:id="@+id/etAboutme"
+            android:layout_width="match_parent"
+            android:layout_height="88sp"
+            android:layout_alignLeft="@+id/rlLocation"
+            android:layout_below="@+id/tvAboutmeLabel"
+            android:layout_marginTop="8dp"
+            android:gravity="left|top"
+            android:hint="@string/aboutme_hint"
+            android:inputType="textMultiLine|textCapSentences|textAutoComplete"
+            android:imeOptions="actionNext"
+            android:lines="3" />
+
+        <Button
+            android:id="@+id/btnGoToStep2"
+            style="@style/NextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tvAboutmeLabel"
+            android:layout_below="@+id/etAboutme"
+            android:onClick="goToStep2"
+            android:text="Next" />
+    </RelativeLayout>
