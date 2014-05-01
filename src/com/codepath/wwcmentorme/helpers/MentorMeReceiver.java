@@ -63,8 +63,9 @@ public class MentorMeReceiver extends BroadcastReceiver {
 									if (!inResponse) {
 										DataService.addResponsePending(userId);
 									}
-									pupInt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-									PendingIntent contentIntent = PendingIntent.getActivity(context, 0, pupInt, 0);
+									int requestID = (int) System.currentTimeMillis();
+									pupInt.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP); 
+									PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, pupInt, PendingIntent.FLAG_UPDATE_CURRENT);
 									 final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 						               .setSmallIcon(R.drawable.ic_launcher)
 						               .setContentTitle(username)

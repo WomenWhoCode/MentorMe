@@ -51,7 +51,7 @@ public abstract class AbstractEditProfileFragment extends Fragment {
 		updateViews(getProfileUser());
 	}
 	
-	void saveUserData() {
+	public void saveUserData() {
 		updateProfile(getProfileUser());
 		getProfileUser().saveInBackground();
 	}

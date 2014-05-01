@@ -369,6 +369,10 @@ public class ViewProfileActivity extends AppActivity {
 				}, false);
 			} else if (item.getTitle().equals("Email")) {
 				DataService.removeResponsePending(user.getFacebookId());
+				if (mIsResponse) {
+		    		sendPushNotification();
+		    		markConnected(user, User.me(), true);
+		    	}
 				Intent email = new Intent(Intent.ACTION_SEND);
 				email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
 				email.setType("message/rfc822");

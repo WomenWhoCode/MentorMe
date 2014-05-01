@@ -44,6 +44,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 public class EditProfileActivity extends AppActivity {
@@ -204,6 +205,9 @@ public class EditProfileActivity extends AppActivity {
 	public void finishWithSuccess() {
 		if (mUserId != 0) {
 			User.setMe(User.getUser(mUserId));
+			ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+	    	installation.put("userId", User.meId());
+	    	installation.saveInBackground();
 			ParseUser.getCurrentUser().put(PROFILE_REF, User.me());
 			ParseUser.getCurrentUser().saveInBackground();
 			final JSONArray menteeSkills = User.me().getMenteeSkills();
@@ -270,7 +274,7 @@ public class EditProfileActivity extends AppActivity {
 	public void validate(final Async.Block<Boolean> completion) {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-		AbstractEditProfileFragment f = (AbstractEditProfileFragment)getFragmentManager().findFragmentById(R.id.flContainer);
+		final AbstractEditProfileFragment f = (AbstractEditProfileFragment)getFragmentManager().findFragmentById(R.id.flContainer);
 		if (f != null) {
 			f.validateInputs(new Async.Block<View>() {
 				@Override
@@ -278,6 +282,7 @@ public class EditProfileActivity extends AppActivity {
 					if (result != null) {
 						result.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shake));
 					}
+					if (result == null) f.saveUserData();
 					completion.call(result == null);
 				}
 			});

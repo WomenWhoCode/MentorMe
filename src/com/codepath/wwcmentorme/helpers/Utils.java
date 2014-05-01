@@ -41,7 +41,8 @@ public class Utils {
 		try {
 			result = OBJECT_MAPPER.readValue(jsonObjString, type);
 		} catch (IOException e) {
-			Log.e("ERROR", String.format("Could not deserialize to type %s", type));
+			Log.e("ERROR",
+					String.format("Could not deserialize to type %s", type));
 		}
 		return result;
 	}
@@ -59,7 +60,9 @@ public class Utils {
 					results.add(item);
 				}
 			} catch (JSONException e) {
-				Log.w("WARN", String.format("Cannot get jsonObject at index %s from jsonArray", i), e);
+				Log.w("WARN", String.format(
+						"Cannot get jsonObject at index %s from jsonArray", i),
+						e);
 				continue;
 			}
 		}
@@ -74,44 +77,48 @@ public class Utils {
 		return activeNetworkInfo != null
 				&& activeNetworkInfo.isConnectedOrConnecting();
 	}
-	
-	public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
-	      double theta = lon1 - lon2;
-	      double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-	      dist = Math.acos(dist);
-	      dist = rad2deg(dist);
-	      dist = dist * 60 * 1.1515;
-	      return round(dist, 1);
-	}
-	
-	/*::  This function converts decimal degrees to radians             :*/
-	private static double deg2rad(double deg) {
-	      return (deg * Math.PI / 180.0);
-	}
-	
-	/*::  This function converts radians to decimal degrees             :*/
-	private static double rad2deg(double rad) {
-	      return (rad * 180.0 / Math.PI);
-	}
-	
-	public static double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    long factor = (long) Math.pow(10, places);
-	    value = value * factor;
-	    long tmp = Math.round(value);
-	    return (double) tmp / factor;
+	public static double getDistance(double lat1, double lon1, double lat2,
+			double lon2) {
+		double theta = lon1 - lon2;
+		double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
+				+ Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2))
+				* Math.cos(deg2rad(theta));
+		dist = Math.acos(dist);
+		dist = rad2deg(dist);
+		dist = dist * 60 * 1.1515;
+		return round(dist, 1);
 	}
-	
-	public static String formatDouble(double d)
-	{
-	    if(d < 1) {
-	    	return Double.toString(d).substring(Double.toString(d).indexOf("."));
-	    } else {
-	    	return Double.toString(d);
-	    }
+
+	/* :: This function converts decimal degrees to radians : */
+	private static double deg2rad(double deg) {
+		return (deg * Math.PI / 180.0);
 	}
-	
+
+	/* :: This function converts radians to decimal degrees : */
+	private static double rad2deg(double rad) {
+		return (rad * 180.0 / Math.PI);
+	}
+
+	public static double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+	public static String formatDouble(double d) {
+		if (d < 1) {
+			return Double.toString(d)
+					.substring(Double.toString(d).indexOf("."));
+		} else {
+			return Double.toString(d);
+		}
+	}
+
 	public static String formatNumber(String num) {
 		DecimalFormat formatter = new DecimalFormat("#,###");
 		Long longNum = Long.parseLong(num);
@@ -123,10 +130,13 @@ public class Utils {
 		return String.format(Locale.US, "%.1f %c",
 				longNum / Math.pow(1000, exp), "kMGTPE".charAt(exp - 1));
 	}
-	
-	// Returns the insertion index for a sorted array "container" by the same comparator.
-	public static <V> int insertDeduped(final List<V> container, V object, Comparator<V> comparator) {
-		// First we check if the object already exists and we remove it in that case.
+
+	// Returns the insertion index for a sorted array "container" by the same
+	// comparator.
+	public static <V> int insertDeduped(final List<V> container, V object,
+			Comparator<V> comparator) {
+		// First we check if the object already exists and we remove it in that
+		// case.
 		for (int i = 0, count = container.size(); i < count; ++i) {
 			final V currentObj = container.get(i);
 			int compare = comparator.compare(object, currentObj);
@@ -140,39 +150,46 @@ public class Utils {
 		for (int i = 0, count = container.size(); i < count; ++i) {
 			final V currentObj = container.get(i);
 			int compare = comparator.compare(object, currentObj);
-			if (compare < 0) break;
+			if (compare < 0)
+				break;
 			++insertionIndex;
 		}
 		container.add(insertionIndex, object);
 		return insertionIndex;
 	}
-	
+
 	private static Geocoder sGeocoder = null;
-	
+
 	public static class LocationParams {
-		double lat; double lng;
+		double lat;
+		double lng;
 		String address;
-		
+
 		public LocationParams(double lat, double lng) {
-			this.lat = lat; this.lng = lng;
+			this.lat = lat;
+			this.lng = lng;
 		}
-		
+
 		public LocationParams(final String address) {
 			this.address = address;
 		}
 	}
-	
-	public static LocationParams DEFAULT_LOCATION = new LocationParams("San Francisco, CA");
-	
+
+	public static LocationParams DEFAULT_LOCATION = new LocationParams(
+			"San Francisco, CA");
+
 	private static HashMap<String, Address> sCache = new HashMap<String, Address>();
-	
+
 	private static Address getLocationInfo(String address) {
-		if (sCache.containsKey(address)) return sCache.get(address);
+		if (sCache.containsKey(address))
+			return sCache.get(address);
 		JSONObject jsonObject = null;
-		String query = "https://maps.google.com/maps/api/geocode/json?address=" + address.replaceAll(" ","%20")
+		String query = "https://maps.google.com/maps/api/geocode/json?address="
+				+ address.replaceAll(" ", "%20")
 				+ "&sensor=false&key=AIzaSyBjd6VS-AlZ0Jc1nvDA1FNBBGz64k6NTv0";
 		Address addr = null;
-		AndroidHttpClient client = AndroidHttpClient.newInstance("ReverseGeocoder");
+		AndroidHttpClient client = AndroidHttpClient
+				.newInstance("ReverseGeocoder");
 		HttpGet httpGet = new HttpGet(query);
 		httpGet.setHeader("Referer", "http://www.mentorme.com");
 		HttpResponse response;
@@ -191,21 +208,28 @@ public class Utils {
 				try {
 					jsonObject = new JSONObject(stringBuilder.toString());
 					addr = new Address(Locale.getDefault());
-					JSONArray addrComp = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+					JSONArray addrComp = ((JSONArray) jsonObject.get("results"))
+							.getJSONObject(0)
 							.getJSONArray("address_components");
-					String locality = ((JSONArray)((JSONObject)addrComp.get(0)).get("types")).getString(0);
+					String locality = ((JSONArray) ((JSONObject) addrComp
+							.get(0)).get("types")).getString(0);
 					if (locality.compareTo("locality") == 0) {
-						locality = ((JSONObject)addrComp.get(0)).getString("long_name");
+						locality = ((JSONObject) addrComp.get(0))
+								.getString("long_name");
 						addr.setLocality(locality);
 					}
-					String adminArea = ((JSONArray)((JSONObject)addrComp.get(2)).get("types")).getString(0);
+					String adminArea = ((JSONArray) ((JSONObject) addrComp
+							.get(2)).get("types")).getString(0);
 					if (adminArea.compareTo("administrative_area_level_1") == 0) {
-						adminArea = ((JSONObject)addrComp.get(2)).getString("long_name");
+						adminArea = ((JSONObject) addrComp.get(2))
+								.getString("long_name");
 						addr.setAdminArea(adminArea);
 					}
-					String country = ((JSONArray)((JSONObject)addrComp.get(3)).get("types")).getString(0);
+					String country = ((JSONArray) ((JSONObject) addrComp.get(3))
+							.get("types")).getString(0);
 					if (country.compareTo("country") == 0) {
-						country = ((JSONObject)addrComp.get(3)).getString("long_name");
+						country = ((JSONObject) addrComp.get(3))
+								.getString("long_name");
 						addr.setCountryName(country);
 					}
 				} catch (JSONException e) {
@@ -216,13 +240,13 @@ public class Utils {
 
 				try {
 
-					lon = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-						.getJSONObject("geometry").getJSONObject("location")
-						.getDouble("lng");
+					lon = ((JSONArray) jsonObject.get("results"))
+							.getJSONObject(0).getJSONObject("geometry")
+							.getJSONObject("location").getDouble("lng");
 
-					lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
-						.getJSONObject("geometry").getJSONObject("location")
-						.getDouble("lat");
+					lat = ((JSONArray) jsonObject.get("results"))
+							.getJSONObject(0).getJSONObject("geometry")
+							.getJSONObject("location").getDouble("lat");
 
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -235,13 +259,15 @@ public class Utils {
 		} finally {
 			client.close();
 		}
-		if (addr != null && !(addr.getLatitude() == 0 && addr.getLongitude() == 0)) {
+		if (addr != null
+				&& !(addr.getLatitude() == 0 && addr.getLongitude() == 0)) {
 			sCache.put(address, addr);
 		}
 		return addr;
 	}
-	
-	public static void geocode(final Context context, final LocationParams params, final Async.Block<Address> completion) {
+
+	public static void geocode(final Context context,
+			final LocationParams params, final Async.Block<Address> completion) {
 		if (sGeocoder == null) {
 			sGeocoder = new Geocoder(context, Locale.getDefault());
 		}
@@ -251,7 +277,8 @@ public class Utils {
 				List<Address> addresses = null;
 				try {
 					if (params.address == null) {
-						addresses = sGeocoder.getFromLocation(params.lat, params.lng, 1);
+						addresses = sGeocoder.getFromLocation(params.lat,
+								params.lng, 1);
 					} else {
 						addresses = new ArrayList<Address>();
 						addresses.add(getLocationInfo(params.address));
@@ -260,12 +287,15 @@ public class Utils {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				final Address address = addresses != null && addresses.size() > 0 ? addresses.get(0) : null;
+				final Address address = addresses != null
+						&& addresses.size() > 0 ? addresses.get(0) : null;
 				Async.dispatchMain(new Runnable() {
 					@Override
 					public void run() {
 						if (completion != null) {
-							if (address != null  && !(address.getLatitude() == 0 && address.getLongitude() == 0)) {
+							if (address != null
+									&& !(address.getLatitude() == 0 && address
+											.getLongitude() == 0)) {
 								completion.call(address);
 							} else {
 								completion.call(null);
