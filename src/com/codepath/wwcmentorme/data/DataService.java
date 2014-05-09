@@ -1,12 +1,14 @@
 package com.codepath.wwcmentorme.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
 import android.content.Context;
 
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.models.Message;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
@@ -201,5 +203,29 @@ public class DataService {
 	
 	public static void addRequestsSent(final long userId) {
 		sRequestsSent.add(userId);
+	}
+	
+	public static void getMessages(final long userId1, final long userId2, final int numMessages, final Date createdMin, final Date createdMax,
+			final Async.Block<List<Message>> completion) {
+		ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
+		query.whereEqualTo(Message.GROUP_ID_KEY, Message.getGroup(userId1, userId2));
+		if (createdMin != null) {
+			query.whereGreaterThanOrEqualTo(Message.CREATED_AT_KEY, createdMin);
+		}
+		if (createdMax != null) {
+			query.whereLessThanOrEqualTo(Message.CREATED_AT_KEY, createdMax);
+		}
+		query.addDescendingOrder(Message.CREATED_AT_KEY);
+		query.findInBackground(new FindCallback<Message>() {
+			@Override
+			public void done(final List<Message> messages, ParseException e) {
+				if (completion != null) {
+					completion.call(e == null ? messages : null);
+				}
+				if (e != null) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }

@@ -5,10 +5,13 @@ public class Constants {
 	public static final String PARSE_CLIENT_KEY = "hUKb43yr9grUlDuEjvqmX8KElnOtO0eonnbZDalh";
 	public static final String FACEBOOK_APP_ID = "382558558549144";
 	
-	public static enum UserType {
-		MENTOR, MENTEE
+	public static enum Persona {
+		BOTH, MENTOR, MENTEE
 	}
 	
+	public static enum UserDisplayMode {
+		PROFILE, CHAT
+	}
 	/*
 	 * 
 	 * SHA1

@@ -20,6 +20,7 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.activities.EditProfileActivity;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.UIUtils;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.models.User;
 
 public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
@@ -71,12 +72,12 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 			tv.setTag(Boolean.valueOf(false));
 			tv.setOnClickListener(onClickListener);
 		}
-		if (getPersona() == EditProfileActivity.PERSONA_MENTEE) {
+		if (getPersona().equals(Persona.MENTEE)) {
 			llAvailability.setVisibility(View.GONE);
 			llMentorSkills.setVisibility(View.GONE);
 			btEditMentorSkills.setVisibility(View.GONE);
 			tvAvailability.setVisibility(View.GONE);
-		} else if (getPersona() == EditProfileActivity.PERSONA_MENTOR) {
+		} else if (getPersona().equals(Persona.MENTOR)) {
 			btEditMenteeSkills.setVisibility(View.GONE);
 			llMenteeSkills.setVisibility(View.GONE);
 		}
@@ -205,7 +206,7 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 		View view = null;
 		boolean validateMentors = validateLinearLayout(llMentorSkills, null);
 		boolean validateMentees = validateLinearLayout(llMenteeSkills, null);
-		if (getPersona() == EditProfileActivity.PERSONA_MENTOR) {
+		if (getPersona().equals(Persona.MENTOR)) {
 			if (!validateMentors) view = btEditMentorSkills;
 			if (view == null && !validateLinearLayout(llAvailability, new FilterInterface<TextView>() {
 				@Override
@@ -213,9 +214,9 @@ public class EditProfileSkillsFragment extends AbstractEditProfileFragment {
 					return ((Boolean)tv.getTag()).booleanValue();
 				}
 			})) view = llAvailability;
-		} else if (getPersona() == EditProfileActivity.PERSONA_MENTEE) {
+		} else if (getPersona().equals(Persona.MENTEE)) {
 			if (!validateMentees) view = btEditMenteeSkills;
-		} else if (getPersona() == EditProfileActivity.PERSONA_BOTH) {
+		} else if (getPersona().equals(Persona.BOTH)) {
 			if (!validateMentors && !validateMentees) view = getView();
 		}
 		invalidView.call(view);

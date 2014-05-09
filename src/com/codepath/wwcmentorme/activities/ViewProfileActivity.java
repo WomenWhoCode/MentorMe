@@ -35,7 +35,7 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Async.Block;
-import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.helpers.MentorMeReceiver;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.Utils;
@@ -234,7 +234,7 @@ public class ViewProfileActivity extends AppActivity {
 			@Override
 			public void onClick(View v) {
 				final Intent intent = new Intent(ViewProfileActivity.this, UserListActivity.class);
-				intent.putExtra("usertype", UserType.MENTOR.toString());
+				intent.putExtra("persona", Persona.MENTOR);
 				intent.putExtra("userId", user.getFacebookId());
 				startActivity(intent);			
 			}
@@ -311,7 +311,7 @@ public class ViewProfileActivity extends AppActivity {
 				tvAddReview.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						UIUtils.login(getActivity(), "Login to add a review", EditProfileActivity.PERSONA_MENTEE, new Async.Block<User>() {
+						UIUtils.login(getActivity(), "Login to add a review", Persona.MENTEE, new Async.Block<User>() {
 							@Override
 							public void call(final User result) {
 								if (result == null) return;
@@ -357,7 +357,7 @@ public class ViewProfileActivity extends AppActivity {
 		if (item.getTitle() == null) return true;
 		if (id == R.id.miProfileAction) {
 			if(item.getTitle().equals("Connect")) {
-				UIUtils.login(getActivity(), "Login to connect to your mentor", EditProfileActivity.PERSONA_MENTEE, new Async.Block<User>() {
+				UIUtils.login(getActivity(), "Login to connect to your mentor", Persona.MENTEE, new Async.Block<User>() {
 					@Override
 					public void call(User result) {
 						if (result != null) {

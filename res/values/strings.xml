@@ -14,6 +14,7 @@
     <string name="btnOK">OK</string>
     <string name="btnCancel">Cancel</string>
     <string name="drawer_edit_profile">Edit Profile</string>
+    <string name="drawer_messages">Messages</string>
     <string name="drawer_requests_received">Incoming Requests</string>
     <string name="drawer_requests_Sent">Outgoing Requests</string>
     <string name="drawer_sign_out">Sign Out</string>

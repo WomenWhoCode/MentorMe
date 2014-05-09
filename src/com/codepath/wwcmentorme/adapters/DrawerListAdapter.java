@@ -19,7 +19,8 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.activities.EditProfileActivity;
 import com.codepath.wwcmentorme.activities.UserListActivity;
 import com.codepath.wwcmentorme.helpers.Async;
-import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
+import com.codepath.wwcmentorme.helpers.Constants.UserDisplayMode;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.helpers.ViewHolder;
 import com.codepath.wwcmentorme.models.User;
@@ -51,7 +52,7 @@ public class DrawerListAdapter extends
 			loginButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					UIUtils.login((Activity)getContext(), null, EditProfileActivity.PERSONA_BOTH, new Async.Block<User>() {
+					UIUtils.login((Activity)getContext(), null, Persona.BOTH, new Async.Block<User>() {
 						@Override
 						public void call(User result) {
 							
@@ -108,13 +109,12 @@ public class DrawerListAdapter extends
 				String buttonText = btnItem.getText().toString();
 				if (buttonText == getContext().getResources().getString(R.string.drawer_requests_received)) {
 					final Intent intent = new Intent(getContext(), UserListActivity.class);
-					intent.putExtra("usertype", UserType.MENTOR.toString());
 					intent.putExtra("userId", User.meId());
-					intent.putExtra("persona", EditProfileActivity.PERSONA_MENTEE);
+					intent.putExtra("persona", Persona.MENTOR);
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(R.string.drawer_requests_Sent)) {
 					final Intent intent = new Intent(getContext(), UserListActivity.class);
-					intent.putExtra("usertype", UserType.MENTEE.toString());
+					intent.putExtra("persona", Persona.MENTEE);
 					intent.putExtra("userId", User.meId());
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(R.string.drawer_edit_profile)) {
@@ -122,6 +122,12 @@ public class DrawerListAdapter extends
 					getContext().startActivity(intent);
 				} else if (buttonText == getContext().getResources().getString(R.string.drawer_sign_out)) {
 					UIUtils.logout(getContext());
+				} else if (buttonText == getContext().getResources().getString(R.string.drawer_messages)) {
+					final Intent intent = new Intent(getContext(), UserListActivity.class);
+					intent.putExtra("userId", User.meId());
+					intent.putExtra("persona", Persona.MENTOR);
+					intent.putExtra("userDisplayMode", UserDisplayMode.CHAT);
+					getContext().startActivity(intent);
 				}
 			}
 		});

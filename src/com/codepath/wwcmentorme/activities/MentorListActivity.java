@@ -28,6 +28,8 @@ import com.codepath.wwcmentorme.adapters.DrawerListAdapter;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
+import com.codepath.wwcmentorme.helpers.Constants.UserDisplayMode;
 import com.codepath.wwcmentorme.helpers.NotificationCenter;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
@@ -102,7 +104,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
-		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint, EditProfileActivity.PERSONA_MENTOR);		
+		mentorListAdapter = new MentorListAdapter(MentorListActivity.this, mGeoPoint, Persona.MENTOR, UserDisplayMode.PROFILE);
 		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(mentorListAdapter);
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);
@@ -152,10 +154,11 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 				listView.setOnItemClickListener(new SlideMenuClickListener());
 				if (User.me() != null) {
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_messages, R.drawable.ic_inbox));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));
-				}				
+				}
 			}
 		});
 	}

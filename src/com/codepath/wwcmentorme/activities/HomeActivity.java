@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.ParseFacebookUtils;
@@ -44,7 +45,7 @@ public class HomeActivity extends Activity {
 		tvBecomeAMentor.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				UIUtils.login(HomeActivity.this, "Login to become a mentor", EditProfileActivity.PERSONA_MENTOR, new Async.Block<User>() {
+				UIUtils.login(HomeActivity.this, "Login to become a mentor", Persona.MENTOR, new Async.Block<User>() {
 					@Override
 					public void call(final User user) {
 						if (user == null) {

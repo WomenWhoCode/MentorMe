@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.activities.EditProfileActivity;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -235,7 +236,7 @@ public class UIUtils {
 		}
 	}
 	
-	public static void login(final Activity context, final String title, final int persona, final Async.Block<User> completion, final boolean skipUI) {
+	public static void login(final Activity context, final String title, final Persona persona, final Async.Block<User> completion, final boolean skipUI) {
 		getOrCreateLoggedInUser(context, new Async.Block<User>() {
 			@Override
 			public void call(User result) {

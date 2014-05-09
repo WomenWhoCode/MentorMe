@@ -33,6 +33,7 @@ import com.codepath.wwcmentorme.fragments.EditProfileLocationFragment;
 import com.codepath.wwcmentorme.fragments.EditProfileSkillsFragment;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Utils;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.models.User;
 import com.facebook.FacebookRequestError;
 import com.facebook.Request;
@@ -54,15 +55,11 @@ public class EditProfileActivity extends AppActivity {
 	private TextView tvFirstName;
 	private TextView tvLastName;
 	private long mUserId;
-	private int mPersona;
-	
-	public static final int PERSONA_BOTH = 0;
-	public static final int PERSONA_MENTEE = 1;
-	public static final int PERSONA_MENTOR = 2;
+	private Persona mPersona;
 	
 	private static ArrayList<Runnable> sCompletion = new ArrayList<Runnable>();
 	
-	public static void startWithCompletion(final Activity context, final int persona, final Runnable completion) {
+	public static void startWithCompletion(final Activity context, final Persona persona, final Runnable completion) {
 		if (sCompletion.size() > 0) {
 			// There is already one instance of EditProfileActivity waiting to get completed.
 			sCompletion.add(completion);
@@ -77,7 +74,11 @@ public class EditProfileActivity extends AppActivity {
 	protected void onCreate(Bundle savedInstanceState) {		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_profile);
-		mPersona = getIntent().getIntExtra("persona", PERSONA_BOTH);
+		if (getIntent().hasExtra("persona")) {
+			mPersona = (Persona)getIntent().getSerializableExtra("persona");
+		} else {
+			mPersona = Persona.BOTH;
+		}
 		setupViews();
 		getFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
 			@Override

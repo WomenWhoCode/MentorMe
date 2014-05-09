@@ -1,28 +1,32 @@
 package com.codepath.wwcmentorme.activities;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.FragmentManager.OnBackStackChangedListener;
+import android.content.Context;
+import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
 import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.MentorListAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
-import com.codepath.wwcmentorme.helpers.Constants.UserType;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
+import com.codepath.wwcmentorme.helpers.Constants.UserDisplayMode;
 import com.codepath.wwcmentorme.models.User;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
-
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.app.FragmentManager.OnBackStackChangedListener;
-import android.content.Context;
-import android.content.Intent;
-import android.view.Menu;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class UserListActivity extends AppActivity implements
 		android.location.LocationListener, OnBackStackChangedListener {
@@ -32,9 +36,9 @@ public class UserListActivity extends AppActivity implements
 	private LocationManager locationManager;
 	private Location mLocation;
 	private String provider;
-	private UserType usertype;
 	private long userId;
-	private int mPersona;
+	private Persona mPersona;
+	private UserDisplayMode mUserDisplayMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +46,21 @@ public class UserListActivity extends AppActivity implements
 		setContentView(R.layout.user_list_fragment);
 		setCurrentLocation();
 
-		if (getIntent().hasExtra("usertype")) {
-			usertype = UserType.valueOf(getIntent().getStringExtra("usertype"));
-		}
-
 		if (getIntent().hasExtra("userId")) {
 			userId = getIntent().getLongExtra("userId", 0);
 		}
 		
-		mPersona = getIntent().getIntExtra("persona", EditProfileActivity.PERSONA_MENTOR);
+		if (getIntent().hasExtra("persona")) {
+			mPersona = (Persona)getIntent().getSerializableExtra("persona");
+		} else {
+			mPersona = Persona.MENTOR;
+		}
+		
+		if (getIntent().hasExtra("userDisplayMode")) {
+			mUserDisplayMode = (UserDisplayMode)getIntent().getSerializableExtra("userDisplayMode");
+		} else {
+			mUserDisplayMode = UserDisplayMode.PROFILE;
+		}
 		
 		setTitle();		
 
@@ -65,23 +75,24 @@ public class UserListActivity extends AppActivity implements
 
 	private void setTitle() {
 		DataService.getUser(userId, new GetCallback<User>() {
-
 			@Override
 			public void done(User user, ParseException e) {
 				if (e == null) {
 					StringBuilder title = new StringBuilder();
 					if (userId == User.meId()) {
-						title.append("Your");
+						title.append("Your ");
 					} else {
 						title.append(user.getFirstName() + "'s");
 					}
-
-					if (usertype.equals(UserType.MENTOR)) {
-						title.append(" Incoming Requests");
+					if (mUserDisplayMode.equals(UserDisplayMode.CHAT)) {
+						title.append("Messages");
 					} else {
-						title.append(" Outgoing Requests");
+						if (mPersona.equals(Persona.MENTOR)) {
+							title.append("Incoming Requests");
+						} else {
+							title.append("Outgoing Requests");
+						}
 					}
-
 					setTitle(title);
 				} else {
 					e.printStackTrace();
@@ -123,12 +134,12 @@ public class UserListActivity extends AppActivity implements
 	private void populateListView() {
 		lvMentors = (ListView) findViewById(R.id.lvMentors);
 		mentorListAdapter = new MentorListAdapter(UserListActivity.this,
-				mGeoPoint, mPersona);
+				mGeoPoint, mPersona.equals(Persona.MENTOR) ? Persona.MENTEE : Persona.MENTOR, mUserDisplayMode);
 		ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(
 				mentorListAdapter);
 		scaleInAnimationAdapter.setAbsListView(lvMentors);
 		lvMentors.setAdapter(scaleInAnimationAdapter);
-		if (usertype.equals(UserType.MENTOR)) {
+		if (mPersona.equals(Persona.MENTOR)) {
 			loadRequests(userId, true);
 		} else {
 			loadRequests(userId, false);
@@ -142,8 +153,26 @@ public class UserListActivity extends AppActivity implements
 		DataService.getConnections(userId, new Runnable() {
 			@Override
 			public void run() {
-				mentorListAdapter.addAll(User.getUsers(User.getUser(userId).getConnections(incoming)));
-				getProgressBar().setVisibility(View.INVISIBLE);
+				final List<User> users = User.getUsers(User.getUser(userId).getConnections(incoming));
+				mentorListAdapter.addAll(users);
+				if (mUserDisplayMode.equals(UserDisplayMode.CHAT)) {
+					DataService.getConnections(userId, new Runnable() {
+						@Override
+						public void run() {
+							final List<User> otherUsers = User.getUsers(User.getUser(userId).getConnections(!incoming));
+							final ArrayList<User> newUsers = new ArrayList<User>();
+							for (final User user : otherUsers) {
+								if (!users.contains(user)) {
+									newUsers.add(user);
+								}
+							}
+							mentorListAdapter.addAll(newUsers);
+							getProgressBar().setVisibility(View.INVISIBLE);
+						}
+					}, !incoming);
+				} else {
+					getProgressBar().setVisibility(View.INVISIBLE);
+				}
 			}
 		}, incoming);
 	}

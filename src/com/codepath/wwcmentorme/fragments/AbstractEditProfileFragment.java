@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.models.User;
 
 public abstract class AbstractEditProfileFragment extends Fragment {
 	private long profileUserId;
-	private int persona;
+	private Persona persona;
 	
 	public abstract void validateInputs(final Async.Block<View> invalidView);
 	abstract void updateViews(final User user);
@@ -21,7 +22,7 @@ public abstract class AbstractEditProfileFragment extends Fragment {
 		return User.getUser(profileUserId);
 	}
 	
-	public int getPersona() {
+	public Persona getPersona() {
 		return persona;
 	}
 	
@@ -33,7 +34,7 @@ public abstract class AbstractEditProfileFragment extends Fragment {
 		return view;
 	}
 	
-	public AbstractEditProfileFragment setProfileId(long profileId, int persona) {
+	public AbstractEditProfileFragment setProfileId(long profileId, Persona persona) {
 		this.profileUserId = profileId;
 		this.persona = persona;
 		return this;
