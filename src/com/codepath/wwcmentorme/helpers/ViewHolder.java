@@ -24,4 +24,10 @@ public class ViewHolder {
 		public Button btnItem;
 	}
 	
+	public static class ChatItem {
+		public ImageView ivUserProfile;
+		public TextView tvMessage;
+		public TextView tvTime;
+	}
+	
 }

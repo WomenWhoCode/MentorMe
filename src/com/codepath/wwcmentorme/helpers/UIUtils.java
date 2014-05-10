@@ -35,13 +35,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
+import com.codepath.wwcmentorme.activities.ChatActivity;
 import com.codepath.wwcmentorme.activities.EditProfileActivity;
+import com.codepath.wwcmentorme.activities.ViewProfileActivity;
 import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
@@ -315,7 +318,7 @@ public class UIUtils {
 								public void onCancel(DialogInterface dialog) {
 									completion.call(null);
 								}
-							});							
+							});
 							final AlertDialog dialog = builder.create();
 							loginButton.setOnClickListener(new View.OnClickListener() {
 								@Override
@@ -330,6 +333,26 @@ public class UIUtils {
 				}
 			}
 		});
-		
+	}
+	
+	public static void startChatSession(final Context context, final long userId) {
+		if (userId == User.meId()) return;  // Disable chat with self.
+		startChatSession(context, User.meId(), userId);
+	}
+	
+	// Keeping this private so that we don't accidentally start a chat session between two users where one of them is NOT me.
+	private static void startChatSession(final Context context, final long userId1, final long userId2) {
+		final Intent intent = new Intent(context, ChatActivity.class);
+		intent.putExtra("userId1", userId1);
+		intent.putExtra("userId2", userId2);
+		context.startActivity(intent);
+	}
+	
+	public static void viewUserProfile(final Context context, final long userId, final ParseGeoPoint geoPoint) {
+		final Intent intent = new Intent(context, ViewProfileActivity.class);
+		intent.putExtra(ViewProfileActivity.USER_ID_KEY, userId);
+		intent.putExtra(ViewProfileActivity.LATITUDE_KEY, geoPoint.getLatitude());
+		intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, geoPoint.getLongitude());
+		context.startActivity(intent);
 	}
 }

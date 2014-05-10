@@ -73,6 +73,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 	
 	private void populate(final ViewHolder.UserItem holder, User user) throws JSONException {
 		final ImageLoader imageLoader = ImageLoader.getInstance();
+		imageLoader.cancelDisplayTask(holder.ivMentorProfile);
 		imageLoader.displayImage(user.getProfileImageUrl(200), holder.ivMentorProfile);
 		
 		holder.tvFirstName.setText(user.getFirstName());

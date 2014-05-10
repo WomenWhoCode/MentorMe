@@ -6,6 +6,7 @@
     <string name="fb_app_id">382558558549144</string>
     <string name="ivMentorProfile">profile</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_chat">Conversation</string>
     <string name="title_activity_view_profile">Profile</string>
     <string name="title_activity_edit_profile">Edit Profile</string>
     <string name="title_activity_home">HomeActivity</string>

@@ -70,11 +70,7 @@ public class MapActivity extends AppActivity {
 						public void onInfoWindowClick(Marker marker) {
 							User user = (User) markerMap.get(marker);
 							if(user != null) {
-								final Intent intent = new Intent(context, ViewProfileActivity.class);
-								intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getFacebookId());
-								intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
-								intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
-								context.startActivity(intent);
+								UIUtils.viewUserProfile(context, user.getFacebookId(), mGeoPoint);
 							}
 						}
 					});

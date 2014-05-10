@@ -230,13 +230,13 @@ public class ViewProfileActivity extends AppActivity {
 	}
 
 	private void setOnClickMenteeCount() {
-		ivMentee.setOnClickListener(new OnClickListener() {			
+		ivMentee.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Intent intent = new Intent(ViewProfileActivity.this, UserListActivity.class);
+				final Intent intent = new Intent(getActivity(), UserListActivity.class);
 				intent.putExtra("persona", Persona.MENTOR);
 				intent.putExtra("userId", user.getFacebookId());
-				startActivity(intent);			
+				startActivity(intent);
 			}
 		});		
 	}
@@ -367,17 +367,18 @@ public class ViewProfileActivity extends AppActivity {
 						}
 					}
 				}, false);
-			} else if (item.getTitle().equals("Email")) {
+			} else if (item.getTitle().equals("Message")) {
 				DataService.removeResponsePending(user.getFacebookId());
 				if (mIsResponse) {
-		    		sendPushNotification();
-		    		markConnected(user, User.me(), true);
+					sendPushNotification();
+					markConnected(user, User.me(), true);
 		    	}
-				Intent email = new Intent(Intent.ACTION_SEND);
-				email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
-				email.setType("message/rfc822");
-				email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
+				UIUtils.startChatSession(getActivity(), user.getFacebookId());
+//				Intent email = new Intent(Intent.ACTION_SEND);
+//				email.putExtra(Intent.EXTRA_EMAIL, new String[]{ user.getEmail() });
+//				email.setType("message/rfc822");
+//				email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//				startActivityForResult(Intent.createChooser(email, "Choose an Email client:"), 1);
 			} else if (item.getTitle().equals("Edit Profile")) {
 				UIUtils.startActivity(getActivity(), EditProfileActivity.class);
 			}
@@ -524,9 +525,9 @@ public class ViewProfileActivity extends AppActivity {
 					if (User.me() != null) {
 						final ArrayList<Long> mentors = User.me().getMentors();
 						if (mentors.contains(currentUserId)) {
-							item.setTitle("Email");
+							item.setTitle("Message");
 						} else {
-							item.setTitle(mIsResponse ? "Email" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
+							item.setTitle(mIsResponse ? "Message" : DataService.isRequestsSent(currentUserId) ? "Request Sent" : "Connect");
 						}
 					}
 				}

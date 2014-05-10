@@ -8,6 +8,7 @@ import com.parse.ParseObject;
 
 public class Message extends ParseObject {
 	public static String GROUP_ID_KEY = "groupId";
+	public static String USER_ID_KEY = "userId";
 	public static String TEXT_KEY = "text";
 	public static String CREATED_AT_KEY = "createdAt";
 	
@@ -35,6 +36,14 @@ public class Message extends ParseObject {
 	
 	public void setGroupId(final String groupId) {
 		put(GROUP_ID_KEY, groupId);
+	}
+	
+	public long getUserId() {
+		return getLong(USER_ID_KEY);
+	}
+	
+	public void setUserId(final long userId) {
+		put(USER_ID_KEY, userId);
 	}
 	
 	public String getText() {

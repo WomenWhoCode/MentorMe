@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -305,5 +305,46 @@ public class Utils {
 				});
 			}
 		});
+	}
+	
+	public static final String getShortRelativeTime(final Date date) {
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		final long currentTime = System.currentTimeMillis();
+		final long time = calendar.getTimeInMillis();
+		final long deltaSeconds = (currentTime - time) / 1000;
+		if (deltaSeconds < 10) {
+			return "Now";
+		}
+		if (deltaSeconds < 60) {
+			return deltaSeconds + "s";
+		}
+		final long deltaMins = deltaSeconds / 60;
+		if (deltaMins < 60) {
+			return deltaMins + "m";
+		}
+		final long deltaHrs = deltaMins / 60;
+		if (deltaHrs < 24) {
+			return deltaHrs + "h";
+		}
+		final long deltaDays = deltaHrs / 24;
+		if (deltaDays < 7) {
+			return deltaDays + "d";
+		}
+		calendar.setTimeInMillis(currentTime);
+		final long currentYear = calendar.get(Calendar.YEAR);
+		calendar.setTime(date);
+		final long year = calendar.get(Calendar.YEAR);
+		final Locale locale = Locale.getDefault();
+		final String day = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+		final String month = calendar.getDisplayName(Calendar.MONTH,
+				Calendar.SHORT, locale);
+		if (year == currentYear) {
+			return day + " " + month;
+		} else {
+			final String yearString = calendar.getDisplayName(Calendar.YEAR,
+					Calendar.SHORT, locale);
+			return day + " " + month + " " + yearString;
+		}
 	}
 }

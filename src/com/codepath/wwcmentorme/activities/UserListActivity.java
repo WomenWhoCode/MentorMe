@@ -22,6 +22,7 @@ import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.helpers.Constants.Persona;
 import com.codepath.wwcmentorme.helpers.Constants.UserDisplayMode;
+import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.User;
 import com.nhaarman.listviewanimations.swinginadapters.prepared.ScaleInAnimationAdapter;
 import com.parse.GetCallback;
@@ -183,15 +184,11 @@ public class UserListActivity extends AppActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				final User user = (User) lvMentors.getItemAtPosition(position);
-				final Intent intent = new Intent(UserListActivity.this,
-						ViewProfileActivity.class);
-				intent.putExtra(ViewProfileActivity.USER_ID_KEY,
-						user.getFacebookId());
-				intent.putExtra(ViewProfileActivity.LATITUDE_KEY,
-						mGeoPoint.getLatitude());
-				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY,
-						mGeoPoint.getLongitude());
-				startActivity(intent);
+				if (mUserDisplayMode.equals(UserDisplayMode.CHAT)) {
+					UIUtils.startChatSession(getActivity(), user.getFacebookId());
+				} else {
+					UIUtils.viewUserProfile(getActivity(), user.getFacebookId(), mGeoPoint);
+				}
 			}
 		});
 	}

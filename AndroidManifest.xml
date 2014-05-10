@@ -74,6 +74,11 @@
             android:label="@string/title_activity_view_profile" >
         </activity>
         <activity
+            android:name="com.codepath.wwcmentorme.activities.ChatActivity"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/title_activity_chat" >
+        </activity>
+        <activity
             android:name="com.codepath.wwcmentorme.activities.EditProfileActivity"
             android:icon="@drawable/ic_launcher"
             android:label="@string/title_activity_edit_profile"

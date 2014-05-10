@@ -51,12 +51,12 @@ public class MentorMeReceiver extends BroadcastReceiver {
 							final String skills = json.getString(skillsKey);
 							final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 							final NotificationCompat.BigTextStyle style = new NotificationCompat.BigTextStyle()
-									.setBigContentTitle(username).bigText(message)
-									.setSummaryText(skills);
+							.setBigContentTitle(username).bigText(message)
+							.setSummaryText(skills);
 							final AsyncHttpClient client = new AsyncHttpClient();
 							client.get(User.getProfileImageUrl(userId, 200), new BinaryHttpResponseHandler() {
 								@Override
-							    public void onSuccess(byte[] fileData) {
+								public void onSuccess(byte[] fileData) {
 									final Bitmap icon = UIUtils.decode(fileData);
 									Intent pupInt = new Intent(context, ViewProfileActivity.class);
 									pupInt.putExtra(ViewProfileActivity.USER_ID_KEY, userId);
@@ -66,20 +66,19 @@ public class MentorMeReceiver extends BroadcastReceiver {
 									int requestID = (int) System.currentTimeMillis();
 									pupInt.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP); 
 									PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, pupInt, PendingIntent.FLAG_UPDATE_CURRENT);
-									 final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-						               .setSmallIcon(R.drawable.ic_launcher)
-						               .setContentTitle(username)
-						               .setContentText(message)
-						               .setOnlyAlertOnce(true)
-						               .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-						               .setAutoCancel(true)
-						               .setStyle(style)
-						               .setLargeIcon(icon)
-						               .setContentIntent(contentIntent);
-									 notificationManager.notify(notificationId, builder.build());
-							    }
+									final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+									.setSmallIcon(R.drawable.ic_launcher)
+									.setContentTitle(username)
+									.setContentText(message)
+									.setOnlyAlertOnce(true)
+									.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+									.setAutoCancel(true)
+									.setStyle(style)
+									.setLargeIcon(icon)
+									.setContentIntent(contentIntent);
+									notificationManager.notify(notificationId, builder.build());
+								}
 							});
-							
 						}
 					}
 				}

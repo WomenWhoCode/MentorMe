@@ -119,11 +119,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				final User user = (User) lvMentors.getItemAtPosition(position);
-				final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
-				intent.putExtra(ViewProfileActivity.USER_ID_KEY, user.getFacebookId());
-				intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
-				intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
-				startActivity(intent);
+				UIUtils.viewUserProfile(getActivity(), user.getFacebookId(), mGeoPoint);
 			}
 		});
 	}
@@ -175,11 +171,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 	private void displayView(int position) {
 		switch (position) {
 		case 0:
-			final Intent intent = new Intent(MentorListActivity.this, ViewProfileActivity.class);
-			intent.putExtra(ViewProfileActivity.USER_ID_KEY, User.meId());
-			intent.putExtra(ViewProfileActivity.LATITUDE_KEY, mGeoPoint.getLatitude());
-			intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, mGeoPoint.getLongitude());
-			startActivity(intent);
+			UIUtils.viewUserProfile(getActivity(), User.meId(), mGeoPoint);
 			break;
 		default:
 			break;
