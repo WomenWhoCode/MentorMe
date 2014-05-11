@@ -150,7 +150,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 				listView.setOnItemClickListener(new SlideMenuClickListener());
 				if (User.me() != null) {
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_edit_profile, R.drawable.ic_edit));
-					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_messages, R.drawable.ic_inbox));
+					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_messages, R.drawable.ic_chat));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_received, R.drawable.ic_inbox));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_requests_Sent, R.drawable.ic_outbox));
 					adapter.add(new DrawerListAdapter.DrawerItem(R.string.drawer_sign_out, R.drawable.ic_signout));

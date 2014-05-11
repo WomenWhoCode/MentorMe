@@ -155,14 +155,12 @@ public class ChatAdapter extends ArrayAdapter<ChatAdapter.MessageGroup> {
 				}
 			});
 			float amountX = parent.getWidth() * 0.2f;
-			float rotate = 270;
 			final ObjectAnimator animatorMessage = ObjectAnimator.ofFloat(holder.tvMessage, "translationX", last.getUserId() == User.meId() ? amountX : -amountX, 0);
 			final ObjectAnimator animatorProfile = ObjectAnimator.ofFloat(holder.ivUserProfile, "translationX", last.getUserId() == User.meId() ? amountX : -amountX, 0);
-			final ObjectAnimator animatorProfileRot = ObjectAnimator.ofFloat(holder.ivUserProfile, "rotation", last.getUserId() == User.meId() ? rotate : -rotate, 0);
 			final ObjectAnimator animatorTime = ObjectAnimator.ofFloat(holder.tvTime, "alpha", 0, 1);
 			final AnimatorSet set = new AnimatorSet();
-			set.playTogether(animator, animatorMessage, animatorProfile, animatorProfileRot, animatorTime);
-			set.setDuration(600);
+			set.playTogether(animator, animatorMessage, animatorProfile, animatorTime);
+			set.setDuration(500);
 			set.start();
 		}
 	}
