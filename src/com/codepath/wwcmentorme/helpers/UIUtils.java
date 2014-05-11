@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -46,6 +50,8 @@ import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class UIUtils {
@@ -348,5 +354,66 @@ public class UIUtils {
 		intent.putExtra(ViewProfileActivity.LATITUDE_KEY, geoPoint.getLatitude());
 		intent.putExtra(ViewProfileActivity.LONGITUDE_KEY, geoPoint.getLongitude());
 		context.startActivity(intent);
+	}
+	
+	public static void sendHandshakePushNotification(boolean isResponse, final long userId) {
+		sendPushNotification(isResponse, null, userId);
+	}
+	
+	public static void sendMessagePushNotification(final String message, final long userId) {
+		sendPushNotification(false, message, userId);
+	}
+	
+	private static void sendPushNotification(boolean isResponse, final String message, final long userId) {
+		if (User.me() == null) return;
+		JSONObject obj;
+		try {
+			obj = new JSONObject();
+			obj.put(MentorMeReceiver.alertKey, User.me().getDisplayName());
+			obj.put(MentorMeReceiver.responseKey, isResponse);
+			obj.put("action", MentorMeReceiver.intentAction);
+			final StringBuilder builder = new StringBuilder();
+			final JSONArray menteeSkills = User.me().getMenteeSkills();
+			boolean useMentorSkills = true;
+			if (menteeSkills != null && !isResponse) {
+				useMentorSkills = false;
+				builder.append("Seeking to learn ");
+				for (int i = 0, count = menteeSkills.length(); i < count; ++i) {
+					final Object skill = menteeSkills.get(i);
+					builder.append(skill.toString());
+					if (i != count - 1) {
+						builder.append(", ");
+					}
+				}
+			}
+			if (useMentorSkills) {
+				builder.append("Expert in ");
+				final JSONArray mentorSkills = User.me().getMentorSkills();
+				if (mentorSkills != null) {
+					for (int i = 0, count = mentorSkills.length(); i < count; ++i) {
+						final Object skill = mentorSkills.get(i);
+						builder.append(skill.toString());
+						if (i != count - 1) {
+							builder.append(", ");
+						}
+					}
+				}
+			}
+			if (message != null) {
+				obj.put(MentorMeReceiver.messageKey, message);
+			}
+			obj.put(MentorMeReceiver.skillsKey, builder.toString());
+			obj.put(ViewProfileActivity.USER_ID_KEY, User.meId());
+
+			ParsePush push = new ParsePush();
+			ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
+
+			query.whereEqualTo("userId", userId); 
+			push.setQuery(query);
+			push.setData(obj);
+			push.sendInBackground();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -125,7 +125,7 @@ android.location.LocationListener, OnBackStackChangedListener, NotificationCente
 	}
 	
 	@Override
-	public void didChange(User oldValue, User newValue) {
+	public void didChange(final String key, User oldValue, User newValue) {
 		setupDrawer();
 	}
 	

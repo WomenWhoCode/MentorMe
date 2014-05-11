@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codepath.wwcmentorme.R;
@@ -56,6 +57,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvAbout = (TextView) view.findViewById(R.id.tvAbout);
 			holder.tvDistance = (TextView) view.findViewById(R.id.tvDistance);
 			holder.tvMenteeCount = (TextView) view.findViewById(R.id.tvMenteeCount);
+			holder.llSkills = (LinearLayout) view.findViewById(R.id.llSkills);
 			holder.tvSkill1 = (TextView) view.findViewById(R.id.tvSkill1);
 			holder.tvSkill2 = (TextView) view.findViewById(R.id.tvSkill2);
 			holder.tvSkill3 = (TextView) view.findViewById(R.id.tvSkill3);
@@ -85,6 +87,7 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 			holder.tvAbout.setVisibility(View.GONE);
 			holder.tvDistance.setVisibility(View.GONE);
 			holder.tvMenteeCount.setVisibility(View.GONE);
+			holder.llSkills.setVisibility(View.GONE);
 		} else {
 			if (user.getAboutMe().length() > 120) {
 				holder.tvAbout.setText(user.getAboutMe().substring(0, 120) + "...");
@@ -121,8 +124,8 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 				}
 			}
 		}
-		if(holder.tvSkill1.getText().length() == 0)  holder.tvSkill1.setVisibility(View.INVISIBLE);
-		if(holder.tvSkill2.getText().length() == 0)  holder.tvSkill2.setVisibility(View.INVISIBLE);
-		if(holder.tvSkill3.getText().length() == 0)  holder.tvSkill3.setVisibility(View.INVISIBLE);
+		holder.tvSkill1.setVisibility(holder.tvSkill1.getText().length() == 0 ? View.INVISIBLE : View.VISIBLE);
+		holder.tvSkill2.setVisibility(holder.tvSkill2.getText().length() == 0 ? View.INVISIBLE : View.VISIBLE);
+		holder.tvSkill3.setVisibility(holder.tvSkill3.getText().length() == 0 ? View.INVISIBLE : View.VISIBLE);
 	}
 }

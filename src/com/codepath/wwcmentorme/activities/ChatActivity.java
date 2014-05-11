@@ -20,12 +20,17 @@ import com.codepath.wwcmentorme.R;
 import com.codepath.wwcmentorme.adapters.ChatAdapter;
 import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
+import com.codepath.wwcmentorme.helpers.NotificationCenter;
+import com.codepath.wwcmentorme.helpers.UIUtils;
 import com.codepath.wwcmentorme.models.Message;
 import com.codepath.wwcmentorme.models.User;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
-public class ChatActivity extends AppActivity {
+public class ChatActivity extends AppActivity implements NotificationCenter.Listener<Object> {
+	private long mUserId;
+	private String mNotificationKey;
+	private Runnable mPoll;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +44,9 @@ public class ChatActivity extends AppActivity {
 			}
 		});
 		populateListView(userId);
+		final String chatKey = Message.getGroup(User.meId(), userId);
+		mNotificationKey = NotificationCenter.keyForPubnubChannel(chatKey);
+		NotificationCenter.registerListener(this, mNotificationKey);
 	}
 	
 	private void getMessages(final long userId, int count, final ChatAdapter adapter, final ListView lv) {
@@ -67,13 +75,20 @@ public class ChatActivity extends AppActivity {
 		final Runnable poll = new Runnable() {
 			@Override
 			public void run() {
+				getMessages(userId, 10, adapter, lv);
+			}
+		};
+		mPoll = poll;
+		final Runnable pollTimer = new Runnable() {
+			@Override
+			public void run() {
 				if (!getActivity().isFinishing() && !getActivity().destroyed()) {
-					getMessages(userId, 10, adapter, lv);
-					Async.dispatchMain(this, 5000);
+					poll.run();
+					Async.dispatchMain(this, 10000);
 				}
 			}
 		};
-		poll.run();
+		pollTimer.run();
 		final EditText etMessage = (EditText)findViewById(R.id.etMessage);
 		final Button btSend = (Button)findViewById(R.id.btSend);
 		final Runnable sendMessage = new Runnable() {
@@ -87,6 +102,8 @@ public class ChatActivity extends AppActivity {
 					message.setGroupId(groupId);
 					message.setText(text);
 					message.setUserId(User.meId());
+					UIUtils.sendMessagePushNotification(text, userId);
+					NotificationCenter.broadcastChange(mNotificationKey, null, null);
 					message.saveInBackground(new SaveCallback() {
 						@Override
 						public void done(ParseException e) {
@@ -133,5 +150,12 @@ public class ChatActivity extends AppActivity {
 			adapter.addAll(messageGroups);
 		}
 		adapter.notifyDataSetChanged();
+	}
+
+	@Override
+	public void didChange(String key, Object oldValue, Object newValue) {
+		if (mNotificationKey.equals(key)) {
+			mPoll.run();
+		}
 	}
 }

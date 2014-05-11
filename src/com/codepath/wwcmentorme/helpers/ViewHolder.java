@@ -2,6 +2,7 @@ package com.codepath.wwcmentorme.helpers;
 
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ViewHolder {
@@ -15,6 +16,7 @@ public class ViewHolder {
 		public TextView tvAbout;
 		public TextView tvDistance;
 		public TextView tvMenteeCount;
+		public LinearLayout llSkills;
 		public TextView tvSkill1;
 		public TextView tvSkill2;
 		public TextView tvSkill3;

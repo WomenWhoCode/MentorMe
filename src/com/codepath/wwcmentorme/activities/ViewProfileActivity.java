@@ -361,7 +361,8 @@ public class ViewProfileActivity extends AppActivity {
 					@Override
 					public void call(User result) {
 						if (result != null) {
-							sendPushNotification();
+							UIUtils.sendHandshakePushNotification(mIsResponse, user.getFacebookId());
+							markConnected(User.me(), user, false);
 							item.setTitle("Request Sent");
 							DataService.addRequestsSent(user.getFacebookId());
 						}
@@ -370,7 +371,7 @@ public class ViewProfileActivity extends AppActivity {
 			} else if (item.getTitle().equals("Message")) {
 				DataService.removeResponsePending(user.getFacebookId());
 				if (mIsResponse) {
-					sendPushNotification();
+					UIUtils.sendHandshakePushNotification(mIsResponse, user.getFacebookId());
 					markConnected(user, User.me(), true);
 		    	}
 				UIUtils.startChatSession(getActivity(), user.getFacebookId());
@@ -408,65 +409,12 @@ public class ViewProfileActivity extends AppActivity {
 	    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 	    if (requestCode == 1) {
 	    	if (mIsResponse) {
-	    		sendPushNotification();
+	    		UIUtils.sendHandshakePushNotification(mIsResponse, user.getFacebookId());
 	    		markConnected(user, User.me(), true);
 	    	}
 	    } else {
 	    	super.onActivityResult(requestCode, resultCode, data);
 	    }
-	}
-	
-	private void sendPushNotification() {
-		if (User.me() == null) return;
-		JSONObject obj;
-		try {
-			obj = new JSONObject();
-			obj.put(MentorMeReceiver.alertKey, User.me().getDisplayName());
-			obj.put(MentorMeReceiver.responseKey, mIsResponse);
-			obj.put("action", MentorMeReceiver.intentAction);
-			final StringBuilder builder = new StringBuilder();
-			final JSONArray menteeSkills = User.me().getMenteeSkills();
-			boolean useMentorSkills = true;
-			if (menteeSkills != null && !mIsResponse) {
-				useMentorSkills = false;
-				builder.append("Seeking to learn ");
-				for (int i = 0, count = menteeSkills.length(); i < count; ++i) {
-					final Object skill = menteeSkills.get(i);
-					builder.append(skill.toString());
-					if (i != count - 1) {
-						builder.append(", ");
-					}
-				}
-			}
-			if (useMentorSkills) {
-				builder.append("Expert in ");
-				final JSONArray mentorSkills = User.me().getMentorSkills();
-				if (mentorSkills != null) {
-					for (int i = 0, count = mentorSkills.length(); i < count; ++i) {
-						final Object skill = mentorSkills.get(i);
-						builder.append(skill.toString());
-						if (i != count - 1) {
-							builder.append(", ");
-						}
-					}
-				}
-			}
-			obj.put(MentorMeReceiver.skillsKey, builder.toString());
-			obj.put(ViewProfileActivity.USER_ID_KEY, User.meId());
-
-			ParsePush push = new ParsePush();
-			ParseQuery<ParseInstallation> query = ParseInstallation.getQuery();
-
-			query.whereEqualTo("userId", user.getFacebookId()); 
-			push.setQuery(query);
-			push.setData(obj);
-			push.sendInBackground();
-			if (!mIsResponse) {
-				markConnected(User.me(), user, false);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private void populateAverageRating() {
