@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="#ffffff"
-    android:padding="10dp" >
+    android:padding="10dp"
+    android:orientation="horizontal">
     <com.codepath.wwcmentorme.helpers.RoundedImageView
-        android:id="@+id/ivMentorProfile"
+        android:id="@+id/ivUserProfile"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
+        android:layout_alignParentLeft="true"
         android:contentDescription="@string/ivMentorProfile" />
+
     <TextView
         android:id="@+id/tvMessage"
-        style="@style/TextViewThin"
+        style="@style/TextView"
         android:layout_width="0dip"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/ivUserProfile"
+        android:layout_toLeftOf="@+id/tvTime"
+        android:layout_centerVertical="true"
         android:text="Hey, was just wondering if you could help me out. I am stuck in this problem"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
+
     <TextView
         android:id="@+id/tvTime"
-        style="@style/TextView"
+        style="@style/TextViewThin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:text="5m"
         android:textSize="12sp" />
-</LinearLayout>
+</RelativeLayout>

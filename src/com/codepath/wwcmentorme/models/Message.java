@@ -4,13 +4,14 @@ import java.util.Date;
 
 import android.util.Pair;
 
+import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
+@ParseClassName("Message")
 public class Message extends ParseObject {
 	public static String GROUP_ID_KEY = "groupId";
 	public static String USER_ID_KEY = "userId";
 	public static String TEXT_KEY = "text";
-	public static String CREATED_AT_KEY = "createdAt";
 	
 	public static Pair<Long, Long> getGroup(final String groupId) {
 		final String[] userIds = groupId.split("_");
@@ -52,13 +53,5 @@ public class Message extends ParseObject {
 	
 	public void setText(final String text) {
 		put(TEXT_KEY, text);
-	}
-	
-	public Date getCreatedAt() {
-    	return getDate(CREATED_AT_KEY);
-	}
-	
-	public void setCreatedAt(Date createdAt) {
-		put(CREATED_AT_KEY, createdAt);
 	}
 }

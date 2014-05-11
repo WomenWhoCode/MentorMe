@@ -76,6 +76,7 @@
         <activity
             android:name="com.codepath.wwcmentorme.activities.ChatActivity"
             android:icon="@drawable/ic_launcher"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_chat" >
         </activity>
         <activity

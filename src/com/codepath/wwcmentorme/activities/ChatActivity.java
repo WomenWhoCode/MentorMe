@@ -1,6 +1,7 @@
 package com.codepath.wwcmentorme.activities;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.os.Bundle;
@@ -27,27 +28,48 @@ public class ChatActivity extends AppActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setAutohideActionBar(false);
 		setContentView(R.layout.activity_chat);
 		final long userId1 = getIntent().getLongExtra("userId1", 0);
 		final long userId2 = getIntent().getLongExtra("userId2", 0);
 		populateListView(userId1, userId2);
 	}
 	
+	private void getMessages(final long userId1, final long userId2, int count, final ChatAdapter adapter, final ListView lv) {
+		DataService.getMessages(userId1, userId2, 100, null, null, new Async.Block<List<Message>>() {
+			@Override
+			public void call(final List<Message> result) {
+				if (result != null) {
+					boolean scrollToBottom = false;
+					if (adapter.getCount() == 0) {
+						scrollToBottom = true;
+					}
+					addMessages(result, adapter);
+					if (scrollToBottom) {
+						lv.setSelection(adapter.getCount() - 1);
+					}
+				}
+			}
+		});
+	}
+	
 	private void populateListView(final long userId1, final long userId2) {
 		final ListView lv = (ListView) findViewById(R.id.lvChat);
-		lv.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		final ChatAdapter adapter = new ChatAdapter(getActivity());
 		SwingLeftInAnimationAdapter scaleInAnimationAdapter = new SwingLeftInAnimationAdapter(adapter);
 		scaleInAnimationAdapter.setAbsListView(lv);
 		lv.setAdapter(scaleInAnimationAdapter);
-		DataService.getMessages(userId1, userId2, 10, null, null, new Async.Block<List<Message>>() {
+		getMessages(userId1, userId2, 100, adapter, lv);
+		final Runnable poll = new Runnable() {
 			@Override
-			public void call(final List<Message> result) {
-				if (result != null) {
-					adapter.addAll(result);
+			public void run() {
+				if (!getActivity().isFinishing() && !getActivity().destroyed()) {
+					getMessages(userId1, userId2, 10, adapter, lv);
+					Async.dispatchMain(this, 5000);
 				}
 			}
-		});
+		};
+		poll.run();
 		final EditText etMessage = (EditText)findViewById(R.id.etMessage);
 		final Button btSend = (Button)findViewById(R.id.btSend);
 		final Runnable sendMessage = new Runnable() {
@@ -61,10 +83,15 @@ public class ChatActivity extends AppActivity {
 					message.setGroupId(groupId);
 					message.setText(text);
 					message.setUserId(User.meId());
-					message.setCreatedAt(new Date());
 					message.saveInBackground(new SaveCallback() {
 						@Override
 						public void done(ParseException e) {
+							if (e == null) {
+								// Success.
+								addMessage(message, adapter);
+							} else {
+								e.printStackTrace();
+							}
 						}
 					});
 				}
@@ -87,5 +114,20 @@ public class ChatActivity extends AppActivity {
 				sendMessage.run();
 			}
 		});
+	}
+	
+	private void addMessage(final Message message, final ChatAdapter adapter) {
+		final ArrayList<Message> list = new ArrayList<Message>();
+		list.add(message);
+		addMessages(list, adapter);
+	}
+	
+	private void addMessages(final List<Message> messages, final ChatAdapter adapter) {
+		Collections.reverse(messages);
+		final List<ChatAdapter.MessageGroup> messageGroups = adapter.processMessages(messages);
+		if (messageGroups.size() > 0) {
+			adapter.addAll(messageGroups);
+		}
+		adapter.notifyDataSetChanged();
 	}
 }

@@ -36,6 +36,8 @@ public class AppActivity extends Activity {
 	private ActionBarDrawerToggle mToggle;
 	private boolean mSettingActionBarVisible;
 	private boolean mActionBarVisible;
+	private boolean mAutoHide;
+	private boolean mDestroyed;
 	
 	public final AppActivity getActivity() {
 		return this;
@@ -59,6 +61,7 @@ public class AppActivity extends Activity {
 	}
 	
 	public void didChangeContentView() {
+		if (!mAutoHide) return;
 		final AtomicBoolean stop = new AtomicBoolean(false);
 		UIUtils.enumerateSubviews(findViewById(android.R.id.content), new Block<View>() {
 			@Override
@@ -100,6 +103,10 @@ public class AppActivity extends Activity {
 				}
 			}
 		}, stop);
+	}
+	
+	public void setAutohideActionBar(final boolean autoHide) {
+		mAutoHide = autoHide;
 	}
 	
 	public void setActionBarVisible(final boolean visible) {
@@ -201,6 +208,7 @@ public class AppActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mAutoHide = true;
 		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		enableBackButtonBehavior(true);
 	}
@@ -234,5 +242,15 @@ public class AppActivity extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+	}
+	
+	public boolean destroyed() {
+		return mDestroyed;
+	}
+	
+	@Override
+	protected void onDestroy() {
+		mDestroyed = true;
+		super.onDestroy();
 	}
 }

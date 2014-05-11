@@ -210,12 +210,13 @@ public class DataService {
 		ParseQuery<Message> query = ParseQuery.getQuery(Message.class);
 		query.whereEqualTo(Message.GROUP_ID_KEY, Message.getGroup(userId1, userId2));
 		if (createdMin != null) {
-			query.whereGreaterThanOrEqualTo(Message.CREATED_AT_KEY, createdMin);
+			query.whereGreaterThanOrEqualTo("createdAt", createdMin);
 		}
 		if (createdMax != null) {
-			query.whereLessThanOrEqualTo(Message.CREATED_AT_KEY, createdMax);
+			query.whereLessThanOrEqualTo("createdAt", createdMax);
 		}
-		query.addDescendingOrder(Message.CREATED_AT_KEY);
+		query.addDescendingOrder("createdAt");
+		query.setLimit(numMessages);
 		query.findInBackground(new FindCallback<Message>() {
 			@Override
 			public void done(final List<Message> messages, ParseException e) {

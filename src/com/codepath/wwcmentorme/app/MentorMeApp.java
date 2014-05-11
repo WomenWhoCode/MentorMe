@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.codepath.wwcmentorme.activities.MentorListActivity;
 import com.codepath.wwcmentorme.helpers.Constants;
+import com.codepath.wwcmentorme.models.Message;
 import com.codepath.wwcmentorme.models.Rating;
 import com.codepath.wwcmentorme.models.Request;
 import com.codepath.wwcmentorme.models.User;
@@ -13,7 +14,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseFacebookUtils;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.PushService;
 
@@ -37,6 +37,7 @@ public class MentorMeApp extends com.activeandroid.app.Application {
     	ParseObject.registerSubclass(User.class);
     	ParseObject.registerSubclass(Request.class);
     	ParseObject.registerSubclass(Rating.class);
+    	ParseObject.registerSubclass(Message.class);
     	Parse.initialize(this, Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
     	
     	PushService.setDefaultPushCallback(this, MentorListActivity.class);

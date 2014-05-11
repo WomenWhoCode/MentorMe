@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
   android:orientation="vertical"
-  android:padding="10dp" 
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
     <ListView
       android:id="@+id/lvChat"
+      android:transcriptMode="normal"
+      android:layout_above="@+id/llSend"
       android:layout_width="wrap_content" 
-      android:layout_height="0dp" 
-      android:layout_weight="1"/>
-    <LinearLayout 
+      android:layout_height="match_parent" />
+    <RelativeLayout 
+      android:id="@+id/llSend"
+      android:layout_alignParentBottom="true"
       android:layout_width="fill_parent" 
+      android:paddingBottom="40dp"
       android:layout_height="wrap_content" >
       <EditText
+        style="@style/EditText"
         android:id="@+id/etMessage"
-        android:layout_width="fill_parent"
+        android:layout_toLeftOf="@+id/btSend"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:imeOptions="actionSend"
-        android:layout_weight="1"/>
+        android:hint="Send a message"
+        android:imeOptions="actionSend"/>
       <Button 
           android:id="@+id/btSend"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="0"
+          android:layout_alignParentRight="true"
           android:text="Send"/>
-    </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
