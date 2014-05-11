@@ -130,7 +130,7 @@ public class ViewProfileActivity extends AppActivity {
 						getProgressBar().setVisibility(View.INVISIBLE);
 						if (result != null && e == null) {
 							user = result;
-							user.setFacebookId(userId);
+							user.putInCache();
 							currentUserRunnable.run();
 						} else {
 							finish();

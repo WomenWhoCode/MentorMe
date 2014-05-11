@@ -337,17 +337,11 @@ public class UIUtils {
 	
 	public static void startChatSession(final Context context, final long userId) {
 		if (userId == User.meId()) return;  // Disable chat with self.
-		startChatSession(context, User.meId(), userId);
-	}
-	
-	// Keeping this private so that we don't accidentally start a chat session between two users where one of them is NOT me.
-	private static void startChatSession(final Context context, final long userId1, final long userId2) {
 		final Intent intent = new Intent(context, ChatActivity.class);
-		intent.putExtra("userId1", userId1);
-		intent.putExtra("userId2", userId2);
+		intent.putExtra("userId", userId);
 		context.startActivity(intent);
 	}
-	
+		
 	public static void viewUserProfile(final Context context, final long userId, final ParseGeoPoint geoPoint) {
 		final Intent intent = new Intent(context, ViewProfileActivity.class);
 		intent.putExtra(ViewProfileActivity.USER_ID_KEY, userId);

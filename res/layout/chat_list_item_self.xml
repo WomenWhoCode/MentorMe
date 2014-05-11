@@ -10,18 +10,19 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:contentDescription="@string/ivMentorProfile" />
     <TextView
         android:id="@+id/tvMessage"
         style="@style/TextView"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/ivUserProfile"
-        android:layout_toLeftOf="@+id/tvTime"
+        android:layout_toLeftOf="@+id/ivUserProfile"
+        android:layout_toRightOf="@+id/tvTime"
         android:layout_centerVertical="true"
+        android:gravity="right"
         android:text="Hey, was just wondering if you could help me out. I am stuck in this problem"
         android:textSize="18sp" />
     <TextView
@@ -29,7 +30,7 @@
         style="@style/TextViewThin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="5m"
         android:textSize="12sp" />

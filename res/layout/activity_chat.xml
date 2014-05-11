@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
   android:orientation="vertical"
+  android:background="#ffffff"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent">
     <ListView
@@ -9,11 +10,26 @@
       android:layout_above="@+id/llSend"
       android:layout_width="wrap_content" 
       android:layout_height="match_parent" />
+    <View
+        android:id="@+id/vShadow"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:alpha="0.5"
+        android:layout_marginBottom="-5dp"
+        android:paddingLeft="0dp"
+      	android:paddingRight="0dp"
+        android:layout_above="@+id/llSend"
+        android:background="@drawable/shadow"
+        />
     <RelativeLayout 
       android:id="@+id/llSend"
       android:layout_alignParentBottom="true"
-      android:layout_width="fill_parent" 
+      android:layout_width="fill_parent"
+      android:background="#ffffffff"
+      android:paddingTop="5dp"
       android:paddingBottom="40dp"
+      android:paddingLeft="0dp"
+      android:paddingRight="0dp"
       android:layout_height="wrap_content" >
       <EditText
         style="@style/EditText"
@@ -22,13 +38,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Send a message"
         android:imeOptions="actionSend"/>
-      <Button 
-          android:id="@+id/btSend"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignParentRight="true"
-          android:text="Send"/>
+      <Button
+        android:id="@+id/btSend"
+        style="@style/ICButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|right"
+        android:paddingRight="10dp"
+        android:background="@drawable/list_button_states"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="10dp"
+        android:text="Send"
+        android:textSize="18sp" >
+    </Button>
+
     </RelativeLayout>
 </RelativeLayout>

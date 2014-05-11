@@ -107,6 +107,24 @@ public class DataService {
 		});
 	}
 	
+	public static void getOrFetchUser(final long userId, final Async.Block<User> completion) {
+		if (User.getUser(userId) != null) {
+			if (completion != null) {
+				completion.call(User.getUser(userId));
+			}
+		} else {
+			getUser(userId, new GetCallback<User>() {
+				@Override
+				public void done(User user, ParseException e) {
+					user.putInCache();
+					if (completion != null) {
+						completion.call(e == null ? user : null);
+					}
+				}
+			});
+		}
+	}
+	
 	public static void getUser(long userId, GetCallback<User> callback) {
 		ParseQuery<User> query = User.getQuery();
 		query.whereEqualTo(User.FACEBOOK_ID_KEY, userId);

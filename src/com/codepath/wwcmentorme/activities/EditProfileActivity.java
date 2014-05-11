@@ -173,7 +173,7 @@ public class EditProfileActivity extends AppActivity {
 											mentorMeUser.setAboutMe((String) fbGraphUser.getProperty("about"));
 										}
 									}
-									mentorMeUser.setFacebookId(mUserId);
+									mentorMeUser.putInCache();
 									mentorMeUser.saveInBackground();
 									populateViewsWithUserInfo(mentorMeUser);
 									getProgressBar().setVisibility(View.INVISIBLE);

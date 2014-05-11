@@ -1,14 +1,19 @@
 package com.codepath.wwcmentorme.adapters;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -88,6 +93,8 @@ public class ChatAdapter extends ArrayAdapter<ChatAdapter.MessageGroup> {
 		}
 	}
 	
+	private HashSet<MessageGroup> mProcessedMessageGroups = new HashSet<MessageGroup>();
+	
 	public ChatAdapter(Context context) {
 		super(context, 0);
 	}
@@ -97,22 +104,32 @@ public class ChatAdapter extends ArrayAdapter<ChatAdapter.MessageGroup> {
 		return getView(getItem(position), convertView, parent);
 	}
 	
+	@Override
+	public int getViewTypeCount() {
+		return 2;
+	}
+	
+	@Override
+	public int getItemViewType(int position) {
+		return getItem(position).last().getUserId() == User.meId() ? 0 : 1;
+	}
+	
 	private View getView(final MessageGroup message, final View convertView, final ViewGroup parent) {
 		View view = convertView;
 		if (view == null) {
 			LayoutInflater inflator = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			view = inflator.inflate(R.layout.chat_list_item, null);
+			view = inflator.inflate(message.last().getUserId() == User.meId() ? R.layout.chat_list_item_self : R.layout.chat_list_item, null);
 			final ViewHolder.ChatItem holder = new ViewHolder.ChatItem();
 			holder.ivUserProfile = (ImageView)view.findViewById(R.id.ivUserProfile);
 			holder.tvMessage = (TextView)view.findViewById(R.id.tvMessage);
 			holder.tvTime = (TextView)view.findViewById(R.id.tvTime);
 			view.setTag(holder);
 		}
-		populateView(view, message);
+		populateView(parent, view, message);
 		return view;
 	}
 	
-	private void populateView(final View view, final MessageGroup message) {
+	private void populateView(final ViewGroup parent, final View view, final MessageGroup message) {
 		final ViewHolder.ChatItem holder = (ViewHolder.ChatItem) view.getTag();
 		final ImageLoader imageLoader = ImageLoader.getInstance();
 		final Message last = message.last();
@@ -121,6 +138,33 @@ public class ChatAdapter extends ArrayAdapter<ChatAdapter.MessageGroup> {
 		imageLoader.displayImage(user.getProfileImageUrl(200), holder.ivUserProfile);
 		holder.tvMessage.setText(message.getText());
 		holder.tvTime.setText(Utils.getShortRelativeTime(last.getCreatedAt()));
+		if (!mProcessedMessageGroups.contains(message) && parent.getHeight() != 0) {
+			
+			final ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
+			animator.addListener(new AnimatorListener() {
+				@Override
+				public void onAnimationStart(Animator animation) {}
+				@Override
+				public void onAnimationCancel(Animator animation) {}
+				@Override
+				public void onAnimationRepeat(Animator animation) {}
+				
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mProcessedMessageGroups.add(message);
+				}
+			});
+			float amountX = parent.getWidth() * 0.2f;
+			float rotate = 270;
+			final ObjectAnimator animatorMessage = ObjectAnimator.ofFloat(holder.tvMessage, "translationX", last.getUserId() == User.meId() ? amountX : -amountX, 0);
+			final ObjectAnimator animatorProfile = ObjectAnimator.ofFloat(holder.ivUserProfile, "translationX", last.getUserId() == User.meId() ? amountX : -amountX, 0);
+			final ObjectAnimator animatorProfileRot = ObjectAnimator.ofFloat(holder.ivUserProfile, "rotation", last.getUserId() == User.meId() ? rotate : -rotate, 0);
+			final ObjectAnimator animatorTime = ObjectAnimator.ofFloat(holder.tvTime, "alpha", 0, 1);
+			final AnimatorSet set = new AnimatorSet();
+			set.playTogether(animator, animatorMessage, animatorProfile, animatorProfileRot, animatorTime);
+			set.setDuration(600);
+			set.start();
+		}
 	}
 	
 	public List<MessageGroup> processMessages(final List<Message> messages) {

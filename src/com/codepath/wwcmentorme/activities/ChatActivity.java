@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -20,7 +22,6 @@ import com.codepath.wwcmentorme.data.DataService;
 import com.codepath.wwcmentorme.helpers.Async;
 import com.codepath.wwcmentorme.models.Message;
 import com.codepath.wwcmentorme.models.User;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingLeftInAnimationAdapter;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
@@ -30,13 +31,18 @@ public class ChatActivity extends AppActivity {
 		super.onCreate(savedInstanceState);
 		setAutohideActionBar(false);
 		setContentView(R.layout.activity_chat);
-		final long userId1 = getIntent().getLongExtra("userId1", 0);
-		final long userId2 = getIntent().getLongExtra("userId2", 0);
-		populateListView(userId1, userId2);
+		final long userId = getIntent().getLongExtra("userId", 0);
+		DataService.getOrFetchUser(userId, new Async.Block<User>() {
+			@Override
+			public void call(final User user) {
+				setTitle(user.getDisplayName());
+			}
+		});
+		populateListView(userId);
 	}
 	
-	private void getMessages(final long userId1, final long userId2, int count, final ChatAdapter adapter, final ListView lv) {
-		DataService.getMessages(userId1, userId2, 100, null, null, new Async.Block<List<Message>>() {
+	private void getMessages(final long userId, int count, final ChatAdapter adapter, final ListView lv) {
+		DataService.getMessages(User.meId(), userId, 100, null, null, new Async.Block<List<Message>>() {
 			@Override
 			public void call(final List<Message> result) {
 				if (result != null) {
@@ -53,18 +59,16 @@ public class ChatActivity extends AppActivity {
 		});
 	}
 	
-	private void populateListView(final long userId1, final long userId2) {
+	private void populateListView(final long userId) {
 		final ListView lv = (ListView) findViewById(R.id.lvChat);
 		final ChatAdapter adapter = new ChatAdapter(getActivity());
-		SwingLeftInAnimationAdapter scaleInAnimationAdapter = new SwingLeftInAnimationAdapter(adapter);
-		scaleInAnimationAdapter.setAbsListView(lv);
-		lv.setAdapter(scaleInAnimationAdapter);
-		getMessages(userId1, userId2, 100, adapter, lv);
+		lv.setAdapter(adapter);
+		getMessages(userId, 100, adapter, lv);
 		final Runnable poll = new Runnable() {
 			@Override
 			public void run() {
 				if (!getActivity().isFinishing() && !getActivity().destroyed()) {
-					getMessages(userId1, userId2, 10, adapter, lv);
+					getMessages(userId, 10, adapter, lv);
 					Async.dispatchMain(this, 5000);
 				}
 			}
@@ -78,7 +82,7 @@ public class ChatActivity extends AppActivity {
 				final String text = etMessage.getText().toString().trim();
 				if (text.length() > 0) {
 					etMessage.setText(null);
-					final String groupId = Message.getGroup(userId1, userId2);
+					final String groupId = Message.getGroup(userId, User.meId());
 					final Message message = new Message();
 					message.setGroupId(groupId);
 					message.setText(text);

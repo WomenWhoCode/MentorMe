@@ -5,16 +5,19 @@
     android:layout_height="match_parent" >
 
     <!-- The main content view -->
-    <RelativeLayout android:id="@+id/rlContainer"
+
+    <RelativeLayout
+        android:id="@+id/rlContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        ></RelativeLayout>
-    
+        android:layout_height="match_parent" >
+    </RelativeLayout>
+
     <!-- The navigation drawer -->
 
     <ListView
         android:id="@+id/left_drawer"
         android:layout_width="240dp"
+        android:paddingBottom="44dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/drawerBackgroundColor"

@@ -82,7 +82,9 @@ public class MentorListAdapter extends ArrayAdapter<User> {
 		String formattedPosition = user.getJobTitle()  + ", " + user.getCompanyName();
 		holder.tvPosition.setText(Html.fromHtml(formattedPosition));
 		if (userDisplayMode.equals(UserDisplayMode.CHAT)) {
-
+			holder.tvAbout.setVisibility(View.GONE);
+			holder.tvDistance.setVisibility(View.GONE);
+			holder.tvMenteeCount.setVisibility(View.GONE);
 		} else {
 			if (user.getAboutMe().length() > 120) {
 				holder.tvAbout.setText(user.getAboutMe().substring(0, 120) + "...");
