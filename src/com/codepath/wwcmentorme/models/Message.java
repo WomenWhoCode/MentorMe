@@ -22,8 +22,8 @@ public class Message extends ParseObject {
 		final StringBuilder sb = new StringBuilder();
 		if (userId2 < userId1) {
 			final long temp = userId1;
-			userId2 = userId1;
-			userId1 = temp;
+			userId1 = userId2;
+			userId2 = temp;
 		}
 		sb.append(userId1);
 		sb.append('_');
