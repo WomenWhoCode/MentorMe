@@ -50,16 +50,19 @@ public class ChatActivity extends AppActivity implements NotificationCenter.List
 	}
 	
 	private void getMessages(final long userId, int count, final ChatAdapter adapter, final ListView lv) {
+		final boolean isInitial = adapter.getCount() == 0;
+		if (isInitial) {
+			getProgressBar().setVisibility(View.VISIBLE);
+		}
 		DataService.getMessages(User.meId(), userId, 100, null, null, new Async.Block<List<Message>>() {
 			@Override
 			public void call(final List<Message> result) {
+				if (isInitial) {
+					getProgressBar().setVisibility(View.INVISIBLE);
+				}
 				if (result != null) {
-					boolean scrollToBottom = false;
-					if (adapter.getCount() == 0) {
-						scrollToBottom = true;
-					}
 					addMessages(result, adapter);
-					if (scrollToBottom) {
+					if (isInitial) {
 						lv.setSelection(adapter.getCount() - 1);
 					}
 				}
